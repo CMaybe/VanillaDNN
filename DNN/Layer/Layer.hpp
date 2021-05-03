@@ -7,18 +7,17 @@ using namespace std;
 
 class Layer{
 	public:
-	Layer();
-	virtual ~Chiled(){}
+		Layer();
+		virtual ~Chiled(){}
 	
 	private:
-	
-	function<float(float)> func;
-	func Activation;
+		function<float(float)> func;
+		func Activation;
 	
 	public:
-	void setActivation(func f);
+		void setActivation(func f);
 	
 	
-}
+};
 
 
