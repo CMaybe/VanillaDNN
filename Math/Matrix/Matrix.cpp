@@ -1,6 +1,7 @@
-#pragma once
+#ifndef VANILLA_DNN_MATRIX_CPP
+#define VANILLA_DNN_MATRIX_CPP
 
-#include "Matrix.h"
+#include "Math/Matrix/Matrix.hpp"
 
 template<typename T>
 Matrix<T>::Matrix(int _rows,int _cols, const T& _init){
@@ -63,22 +64,6 @@ Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs){
 }
 
 template<typename T>
-Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& rhs){
-	int rows = rhs.get_rows_size();
-	int cols = rhs.get_cols_size();
-	if(this->cols!=cols || this->rows!=rows)
-		throw std::out_of_range("Index out of bounds");
-
-	for(int i = 0;i<rows;i++){
-		for(int j = 0;j<cols;j++){
-			this->matrix[i][j] += rhs(i,j);
-		}
-	}
-	
-	return *this;
-}
-
-template<typename T>
 Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs){
 	int rows = rhs.get_rows_size();
 	int cols = rhs.get_cols_size();
@@ -93,6 +78,43 @@ Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs){
 		}
 	}
 	return result;
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::operator*(const Matrix<T>& rhs){
+	int rows = rhs.get_rows_size();
+	int cols = rhs.get_cols_size();
+	Matrix<T> result(rows,cols,0);
+	
+	if(this->cols!=rows)
+		throw std::out_of_range("Index out of bounds");
+
+	for(int i = 0;i<rows;i++){
+		for(int j = 0;j<cols;j++){
+			for(int k=0;k<rows;k++){
+				result(i,j) += this->matrix[i][k]*rhs(k,j);
+			}
+		}
+	}
+	
+	return result;
+}
+
+
+template<typename T>
+Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& rhs){
+	int rows = rhs.get_rows_size();
+	int cols = rhs.get_cols_size();
+	if(this->cols!=cols || this->rows!=rows)
+		throw std::out_of_range("Index out of bounds");
+
+	for(int i = 0;i<rows;i++){
+		for(int j = 0;j<cols;j++){
+			this->matrix[i][j] += rhs(i,j);
+		}
+	}
+	
+	return *this;
 }
 
 template<typename T>
@@ -111,25 +133,6 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& rhs){
 	return *this;
 }
 
-template<typename T>
-Matrix<T> Matrix<T>::operator*(const Matrix<T>& rhs){
-	int rows = rhs.get_rows_size();
-	int cols = rhs.get_cols_size();
-	Matrix<T> result(rows,cols,0);
-	
-	if(this->cols!=row)
-		throw std::out_of_range("Index out of bounds");
-
-	for(int i = 0;i<rows;i++){
-		for(int j = 0;j<cols;j++){
-			for(int k=0;k<rows;k++){
-				result(i,j) = this->matrix[i][k]+rhs(k,j);
-			}
-		}
-	}
-	
-	return result;
-}
 
 template<typename T>
 Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs){
@@ -138,19 +141,6 @@ Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs){
 	return *this;
 }
 
-template<typename T>
-Matrix<T> Matrix<T>::transpose(){
-	int row = this->rows;
-	int cols = this->cols;
-	Matrix<T> result(cols,rows,0);
-	
-	for(int i = 0;i<rows;i++){
-		for(int j = 0;j<cols;j++){
-			result(j,i) = this->matrix[i][j];
-		}
-	}
-	return result;
-}
 
 //scalar
 template<typename T>
@@ -272,12 +262,41 @@ Matrix<T>& Matrix<T>::operator/=(const T& rhs){
 }
 
 template<typename T>
-T& Matrix<T>::operator()(const int& row, const int col){
+Vector<T> Matrix<T>::operator*(const Vector<T>& rhs){
+	if(rhs.get_size() != this->cols){
+		throw std::out_of_range("Index out of bounds");
+	}
+	Vector<T> result(rhs.get_size(),0);
+	for(int i = 0;i<this->get_rows_size();i++){
+		for(int j=0;j<this->get_cols_size();j++){
+			result(i) += this->matrix[i][j] * rhs(j);
+		}
+	}
+	
+	return result;	
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::transpose(){
+	int row = this->rows;
+	int cols = this->cols;
+	Matrix<T> result(cols,rows,0);
+	
+	for(int i = 0;i<rows;i++){
+		for(int j = 0;j<cols;j++){
+			result(j,i) = this->matrix[i][j];
+		}
+	}
+	return result;
+}
+
+template<typename T>
+T& Matrix<T>::operator()(const int& row, const int& col){
 	return this->matrix[row][col];
 }
 
 template<typename T>
-const T& Matrix<T>::operator()(const int& row, const int col) const {
+const T& Matrix<T>::operator()(const int& row, const int& col) const {
 	return this->matrix[row][col];
 }
 
@@ -290,3 +309,5 @@ template<typename T>
 int Matrix<T>::get_cols_size() const{
 	return this->cols;
 }
+
+#endif
