@@ -1,23 +1,27 @@
-#pragma once
+#ifndef VANILLA_DNN_LAYER_HPP
+#define VANILLA_DNN_LAYER_HPP
 
 #include<functional>
-#include<cmath>
-
-using namespace std;
+#include"Math/Matrix/Matrix.hpp"
+#include"Math/Vector/Vector.hpp"
 
 class Layer{
+	private:
+		using func = std::function<float(Vector<float>,Vector<float>)> ;
+		func activation,loss;
+		Layer* preLayer;
+		Matrix<float> weight;
+		Vector<float> neuronInput; // before activate : preLayer->weight * neuronOutput
+		Vector<float> neuronOutput; // after actionte : activatoin(neuronInput)
+	
 	public:
 		Layer();
-		virtual ~Chiled(){}
+		virtual ~Layer(){}
+		void setActivation(void* f);
+		void setLoss(void* f);
 	
-	private:
-		function<float(float)> func;
-		func Activation;
-	
-	public:
-		void setActivation(func f);
 	
 	
 };
 
-
+#endif

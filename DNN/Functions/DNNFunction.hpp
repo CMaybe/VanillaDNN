@@ -64,9 +64,12 @@ namespace LOSS_FUCTION{
 		return ans/N:
 	}
 	
+	/*
 	float categorical_cross_entropy(Vector<float> t ,Vector<float> y, int c){
-		
+		float ans = 0;
+		int N = y.size();
 	}
+	*/
 }
 
 
