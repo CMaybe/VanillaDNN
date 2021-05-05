@@ -4,6 +4,12 @@
 #include "Math/Matrix/Matrix.hpp"
 
 template<typename T>
+Matrix<T>::Matrix(){
+	rows = 0;
+	cols = 0;
+}
+
+template<typename T>
 Matrix<T>::Matrix(int _rows,int _cols, const T& _init){
 	matrix.resize(_rows);
 	for(int i = 0;i<matrix.size();i++){
@@ -22,6 +28,16 @@ Matrix<T>::Matrix(const Matrix<T>& rhs){
 
 template<typename T>
 Matrix<T>::~Matrix(){}
+
+template<typename T>
+void Matrix<T>::resize(int _rows,int _cols, T _init){
+	matrix.resize(_rows);
+	for(int i = 0;i<matrix.size();i++){
+		matrix[i].resize(_cols,_init);
+	}
+	rows = _rows;
+	cols = _cols;
+}
 
 template<typename T>
 Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs){

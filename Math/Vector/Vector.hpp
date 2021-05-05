@@ -13,11 +13,13 @@ template<typename T> class Vector{
 		int size;
 	
 	public:
+		Vector();
 		Vector(int _size, const T& _init);
 		Vector(const Vector<T>& rhs);
 		Vector<T>& operator=(const Vector<T>& rhs);
 	
 		virtual ~Vector();
+	
 	
 	
 		//operator
@@ -44,6 +46,7 @@ template<typename T> class Vector{
 		friend std::ostream & operator << (std::ostream &out, const Vector<U> &v);
 	
 		int get_size() const;
+		void resize(const int& _size, const T& _init = 0);
 	
 };
 

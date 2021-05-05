@@ -14,6 +14,7 @@ template<typename T> class Matrix{
 		int cols;
 	
 	public:
+		Matrix();
 		Matrix(int _rows,int _cols, const T& _init);
 		Matrix(const Matrix<T>& rhs);
 		Matrix<T>& operator=(const Matrix<T>& rhs);
@@ -53,6 +54,7 @@ template<typename T> class Matrix{
 
 		int get_rows_size() const;
 		int get_cols_size() const;
+		void resize(int _rows,int _cols, T _init = 0);
 	
 	
 };

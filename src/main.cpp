@@ -17,6 +17,7 @@ int main(int argc, char **argv) {
 			m2(i,j) = rand() % 10;
 		}
 	}
+	
 	cout<<v;
 	cout<<m1 + m2;
 	cout<<m1-m2<<endl;

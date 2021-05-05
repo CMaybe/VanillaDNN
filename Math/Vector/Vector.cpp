@@ -4,6 +4,11 @@
 #include "Math/Vector/Vector.hpp"
 
 template<typename T>
+Vector<T>::Vector(){
+	size = 0;
+}
+
+template<typename T>
 Vector<T>::Vector(int _size, const T& _init){
 	vector.resize(_size,_init);
 	size = _size;
@@ -17,6 +22,12 @@ Vector<T>::Vector(const Vector<T>& rhs){
 
 template<typename T>
 Vector<T>::~Vector(){}
+
+template<typename T>
+void Vector<T>::resize(const int& _size, const T& _init){
+	vector.resize(_size,_init);
+	size = _size;
+}
 
 template<typename T>
 Vector<T>& Vector<T>::operator=(const Vector<T>& rhs){
