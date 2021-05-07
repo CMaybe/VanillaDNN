@@ -9,7 +9,7 @@
 
 class Model{
 	private:
-		typedef std::function<Vector<float>(Vector<float>,Vector<Vector<float>>)> Loss;
+		typedef std::function<float(Vector<float>,Vector<float>)> Loss;
 		Loss loss;
 		std::vector<Layer*> Layers; // exclude input&output Layer; 
 		Layer* inputLayer = nullptr;

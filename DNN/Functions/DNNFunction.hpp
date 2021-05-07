@@ -71,11 +71,11 @@ namespace LOSS_FUCTION{
 		return ans;
 	}
 	
-	float binary_cross_entropy(Vector<float> t, Vector<float> y){
+	float binary_cross_entropy(Vector<float> y_hat, Vector<float> y){
 		float ans = 0;
 		int N = y.get_size();
 		for(int i = 0;i<N;i++){
-			ans+= -y(i)*log(t(i)) - (1-y(i))*log(1-t(i));
+			ans+= -y(i)*log(y_hat(i)) - (1-y(i))*log(1-y_hat(i));
 		}
 		return ans/N;
 	}
