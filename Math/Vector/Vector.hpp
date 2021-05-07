@@ -41,12 +41,17 @@ template<typename T> class Vector{
 		T& operator()(const int& idx);
 		const T& operator()(const int& idx) const;
 	
+	
+		T& operator[](const int& idx);
+		const T& operator[](const int& idx) const;
+	
 		//cout overloading 
 		template<typename U>
 		friend std::ostream & operator << (std::ostream &out, const Vector<U> &v);
 	
 		int get_size() const;
-		void resize(const int& _size, const T& _init = 0);
+		void resize(const int& _size);
+		void resize(const int& _size, const T& _init);
 	
 };
 

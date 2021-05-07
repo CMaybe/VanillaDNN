@@ -5,20 +5,20 @@
 #include"Math/Matrix/Matrix.hpp"
 #include"Math/Vector/Vector.hpp"
 
+
 class Layer{
 	private:
-		using func = std::function<float(Vector<float>,Vector<float>)> ;
-		func activation,loss;
+		typedef std::function<Vector<float>(Vector<float>)> Activation;
+		Activation activation;
 		Layer* preLayer;
 		Matrix<float> weight;
 		Vector<float> neuronInput; // before activate : preLayer->weight * neuronOutput
-		Vector<float> neuronOutput; // after actionte : activatoin(neuronInput)
+		Vector<float> neuronOutput; // after actionte : actinvation(neuronInput)
 	
 	public:
 		Layer();
 		virtual ~Layer(){}
-		void setActivation(void* f);
-		void setLoss(void* f);
+		void setActivation(Activation _activation);
 	
 	
 	

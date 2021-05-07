@@ -25,8 +25,14 @@ Vector<T>::~Vector(){}
 
 template<typename T>
 void Vector<T>::resize(const int& _size, const T& _init){
-	vector.resize(_size,_init);
-	size = _size;
+	this->vector.resize(_size,_init);
+	this->size = _size;
+}
+
+template<typename T>
+void Vector<T>::resize(const int& _size){
+	this->vector.resize(_size,0);
+	this->size = _size;
 }
 
 template<typename T>
@@ -35,13 +41,10 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& rhs){
 	
 	int new_size = rhs.get_size();
 	
-	vector.resize(new_size);
-	for(int i =0;i<vector.size();i++){
-		vector[i].resize(new_size);
-	}
+	this->vector.resize(new_size);
 	
 	for(int i = 0;i<new_size;i++){
-		vector[i]=rhs(i);
+		this->vector[i]=rhs(i);
 	}
 	
 	size = new_size;
@@ -57,7 +60,7 @@ Vector<T> Vector<T>::operator+(const Vector<T>& rhs){
 		throw std::out_of_range("Index out of bounds");
 
 	for(int i = 0;i<size;i++){
-		result(i) = this->vector(i)+rhs(i);
+		result(i) = this->vector[i]+rhs(i);
 	}
 	return result;
 }
@@ -70,7 +73,7 @@ Vector<T> Vector<T>::operator-(const Vector<T>& rhs){
 		throw std::out_of_range("Index out of bounds");
 
 	for(int i = 0;i<size;i++){
-		result(i) = this->vector(i)-rhs(i);
+		result(i) = this->vector[i]-rhs(i);
 	}
 	return result;
 }
@@ -83,7 +86,7 @@ Vector<T>& Vector<T>::operator+=(const Vector<T>& rhs){
 		throw std::out_of_range("Index out of bounds");
 
 	for(int i = 0;i<size;i++){
-		this->vector(i)+=rhs(i);
+		this->vector[i]+=rhs(i);
 	}
 	return *this;
 }
@@ -95,7 +98,7 @@ Vector<T>& Vector<T>::operator-=(const Vector<T>& rhs){
 		throw std::out_of_range("Index out of bounds");
 
 	for(int i = 0;i<size;i++){
-		this->vector(i)-=rhs(i);
+		this->vector[i]-=rhs(i);
 	}
 	return *this;
 }
@@ -169,7 +172,7 @@ T Vector<T>::dot(const Vector<T>& rhs){
 	if(this->size!=rhs.get_size())
 		throw std::out_of_range("Index out of bounds");
 	for(int i =0;i<this->size;i++){
-		result += (this->vector[i] * rhs(i));
+		result += (this->vector(i) * rhs(i));
 	}
 }
 
@@ -179,7 +182,18 @@ T& Vector<T>::operator()(const int& idx){
 }
 
 template<typename T>
+T& Vector<T>::operator[](const int& idx){
+	return this->vector[idx];
+}
+
+
+template<typename T>
 const T& Vector<T>::operator()(const int& idx) const {
+	return this->vector[idx];
+}
+
+template<typename T>
+const T& Vector<T>::operator[](const int& idx) const {
 	return this->vector[idx];
 }
 

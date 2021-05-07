@@ -8,16 +8,11 @@ Layer::Layer(){
 
 }
 
-void Layer::setActivation(void* f){
-	this->activation = std::move(std::bind(f,this,std::placeholders::_1));
+void Layer::setActivation(Activation _activation){
+	this->activation = std::move(std::bind(_activation,std::placeholders::_1));
 	return;
 }
 
-
-void Layer::setLoss(void* f){
-	this->loss = std::move(std::bind(f,this,std::placeholders::_1,std::placeholders::_2));
-	return;
-}
 
 #endif
 

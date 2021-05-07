@@ -6,20 +6,36 @@
 #include<cmath>
 
 namespace ACTIVATION_FUNCTION{
-	float sigmoid(float input){
-		return 1/(1+exp(-input));
+	Vector<float> sigmoid(Vector<float> input){
+		Vector<float> output(input.get_size(),0);
+		for(int i = 0;i<output.get_size();i++){
+			output(i) = 1/(1+exp(-input(i)));
+		}
+		return output;
 	}
 	
-	float hyper_tan(float input){
-		return tanh(input);
+	Vector<float> hyper_tan(Vector<float> input){
+		Vector<float> output(input.get_size(),0);
+		for(int i = 0;i<output.get_size();i++){
+			output(i) = tanh(input(i));
+		}
+		return output;
 	}
 	
-	float ReLU(float input){
-		return 0>input ? 0 : input;
+	Vector<float> ReLU(Vector<float> input){
+		Vector<float> output(input.get_size(),0);
+		for(int i = 0;i<output.get_size();i++){
+			output(i) = 0>input(i) ? 0 : input(i);
+		}
+		return output;
 	}
 	
-	float leaky_ReLU(float){
-		return 0>input ? 0.01*input :input;
+	Vector<float> leaky_ReLU(Vector<float> input){
+		Vector<float> output(input.get_size(),0);
+		for(int i = 0;i<output.get_size();i++){
+			output(i) = 0>input(i) ? 0.01*input(i) : input(i);
+		}
+		return output;
 	}
 	
 }
@@ -29,45 +45,45 @@ namespace ACTIVATION_FUNCTION{
 namespace LOSS_FUCTION{
 	float mean_squared_error(Vector<float> y_hat, Vector<float> y){
 		float ans = 0;
-		int N = y.size();
+		int N = y.get_size();
 		for(int i = 0;i<N;i++){
 			ans+= (y_hat(i)-y(i))*(y_hat(i)-y(i));
 		}
-		return ans/N:
+		return ans/N;
 	}
 	
 	float root_mean_squared_error(Vector<float> y_hat, Vector<float> y){
 		float ans = 0;
-		int N = y.size();
+		int N = y.get_size();
 		for(int i = 0;i<N;i++){
 			ans+= (y_hat(i)-y(i))*(y_hat(i)-y(i));
 		}
-		return (float)sqrt(ans/N):
+		return (float)sqrt(ans/N);
 	}
 	
 	float cross_entropy_error(Vector<float> y_hat, Vector<float> y){
 		float ans = 0;
-		float delta = 1e-7
-		int N = y.size();
+		float delta = 1e-7;
+		int N = y.get_size();
 		for(int i = 0;i<N;i++){
 			ans+= -y(i)*log2(y_hat(i)+delta);
 		}
-		return ans:
+		return ans;
 	}
 	
 	float binary_cross_entropy(Vector<float> t, Vector<float> y){
 		float ans = 0;
-		int N = y.size();
+		int N = y.get_size();
 		for(int i = 0;i<N;i++){
 			ans+= -y(i)*log(t(i)) - (1-y(i))*log(1-t(i));
 		}
-		return ans/N:
+		return ans/N;
 	}
 	
 	/*
 	float categorical_cross_entropy(Vector<float> t ,Vector<float> y, int c){
 		float ans = 0;
-		int N = y.size();
+		int N = y.get_size();
 	}
 	*/
 }
