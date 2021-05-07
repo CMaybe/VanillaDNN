@@ -8,7 +8,7 @@
 
 class Layer{
 	private:
-		typedef std::function<Vector<float>(Vector<float>)> Activation;
+		using Activation = std::function<Vector<float>(Vector<float>)>;
 		Activation activation;
 		Layer* preLayer;
 		Matrix<float> weight;
