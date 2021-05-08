@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(
-	Vanilla-DNN
+	VanillaDNN
 	VERSION 1.0
 	DESCRIPTION "DNN without any lib"
 	LANGUAGES CXX
