@@ -12,6 +12,7 @@ class Layer{
 		Activation activation;
 		Layer* preLayer;
 		Matrix<float> weight;
+		Vector<float> bias;
 		Vector<float> neuronInput; // before activate : preLayer->weight * neuronOutput
 		Vector<float> neuronOutput; // after actionte : actinvation(neuronInput)
 	

@@ -38,6 +38,16 @@ namespace ACTIVATION_FUNCTION{
 		return output;
 	}
 	
+	Vector<float> soft_max(Vector<float> input){
+		Vector<float> output(input.get_size(),0);
+		float sum=0;
+		for(int i = 0;i<output.get_size();i++){
+			output(i) = exp(input(i));
+			sum += output(i);
+		}
+		return output/sum;
+	}
+	
 }
 
 
