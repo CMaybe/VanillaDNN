@@ -2,8 +2,9 @@
 #define VANILLA_DNN_VECTOR_HPP
 
 #include<vector>
-#include <stdexcept>
+#include<stdexcept>
 #include<iostream>
+#include<vector>
 
 template<typename T> class Matrix;
 
@@ -16,7 +17,9 @@ template<typename T> class Vector{
 		Vector();
 		Vector(int _size, const T& _init);
 		Vector(const Vector<T>& rhs);
+		Vector(const std::vector<T>& rhs);
 		Vector<T>& operator=(const Vector<T>& rhs);
+	
 	
 		virtual ~Vector();
 	

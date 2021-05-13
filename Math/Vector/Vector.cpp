@@ -5,19 +5,26 @@
 
 template<typename T>
 Vector<T>::Vector(){
-	size = 0;
+	this->size = 0;
 }
 
 template<typename T>
 Vector<T>::Vector(int _size, const T& _init){
-	vector.resize(_size,_init);
-	size = _size;
+	this->vector.resize(_size,_init);
+	this->size = _size;
 }
 
 template<typename T>
 Vector<T>::Vector(const Vector<T>& rhs){
-	vector =rhs.vector;
-	size = rhs.get_size();
+	this->vector = rhs.vector;
+	this->size = rhs.get_size();
+}
+
+template<typename T>
+Vector<T>::Vector(const std::vector<T>& rhs){
+	for(int i = 0; i < this->size; i++){
+		this->vector[i] = rhs[i];
+	}
 }
 
 template<typename T>
@@ -47,7 +54,7 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& rhs){
 		this->vector[i]=rhs(i);
 	}
 	
-	size = new_size;
+	this->size = new_size;
 	
 	return *this;
 }

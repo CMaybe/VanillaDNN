@@ -9,16 +9,23 @@
 
 class Model{
 	private:
-		typedef std::function<float(Vector<float>,Vector<float>)> Loss;
+		using  Loss = std::function<float(Vector<float>,Vector<float>)>;
 		Loss loss;
 		std::vector<Layer*> Layers; // exclude input&output Layer; 
 		Layer* inputLayer = nullptr;
 		Layer* outputLayer = nullptr;
+		int depth;
 	
 	public:
 		Model();
-		virtual ~Model(){}
+		virtual ~Model();
 		void setLoss(Loss _loss);
+		void init();
+		void learn();
+		void feed_forward();
+		void addLayer(Layer* _layer);
+		void addLayers(std::vector<Layer*>& _layers);
+		
 	
 	
 	

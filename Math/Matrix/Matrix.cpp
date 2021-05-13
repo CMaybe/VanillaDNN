@@ -10,6 +10,16 @@ Matrix<T>::Matrix(){
 }
 
 template<typename T>
+Matrix<T>::Matrix(int _rows,int _cols){
+	matrix.resize(_rows);
+	for(int i = 0;i<matrix.size();i++){
+		matrix[i].resize(_cols,0);
+	}
+	rows = _rows;
+	cols = _cols;
+}
+
+template<typename T>
 Matrix<T>::Matrix(int _rows,int _cols, const T& _init){
 	matrix.resize(_rows);
 	for(int i = 0;i<matrix.size();i++){
@@ -24,6 +34,19 @@ Matrix<T>::Matrix(const Matrix<T>& rhs){
 	matrix = rhs.matrix;
 	rows = rhs.get_rows_size();
 	cols = rhs.get_cols_size();
+}
+
+template<typename T>
+Matrix<T>::Matrix(const std::vector<std::vector<T>>& rhs){
+	this->rows = rhs.size();
+	this->cols = rhs[0].size();
+	this->matrix.resize(this->rows);
+	for(int i = 0;i < this->rows; i++){
+		matrix[i].resize(this->cols,0);
+		for(int j = 0;j<this->cols;j++){
+			this->matrix[i][j] = rhs[i][j];
+		}
+	}
 }
 
 template<typename T>
@@ -46,7 +69,7 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs){
 	int new_rows = rhs.get_rows_size();
 	int new_cols = rhs.get_cols_size();
 	
-	matrix.resize(new_rows);
+	this->matrix.resize(new_rows);
 	for(int i =0;i<matrix.size();i++){
 		matrix[i].resize(new_cols);
 	}
@@ -62,6 +85,8 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs){
 	
 	return *this;
 }
+
+
 
 template<typename T>
 Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs){

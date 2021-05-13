@@ -15,8 +15,11 @@ template<typename T> class Matrix{
 	
 	public:
 		Matrix();
+		Matrix(int _rows,int _cols);
 		Matrix(int _rows,int _cols, const T& _init);
 		Matrix(const Matrix<T>& rhs);
+		Matrix(const std::vector<std::vector<T>>& rhs);
+	
 		Matrix<T>& operator=(const Matrix<T>& rhs);
 	
 		virtual ~Matrix();

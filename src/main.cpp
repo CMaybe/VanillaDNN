@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 	Matrix<int> m2(3, 3, 0);
 	Vector<int> v(3,2);
 	
-	Layer layer;
+	Layer layer(10);
 	layer.setActivation(&ACTIVATION_FUNCTION::sigmoid);
 	
 	
