@@ -1,8 +1,5 @@
 #include "Math/Matrix/Matrix.hpp"
 #include "Math/Vector/Vector.hpp"
-#include "DNN/Layer/Layer.hpp"
-#include "DNN/Functions/DNNFunction.hpp"
-
 #include <iostream>
 #include <cstdlib>
 using namespace std;
@@ -12,8 +9,6 @@ int main(int argc, char **argv) {
 	Matrix<int> m2(3, 3, 0);
 	Vector<int> v(3,2);
 	
-	Layer layer(10);
-	layer.setActivation(&ACTIVATION_FUNCTION::sigmoid);
 	
 	
 	for(int i = 0;i<3;i++){

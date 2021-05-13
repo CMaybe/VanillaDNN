@@ -8,6 +8,7 @@
 #include"DNN/Functions/DNNFunction.hpp"
 
 
+
 class Layer{
 	private:
 		using Activation = std::function<Vector<float>(Vector<float>)>;
