@@ -7,6 +7,7 @@ project(
 	LANGUAGES CXX
 )
 
+add_definitions("-std=c++17")
 
 add_executable(Main
 	src/main.cpp
