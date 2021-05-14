@@ -12,7 +12,7 @@ add_executable(Main
 	src/main.cpp
 	Math/Matrix/Matrix.cpp
 	Math/Vector/Vector.cpp
-	DNN/Functions/DNNFunction.hpp
+	DNN/Functions/DNNFunction.cpp
 	DNN/Layer/Layer.cpp
 	DNN/Model/Model.cpp
 )
