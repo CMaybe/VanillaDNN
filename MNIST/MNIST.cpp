@@ -1,7 +1,7 @@
 #ifndef VANILLA_MNIST_CPP
 #define VANILLA_MNIST_CPP
 
-#include "MNIST/MNIST.hpp"
+#include "MNIST.hpp"
 
 MNIST::MNIST()
 {
@@ -14,7 +14,6 @@ MNIST::MNIST(std::string _set)
     std::ifstream labelInputStream;
 
     this->set = _set;
-
     if (this->set == "train")
     {
         imageInputStream.open(this->trainSetFileName[0], 
@@ -73,6 +72,11 @@ std::vector<std::vector<char>> MNIST::getImages()
 std::vector<char> MNIST::getLabels()
 {
     return this->labels;
+}
+
+std::string MNIST::getSet()
+{
+	return this->set;
 }
 
 #endif

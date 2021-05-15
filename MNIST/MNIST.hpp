@@ -18,13 +18,13 @@ private:
     // label file name idx = 1
     std::string trainSetFileName[2] = \
     {
-        "../../data/train-images-idx3-ubyte",
-        "../../data/train-labels-idx1-ubyte"
+        "../../../data/train-images-idx3-ubyte",
+        "../../../data/train-labels-idx1-ubyte"
     };
     std::string testSetFileName[2] = \
     {
-        "../../data/t10k-images-idx3-ubyte",
-        "../../data/t10k-labels-idx1-ubyte"
+        "../../../data/t10k-images-idx3-ubyte",
+        "../../../data/t10k-labels-idx1-ubyte"
     };
 
 public:
@@ -34,6 +34,7 @@ public:
 
     std::vector<std::vector<char>> getImages();
     std::vector<char> getLabels();
+	std::string getSet();
 };
 
 #endif
