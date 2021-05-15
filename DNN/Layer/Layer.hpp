@@ -1,6 +1,7 @@
 #ifndef VANILLA_DNN_LAYER_HPP
 #define VANILLA_DNN_LAYER_HPP
 
+#include<vector>
 #include<functional>
 #include<memory>
 #include"Math/Matrix/Matrix.hpp"
@@ -27,9 +28,10 @@ class Layer{
 		Vector<float> outputNeuron; // after actionte : actinvation(neuronInput)
 		
 		Matrix<float> dE_dw;
-		Vector<float> dE_do; 
+		Vector<float> dE_do;
 		Vector<float> do_dz;
 		Vector<float> dz_dw;
+		Vector<float> dE_dz;
 	
 		virtual ~Layer();
 		void setActivation(Activation _activation);

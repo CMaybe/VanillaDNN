@@ -9,10 +9,10 @@ Layer::Layer(int _nNueron){
 	this->bias.resize(nNueron,0);
 	this->inputNeuron.resize(nNueron,0);
 	this->outputNeuron.resize(nNueron,0);
-	this->dE_dw.resize(nNueron,0);
 	this->dE_do.resize(nNueron,0);
 	this->do_dz.resize(nNueron,0);
-	this->dz_dw.resize(nNueron,0);
+	this->dE_dz.resize(nNueron,0);
+	//this->dz_dw.resize(nNueron,0);
 }
 
 Layer::~Layer(){

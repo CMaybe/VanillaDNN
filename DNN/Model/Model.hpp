@@ -19,8 +19,9 @@ class Model{
 		std::vector<Layer*> Layers; // exclude input&output Layer;
 		
 		Vector<float> input;
-		Vector<float> output;
-		
+		Vector<float> target;
+		Vector<float> output;	
+	
 		std::vector<Vector<float>> input_set;
 		std::vector<Vector<float>> target_set;
 	

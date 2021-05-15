@@ -49,6 +49,7 @@ void Model::init(){
 	Layer * cur = outputLayer;
 	do{
 		cur->weight.resize(cur->getNueronCnt(),cur->preLayer->getNueronCnt(),1.0);
+		cur->dz_dw.resize(cur->preLayer->getNueronCnt());
 		cur = cur->preLayer;
 	}while(cur!=nullptr);
 }
@@ -65,10 +66,51 @@ void Model::feed_forward(){
 }
 
 void Model::back_propagation(){
-	
-	
-	//outputLayer
-	
+	Layer* cur = nullptr;
+	Layer* next = nullptr;
+	for(int i = 0;i<batch;i++){
+		this->input = input_set[i];
+		this->target = target_set[i];
+		//output Layer
+		cur = this->outputLayer;
+		cur->dE_do = this->loss_diff(this->output,this->target);
+		cur->do_dz = cur->activation_diff(cur->inputNeuron);
+		cur->dz_dw = cur->preLayer->outputNeuron;
+		cur->dE_dz = cur->dE_do * cur->do_dz; //for chain rule
+		for(int j=0;j<this->nOutput;j++){
+			for(int k = 0;k<this->nOutput;k++){
+				cur->dE_dw(j, k) = cur->dE_do[j] * cur->do_dz[j] * cur->dz_dw[k];
+				cur->weight(j, k) -= cur->dE_dw(j, k);
+			}
+		}
+		
+		//hidden Layer
+		do{
+			next = cur;
+			cur=cur->preLayer; //dE_dh = sigma(dE_Oi)
+			for(int j = 0;j<cur->getNueronCnt();j++){
+				float temp = 0;
+				for(int k = 0;k < next->getNueronCnt();k++){
+					temp += next->dE_do[k] * next->weight(k,j);
+				}
+				cur->dE_do[j] = temp;
+			}
+			cur->do_dz = cur->activation_diff(cur->inputNeuron);
+			cur->dz_dw = cur->preLayer->outputNeuron;
+			cur->dE_dz = cur->dE_do * cur->do_dz;
+
+			//gradient
+			for(int j=0;j<this->nOutput;j++){
+				for(int k = 0;k<this->nOutput;k++){
+					cur->dE_dw(j, k) = cur->dE_do[j] * cur->do_dz[j] * cur->dz_dw[k];
+					cur->weight(j, k) -= cur->dE_dw(j, k);
+				}
+			}
+			next = cur;
+			cur=cur->preLayer;	
+		}while(cur != nullptr);
+		
+	}
 }
 
 
