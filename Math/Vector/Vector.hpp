@@ -28,8 +28,10 @@ template<typename T> class Vector{
 		//operator
 		Vector<T> operator+(const Vector<T>& rhs);
 		Vector<T> operator-(const Vector<T>& rhs);
+		Vector<T> operator*(const Vector<T>& rhs);
 		Vector<T>& operator+=(const Vector<T>& rhs);
 		Vector<T>& operator-=(const Vector<T>& rhs);
+		Vector<T>& operator*=(const Vector<T>& rhs);
 	
 		//scalar	
 		Vector<T> operator*(const T& rhs);

@@ -87,6 +87,19 @@ Vector<T> Vector<T>::operator-(const Vector<T>& rhs){
 	return result;
 }
 
+template<typename T>
+Vector<T> Vector<T>::operator*(const Vector<T>& rhs){
+	int size = rhs.get_size();
+	Vector<T> result(size,0);
+	if(this->size!=size)
+		throw std::out_of_range("Index out of bounds");
+
+	for(int i = 0;i<size;i++){
+		result(i) = this->vector[i]*rhs(i);
+	}
+	return result;
+}
+
 
 template<typename T>
 Vector<T>& Vector<T>::operator+=(const Vector<T>& rhs){
@@ -108,6 +121,18 @@ Vector<T>& Vector<T>::operator-=(const Vector<T>& rhs){
 
 	for(int i = 0;i<size;i++){
 		this->vector[i]-=rhs(i);
+	}
+	return *this;
+}
+
+template<typename T>
+Vector<T>& Vector<T>::operator*=(const Vector<T>& rhs){
+	int size = rhs.get_size();
+	if(this->size!=size)
+		throw std::out_of_range("Index out of bounds");
+
+	for(int i = 0;i<size;i++){
+		this->vector[i]*=rhs(i);
 	}
 	return *this;
 }
