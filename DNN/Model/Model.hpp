@@ -31,6 +31,9 @@ class Model{
 		int nInput,nOutput;
 		int batch;
 		int epoch;
+		int nEval;
+		float accuracy;
+		float error;
 	
 	public:
 		Model();
@@ -38,14 +41,18 @@ class Model{
 		virtual ~Model();
 		void setLoss(Loss _loss);
 		void init();
-		void learn(int batch,int _epoch);
-		void feed_forward();
-		void back_propagation();
+		void fit(int batch,int _epoch);
+		void evaluate(int _batch);
+		void feed_forward(int idx);
+		void back_propagation(int idx);
 		void addLayer(Layer* _layer);
 		void addLayers(std::vector<Layer*>& _layers);
 		void setInput(std::vector<Vector<float>>& _input_set);
-		void setOutput(std::vector<Vector<float>>& _target_set);
-		
+		void setTarget(std::vector<Vector<float>>& _target_set);
+		int getOutput();
+		float getAccuracy();
+		float getError();
+		bool check_success(int idx);
 	
 	
 	

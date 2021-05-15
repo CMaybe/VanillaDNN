@@ -14,7 +14,7 @@ VanillaDNN is DNN framework using only C++.
 ## To-do
 
 ### DNN
-- [ ] Training logic
+- [x] ~~Training logic~~
 - [ ] Testing logic
 - [ ] TBA
 ___
@@ -31,7 +31,7 @@ ___
 - [x] ~~Vectors and vector operations~~
 - [x] ~~Vectors and scala operations~~
 - [x] ~~Transpose~~
-- [X] Inner product
+- [X] ~~Inner product~~
 - [ ] cross product
 - [ ] TBA
 ___
