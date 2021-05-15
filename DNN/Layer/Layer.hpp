@@ -21,6 +21,12 @@ class Layer{
 		Vector<float> bias;
 		Vector<float> inputNeuron; // before activate : preLayer->weight * neuronOutput
 		Vector<float> outputNeuron; // after actionte : actinvation(neuronInput)
+		
+		Matrix<float> dE_dw;
+		Vector<float> dE_do; 
+		Vector<float> do_dz;
+		Vector<float> dz_dw;
+	
 		Layer(int _nNueron);
 		virtual ~Layer();
 		void setActivation(Activation _activation);
