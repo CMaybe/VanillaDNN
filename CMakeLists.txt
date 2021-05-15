@@ -7,6 +7,7 @@ project(
 	LANGUAGES CXX
 )
 
+set(MNIST_DATA_DIR ${CMAKE_CURRENT_LIST_DIR})
 add_definitions("-std=c++17")
 
 add_executable(Main
@@ -16,6 +17,7 @@ add_executable(Main
 	DNN/Functions/DNNFunction.cpp
 	DNN/Layer/Layer.cpp
 	DNN/Model/Model.cpp
+	MNIST/MNIST.cpp
 )
 
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR})

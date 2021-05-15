@@ -22,6 +22,8 @@ Vector<T>::Vector(const Vector<T>& rhs){
 
 template<typename T>
 Vector<T>::Vector(const std::vector<T>& rhs){
+	this->vector.resize(rhs.size());
+	this->size = rhs.size();
 	for(int i = 0; i < this->size; i++){
 		this->vector[i] = rhs[i];
 	}

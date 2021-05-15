@@ -15,6 +15,10 @@ class Layer{
 		int nNueron;
 	
 	public:
+	
+		Layer(int _nNueron);
+	
+	
 		Activation activation,activation_diff;
 		Layer* preLayer;
 		Matrix<float> weight;
@@ -27,7 +31,6 @@ class Layer{
 		Vector<float> do_dz;
 		Vector<float> dz_dw;
 	
-		Layer(int _nNueron);
 		virtual ~Layer();
 		void setActivation(Activation _activation);
 		int getNueronCnt();

@@ -1,33 +1,27 @@
 #include "Math/Matrix/Matrix.hpp"
 #include "Math/Vector/Vector.hpp"
+#include "DNN/Layer/Layer.hpp"
+#include "DNN/Model/Model.hpp"
+#include "DNN/Functions/DNNFunction.hpp"
 #include <iostream>
 #include <cstdlib>
-using namespace std;
+#include <vector>
 
 int main(int argc, char **argv) {
-	Matrix<int> m1(3, 3, 0);
-	Matrix<int> m2(3, 3, 0);
-	Vector<int> v(3,2);
-	
-	
+	Matrix<float> m1(3, 3, 0);
+	Matrix<float> m2(3, 3, 0);
 	
 	for(int i = 0;i<3;i++){
-		v(i) = rand()%10;
 		for(int j=0;j<3;j++){
 			m1(i,j) = rand() % 10;
 			m2(i,j) = rand() % 10;
 		}
 	}
 	
-	cout<<v;
-	v=v*10;
-	cout<<v;
-	cout<<m1 + m2;
-	cout<<m1-m2<<endl;
-	cout<<m1*m2<<endl;
-	cout<<m1.transpose()<<endl;
 	
-	
-	cout<< m1 * v;
+	std::cout<<m1 + 10;
+	std::cout<<m1 - 10;
+	std::cout<<m1 * 10;
+	std::cout<<m1 / 10;
 	return 0;
 }
