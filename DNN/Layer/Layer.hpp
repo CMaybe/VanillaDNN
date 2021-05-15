@@ -18,7 +18,7 @@ class Layer{
 	public:
 	
 		Layer(int _nNueron);
-	
+		Layer(int _nNueron,Activation _activation);
 	
 		Activation activation,activation_diff;
 		Layer* preLayer;

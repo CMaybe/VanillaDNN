@@ -15,7 +15,7 @@ namespace ACTIVATION_FUNCTION{
 
 
 // y : ans , y_hat : output 
-namespace LOSS_FUCTION{
+namespace LOSS_FUNCTION{
 	float mean_squared_error(Vector<float> y_hat, Vector<float> y);	
 	float root_mean_squared_error(Vector<float> y_hat, Vector<float> y);
 	float cross_entropy_error(Vector<float> y_hat, Vector<float> y);

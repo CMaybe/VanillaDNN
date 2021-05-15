@@ -2,7 +2,6 @@
 #define VANILLA_MNIST_CPP
 
 #include "MNIST.hpp"
-
 MNIST::MNIST()
 {
     set = "defalut";
@@ -36,7 +35,9 @@ MNIST::MNIST(std::string _set)
     labelInputStream.seekg(0, labelInputStream.end);
     int labelSize = labelInputStream.tellg();
     labelInputStream.seekg(0, labelInputStream.beg);
-
+	
+	char temp[16];
+	imageInputStream.read(temp,16);
     for (int i = 0; i < imageSize; i += 784)
     {
         std::vector<char> image;
@@ -50,6 +51,9 @@ MNIST::MNIST(std::string _set)
 
         this->images.push_back(image);
     }
+	
+	char temp2[8];
+	labelInputStream.read(temp2,8);
     
     for (int i = 0; i < labelSize; i++)
     {

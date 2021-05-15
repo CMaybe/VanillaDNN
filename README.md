@@ -15,7 +15,7 @@ VanillaDNN is DNN framework using only C++.
 
 ### DNN
 - [x] ~~Training logic~~
-- [ ] Testing logic
+- [x] ~~Testing logic~~
 - [ ] TBA
 ___
 ### Math

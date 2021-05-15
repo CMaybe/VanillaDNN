@@ -237,4 +237,10 @@ int Vector<T>::get_size() const{
 	return this->size;
 }
 
+
+template<typename T>
+void Vector<T>::push_back(T value){
+	this->vector.push_back(value);
+}
+
 #endif

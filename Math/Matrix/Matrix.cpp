@@ -307,7 +307,7 @@ Vector<T> Matrix<T>::operator*(const Vector<T>& rhs){
 	if(rhs.get_size() != this->cols){
 		throw std::out_of_range("Index out of bounds");
 	}
-	Vector<T> result(rhs.get_size(),0);
+	Vector<T> result(this->rows,0);
 	for(int i = 0;i<this->get_rows_size();i++){
 		for(int j=0;j<this->get_cols_size();j++){
 			result(i) += this->matrix[i][j] * rhs(j);

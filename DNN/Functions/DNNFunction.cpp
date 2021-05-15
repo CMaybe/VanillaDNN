@@ -49,7 +49,7 @@ Vector<float> ACTIVATION_FUNCTION::soft_max(Vector<float> input){
 
 // y : ans , y_hat : output 
 
-float LOSS_FUCTION::mean_squared_error(Vector<float> y_hat, Vector<float> y){
+float LOSS_FUNCTION::mean_squared_error(Vector<float> y_hat, Vector<float> y){
 	float ans = 0;
 	int N = y.get_size();
 	for(int i = 0;i<N;i++){
@@ -58,7 +58,7 @@ float LOSS_FUCTION::mean_squared_error(Vector<float> y_hat, Vector<float> y){
 	return ans/N;
 }
 
-float LOSS_FUCTION::root_mean_squared_error(Vector<float> y_hat, Vector<float> y){
+float LOSS_FUNCTION::root_mean_squared_error(Vector<float> y_hat, Vector<float> y){
 	float ans = 0;
 	int N = y.get_size();
 	for(int i = 0;i<N;i++){
@@ -67,7 +67,7 @@ float LOSS_FUCTION::root_mean_squared_error(Vector<float> y_hat, Vector<float> y
 	return (float)sqrt(ans/N);
 }
 
-float LOSS_FUCTION::cross_entropy_error(Vector<float> y_hat, Vector<float> y){
+float LOSS_FUNCTION::cross_entropy_error(Vector<float> y_hat, Vector<float> y){
 	float ans = 0;
 	float delta = 1e-7;
 	int N = y.get_size();
@@ -77,7 +77,7 @@ float LOSS_FUCTION::cross_entropy_error(Vector<float> y_hat, Vector<float> y){
 	return ans;
 }
 
-float LOSS_FUCTION::binary_cross_entropy(Vector<float> y_hat, Vector<float> y){
+float LOSS_FUNCTION::binary_cross_entropy(Vector<float> y_hat, Vector<float> y){
 	float ans = 0;
 	int N = y.get_size();
 	for(int i = 0;i<N;i++){
@@ -87,7 +87,7 @@ float LOSS_FUCTION::binary_cross_entropy(Vector<float> y_hat, Vector<float> y){
 }
 
 /*
-float LOSS_FUCTION::categorical_cross_entropy(Vector<float> t ,Vector<float> y, int c){
+float LOSS_FUNCTION::categorical_cross_entropy(Vector<float> t ,Vector<float> y, int c){
 	float ans = 0;
 	int N = y.get_size();
 }

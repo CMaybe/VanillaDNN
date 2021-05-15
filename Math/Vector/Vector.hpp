@@ -55,6 +55,7 @@ template<typename T> class Vector{
 		friend std::ostream & operator << (std::ostream &out, const Vector<U> &v);
 	
 		int get_size() const;
+		void push_back(T value);
 		void resize(const int& _size);
 		void resize(const int& _size, const T& _init);
 	

@@ -5,13 +5,17 @@
 #include<any>
 #include<functional>
 #include<vector>
+#include<iostream>
+#include<random>
 #include"Math/Matrix/Matrix.hpp"
 #include"Math/Vector/Vector.hpp"
 #include"DNN/Layer/Layer.hpp"
 #include "MNIST/MNIST.hpp"
 
+
 class Model{
 	private:
+		using Activation = std::function<Vector<float>(Vector<float>)>;
 		using  Loss = std::function<float(Vector<float>,Vector<float>)>;
 		using  Loss_diff = std::function<Vector<float>(Vector<float>,Vector<float>)>;
 		Loss loss;
@@ -40,6 +44,7 @@ class Model{
 		Model(int _nInput,int _nOutput);
 		virtual ~Model();
 		void setLoss(Loss _loss);
+		void setOutputFunction(Activation _activation);
 		void init();
 		void fit(int batch,int _epoch);
 		void evaluate(int _batch);
