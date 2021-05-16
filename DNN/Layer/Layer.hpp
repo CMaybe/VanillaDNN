@@ -32,6 +32,8 @@ public:
 	Vector<float> do_dz;
 	Vector<float> dz_dw;
 	Vector<float> dE_dz;
+	Vector<float> dE_db;
+	Vector<float> dz_db;
 
 	virtual ~Layer();
 	void setActivation(Activation _activation);

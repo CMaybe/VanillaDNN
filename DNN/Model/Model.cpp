@@ -54,46 +54,49 @@ void Model::init() {
 		cur->weight.resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), ((float)rand() / (RAND_MAX)));
 		cur->dE_dw.resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0);
 		cur->dz_dw.resize(cur->preLayer->getNueronCnt());
+		cur->dE_db.resize(cur->getNueronCnt(), 0);
 		cur = cur->preLayer;
 	} while (cur->preLayer != nullptr);
 }
 
 void Model::feed_forward(int idx) {
+
 	this->inputLayer->inputNeuron = this->input_set[idx];
 	this->inputLayer->outputNeuron = this->inputLayer->inputNeuron;
+
 	for (Layer* layer : Layers) {
-		layer->inputNeuron = (layer->weight * layer->preLayer->outputNeuron);// + layer->bias;
+		layer->inputNeuron = (layer->weight * layer->preLayer->outputNeuron) + layer->bias;
 		layer->outputNeuron = layer->activation(layer->inputNeuron);
 	}
-	Layer* temp = this->outputLayer;
-	temp->inputNeuron = temp->weight * this->Layers[this->depth - 1]->outputNeuron;
-	temp->outputNeuron = temp->activation(temp->inputNeuron);
-	this->output = this->outputLayer->outputNeuron;
-	std::cout << "final input\n";
-	std::cout << this->outputLayer->inputNeuron;
-	std::cout << "final output\n";
-	std::cout << this->outputLayer->outputNeuron;
+	Layer* cur = this->outputLayer;
+	cur->inputNeuron = (cur->weight * cur->preLayer->outputNeuron) + cur->bias;
+	cur->outputNeuron = cur->activation(cur->inputNeuron);
+	this->output = cur->outputNeuron;
+
 	return;
 }
 
 void Model::back_propagation(int idx) {
 	Layer* cur = nullptr;
 	Layer* next = nullptr;
-	this->input = input_set[idx];
 	this->target = target_set[idx];
+	
 	//output Layer
 	cur = this->outputLayer;
 	cur->dE_do = this->loss_diff(this->output, this->target);
 	cur->do_dz = cur->activation_diff(cur->inputNeuron);
 	cur->dz_dw = cur->preLayer->outputNeuron;
-	cur->dE_dz = cur->dE_do * cur->do_dz; //for chain rule
+	cur->dE_dz = cur->dE_do * cur->do_dz;
+	cur->dz_db.resize(cur->getNueronCnt(), 1);
+	cur->dE_db = cur->dE_dz * cur->dz_db;
 	for (int j = 0; j < this->nOutput; j++) {
 		for (int k = 0; k < cur->preLayer->getNueronCnt(); k++) {
 			cur->dE_dw(j, k) = cur->dE_do[j] * cur->do_dz[j] * cur->dz_dw[k];
-			cur->weight(j, k) -= cur->dE_dw(j, k);
+			cur->weight(j, k) -= cur->dE_dw(j,k);
 		}
 	}
 
+	cur->bias -= cur->dE_db;
 	next = cur;
 	cur = cur->preLayer; //dE_dh = sigma(dE_Oi)
 	//hidden Layer
@@ -108,6 +111,8 @@ void Model::back_propagation(int idx) {
 		cur->do_dz = cur->activation_diff(cur->inputNeuron);
 		cur->dz_dw = cur->preLayer->outputNeuron;
 		cur->dE_dz = cur->dE_do * cur->do_dz;
+		cur->dz_db.resize(cur->getNueronCnt(), 1);
+		cur->dE_db = cur->dE_dz * cur->dz_db;
 
 		//gradient
 		for (int j = 0; j < cur->getNueronCnt(); j++) {
@@ -118,6 +123,7 @@ void Model::back_propagation(int idx) {
 			}
 			//std::cout<<'\n';
 		}
+		cur->bias -= cur->dE_db;
 		next = cur;
 		cur = cur->preLayer;
 	} while (cur->preLayer != nullptr);
@@ -141,9 +147,17 @@ void Model::evaluate(int _batch) {
 	float acc_sum = 0;
 	float error_sum = 0;
 	this->batch = _batch;
-	for (int i = 0; i < this->batch; i++) {
-		feed_forward(i);
-		if (check_success(i)) acc_sum += 1;
+
+	this->Layers[0]->preLayer = inputLayer;
+	this->inputLayer->preLayer = nullptr;
+	this->outputLayer->preLayer = this->Layers[this->depth - 1];
+	for (int i = 0; i < _batch; i++) {
+		this->feed_forward(i);
+		std::cout << "output\n";
+		std::cout << this->output;
+		std::cout << "target\n";
+		std::cout << this->target_set[i];
+		if (this->check_success(i)) acc_sum += 1;
 		error_sum += this->loss(output, target_set[i]);
 	}
 	this->accuracy = acc_sum / _batch;
@@ -219,7 +233,7 @@ bool Model::check_success(int idx) {
 	int ans = 0;
 	for (int i = 0; i < nOutput; i++) {
 		if (target_set[idx][i] != 0) {
-			ans = idx + 1;
+			ans = i + 1;
 			break;
 		}
 	}
