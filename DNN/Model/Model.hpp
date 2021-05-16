@@ -13,54 +13,54 @@
 #include "MNIST/MNIST.hpp"
 
 
-class Model{
-	private:
-		using Activation = std::function<Vector<float>(Vector<float>)>;
-		using  Loss = std::function<float(Vector<float>,Vector<float>)>;
-		using  Loss_diff = std::function<Vector<float>(Vector<float>,Vector<float>)>;
-		Loss loss;
-		Loss_diff loss_diff;
-		std::vector<Layer*> Layers; // exclude input&output Layer;
-		
-		Vector<float> input;
-		Vector<float> target;
-		Vector<float> output;	
-	
-		std::vector<Vector<float>> input_set;
-		std::vector<Vector<float>> target_set;
-	
-		Layer* inputLayer = nullptr;
-		Layer* outputLayer = nullptr;
-		int depth;
-		int nInput,nOutput;
-		int batch;
-		int epoch;
-		int nEval;
-		float accuracy;
-		float error;
-	
-	public:
-		Model();
-		Model(int _nInput,int _nOutput);
-		virtual ~Model();
-		void setLoss(Loss _loss);
-		void setOutputFunction(Activation _activation);
-		void init();
-		void fit(int batch,int _epoch);
-		void evaluate(int _batch);
-		void feed_forward(int idx);
-		void back_propagation(int idx);
-		void addLayer(Layer* _layer);
-		void addLayers(std::vector<Layer*>& _layers);
-		void setInput(std::vector<Vector<float>>& _input_set);
-		void setTarget(std::vector<Vector<float>>& _target_set);
-		int getOutput();
-		float getAccuracy();
-		float getError();
-		bool check_success(int idx);
-	
-	
-	
+class Model {
+private:
+	using Activation = std::function<Vector<float>(Vector<float>)>;
+	using  Loss = std::function<float(Vector<float>, Vector<float>)>;
+	using  Loss_diff = std::function<Vector<float>(Vector<float>, Vector<float>)>;
+	Loss loss;
+	Loss_diff loss_diff;
+	std::vector<Layer*> Layers; // exclude input&output Layer;
+
+	Vector<float> input;
+	Vector<float> target;
+	Vector<float> output;
+
+	std::vector<Vector<float>> input_set;
+	std::vector<Vector<float>> target_set;
+
+	Layer* inputLayer = nullptr;
+	Layer* outputLayer = nullptr;
+	int depth;
+	int nInput, nOutput;
+	int batch;
+	int epoch;
+	int nEval;
+	float accuracy;
+	float error;
+
+public:
+	Model();
+	Model(int _nInput, int _nOutput);
+	virtual ~Model();
+	void setLoss(Loss _loss);
+	void setOutputFunction(Activation _activation);
+	void init();
+	void fit(int batch, int _epoch);
+	void evaluate(int _batch);
+	void feed_forward(int idx);
+	void back_propagation(int idx);
+	void addLayer(Layer* _layer);
+	void addLayers(std::vector<Layer*>& _layers);
+	void setInput(std::vector<Vector<float>>& _input_set);
+	void setTarget(std::vector<Vector<float>>& _target_set);
+	int getOutput();
+	float getAccuracy();
+	float getError();
+	bool check_success(int idx);
+
+
+
 };
 
 #endif

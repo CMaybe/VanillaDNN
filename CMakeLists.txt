@@ -7,7 +7,7 @@ project(
 	LANGUAGES CXX
 )
 
-set(MNIST_DATA_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 add_definitions("-std=c++17")
 
 add_executable(Main

@@ -5,7 +5,7 @@
 #include"Math/Vector/Vector.hpp"
 #include<cmath>
 
-namespace ACTIVATION_FUNCTION{
+namespace ACTIVATION_FUNCTION {
 	Vector<float> sigmoid(Vector<float> input);
 	Vector<float> hyper_tan(Vector<float> input);
 	Vector<float> ReLU(Vector<float> input);
@@ -15,8 +15,8 @@ namespace ACTIVATION_FUNCTION{
 
 
 // y : ans , y_hat : output 
-namespace LOSS_FUNCTION{
-	float mean_squared_error(Vector<float> y_hat, Vector<float> y);	
+namespace LOSS_FUNCTION {
+	float mean_squared_error(Vector<float> y_hat, Vector<float> y);
 	float root_mean_squared_error(Vector<float> y_hat, Vector<float> y);
 	float cross_entropy_error(Vector<float> y_hat, Vector<float> y);
 	float binary_cross_entropy(Vector<float> y_hat, Vector<float> y);
@@ -24,7 +24,7 @@ namespace LOSS_FUNCTION{
 }
 
 //Derivative of a function
-namespace DIFF_FUNCTION{
+namespace DIFF_FUNCTION {
 	Vector<float> sigmoid_diff(Vector<float> input);
 	Vector<float> hyper_tan_diff(Vector<float> input);
 	Vector<float> ReLU_diff(Vector<float> input);
