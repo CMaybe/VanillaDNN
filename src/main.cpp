@@ -68,23 +68,20 @@ int main(int argc, char** argv) {
 	mnist.setOutputFunction(ACTIVATION_FUNCTION::sigmoid);
 	mnist.setLoss(LOSS_FUNCTION::mean_squared_error);
 
-	Layer* temp = new Layer(384, ACTIVATION_FUNCTION::sigmoid);
-	mnist.addLayer(temp);
-	temp = new Layer(128, ACTIVATION_FUNCTION::sigmoid);
-	mnist.addLayer(temp);
-	temp = new Layer(32, ACTIVATION_FUNCTION::sigmoid);
-	mnist.addLayer(temp);
+	mnist.addLayer(new Layer(384, ACTIVATION_FUNCTION::sigmoid));
+	mnist.addLayer(new Layer(128, ACTIVATION_FUNCTION::sigmoid));
+	mnist.addLayer(new Layer(32, ACTIVATION_FUNCTION::sigmoid));
 
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(40000, 5); //batch, epoch
+	mnist.fit(50000, 10); //batch, epoch
 
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
 
 	std::cout << "training is done" << '\n';
 
-	mnist.evaluate(7000);
+	mnist.evaluate(5000);
 	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
 
 

@@ -18,7 +18,7 @@ VanillaDNN is DNN framework using only C++.
 - [x] ~~Testing Func~~
 - [X] ~~Feed forward~~
 - [X] ~~Back propagation~~
-- [ ] ~~Optimizer~~
+- [ ] Optimizer
 - [ ] TBA
 ___
 ### Math
@@ -48,7 +48,7 @@ ___
 - [x] ~~Set input~~
 - [x] ~~Set target~~
 - [x] ~~Get accuracy~~
-- [ ] ~~Optimizer handle
+- [ ] Optimizer handle
 - [ ] TBA
 
 ___
