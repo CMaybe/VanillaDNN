@@ -46,4 +46,3 @@ CTestTestfile.cmake
 _deps
 build/
 .vs/
-out/

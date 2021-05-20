@@ -14,8 +14,11 @@ VanillaDNN is DNN framework using only C++.
 ## To-do
 
 ### DNN
-- [x] ~~Training logic~~
-- [x] ~~Testing logic~~
+- [x] ~~Training Func~~
+- [x] ~~Testing Func~~
+- [X] ~~Feed forward~~
+- [X] ~~Back propagation~~
+- [ ] ~~Optimizer~~
 - [ ] TBA
 ___
 ### Math
@@ -37,10 +40,25 @@ ___
 ___
 
 ### Model
-TBA
+- [x] ~~Loss function handle~~
+- [x] ~~Output function(activation) handle~~
+- [x] ~~fit~~
+- [x] ~~evaluate~~
+- [x] ~~Layer handle~~
+- [x] ~~Set input~~
+- [x] ~~Set target~~
+- [x] ~~Get accuracy~~
+- [ ] ~~Optimizer handle
+- [ ] TBA
+
 ___
 ### Layer
-TBA
+- [x] ~~Activation function handle~~
+- [x] ~~weight~~
+- [x] ~~bias~~
+- [x] ~~Neurons~~
+- [x] ~~diff factors~~
+
 
 ___
 ### activation functions
@@ -91,12 +109,24 @@ Second, write your code on `main.cpp` in  `./src` folder
 ### Build
 
 
+#### For Linux
+
 ```
 mkdir build
 cd build
 cmake ..
 make
 ```
+
+#### For Windows (Visual Studio 2019)
+
+Open with visual studio(2019)
+
+`build` folder will be created automatically.
+
+copy `data` folder to `build` folder(for MNIST)
+
+build on VS
 
 ### Examples
 TBA
