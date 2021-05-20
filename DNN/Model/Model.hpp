@@ -57,7 +57,7 @@ public:
 	int getOutput();
 	float getAccuracy();
 	float getError();
-	bool check_success(int idx);
+	bool check_success();
 
 
 

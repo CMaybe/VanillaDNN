@@ -63,6 +63,16 @@ void Matrix<T>::resize(int _rows, int _cols, T _init) {
 }
 
 template<typename T>
+void Matrix<T>::setRandom()
+{
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			this->matrix[i][j] = ((float)rand() / (RAND_MAX)) * 2 - 1;
+		}
+	}
+}
+
+template<typename T>
 Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs) {
 	if (&rhs == this) return *this;
 

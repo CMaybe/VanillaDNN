@@ -51,7 +51,8 @@ void Model::init() {
 	this->outputLayer->preLayer = this->Layers[this->depth - 1];
 	Layer* cur = this->outputLayer;
 	do {
-		cur->weight.resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), ((float)rand() / (RAND_MAX)));
+		cur->weight.resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt());
+		cur->weight.setRandom();
 		cur->dE_dw.resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0);
 		cur->dz_dw.resize(cur->preLayer->getNueronCnt());
 		cur->dE_db.resize(cur->getNueronCnt(), 0);
@@ -72,7 +73,6 @@ void Model::feed_forward(int idx) {
 	cur->inputNeuron = (cur->weight * cur->preLayer->outputNeuron) + cur->bias;
 	cur->outputNeuron = cur->activation(cur->inputNeuron);
 	this->output = cur->outputNeuron;
-
 	return;
 }
 
@@ -89,10 +89,10 @@ void Model::back_propagation(int idx) {
 	cur->dE_dz = cur->dE_do * cur->do_dz;
 	cur->dz_db.resize(cur->getNueronCnt(), 1);
 	cur->dE_db = cur->dE_dz * cur->dz_db;
-	for (int j = 0; j < this->nOutput; j++) {
-		for (int k = 0; k < cur->preLayer->getNueronCnt(); k++) {
-			cur->dE_dw(j, k) = cur->dE_do[j] * cur->do_dz[j] * cur->dz_dw[k];
-			cur->weight(j, k) -= cur->dE_dw(j,k);
+	for (int i = 0; i < this->nOutput; i++) {
+		for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
+			cur->dE_dw(i, j) = cur->dE_do[i] * cur->do_dz[i] * cur->dz_dw[j];
+			cur->weight(i, j) -= cur->dE_dw(i,j);
 		}
 	}
 
@@ -101,25 +101,24 @@ void Model::back_propagation(int idx) {
 	cur = cur->preLayer; //dE_dh = sigma(dE_Oi)
 	//hidden Layer
 	do {
-		for (int j = 0; j < cur->getNueronCnt(); j++) {
+		for (int i = 0; i < cur->getNueronCnt(); i++) {
 			float temp = 0;
-			for (int k = 0; k < next->getNueronCnt(); k++) {
-				temp += next->dE_dz[k] * next->weight(k, j);
+			for (int j = 0; j < next->getNueronCnt(); j++) {
+				temp += next->dE_dz[j] * next->weight(j, i);
 			}
-			cur->dE_do[j] = temp;
+			cur->dE_do[i] = temp;
 		}
 		cur->do_dz = cur->activation_diff(cur->inputNeuron);
 		cur->dz_dw = cur->preLayer->outputNeuron;
 		cur->dE_dz = cur->dE_do * cur->do_dz;
 		cur->dz_db.resize(cur->getNueronCnt(), 1);
 		cur->dE_db = cur->dE_dz * cur->dz_db;
-
 		//gradient
-		for (int j = 0; j < cur->getNueronCnt(); j++) {
-			for (int k = 0; k < cur->preLayer->getNueronCnt(); k++) {
-				cur->dE_dw(j, k) = cur->dE_do[j] * cur->do_dz[j] * cur->dz_dw[k];
+		for (int i = 0; i < cur->getNueronCnt(); i++) {
+			for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
+				cur->dE_dw(i, j) = cur->dE_do[i] * cur->do_dz[i] * cur->dz_dw[j];
 				//std::cout<<cur->dE_dw(j, k)<<'\t';
-				cur->weight(j, k) -= cur->dE_dw(j, k);
+				cur->weight(i, j) -= cur->dE_dw(i, j);
 			}
 			//std::cout<<'\n';
 		}
@@ -139,6 +138,7 @@ void Model::fit(int _batch, int _epoch) {
 			this->feed_forward(j);
 			this->back_propagation(j);
 		}
+		std::cout << i + 1 << " epoch is done\n";
 	}
 }
 
@@ -152,12 +152,13 @@ void Model::evaluate(int _batch) {
 	this->inputLayer->preLayer = nullptr;
 	this->outputLayer->preLayer = this->Layers[this->depth - 1];
 	for (int i = 0; i < _batch; i++) {
+		this->target = this->target_set[i];
 		this->feed_forward(i);
-		std::cout << "output\n";
+		std::cout << "\n\ntarget : \n";
+		std::cout << this->target;
+		std::cout << "output : " << this->getOutput() << '\n';
 		std::cout << this->output;
-		std::cout << "target\n";
-		std::cout << this->target_set[i];
-		if (this->check_success(i)) acc_sum += 1;
+		if (this->check_success()) acc_sum += 1;
 		error_sum += this->loss(output, target_set[i]);
 	}
 	this->accuracy = acc_sum / _batch;
@@ -219,7 +220,8 @@ void Model::setTarget(std::vector<Vector<float>>& _target_set) {
 }
 
 int Model::getOutput() {
-	int idx = 0, _max = -1e9;
+	int idx = 0;
+	float _max = -1e9;
 	for (int i = 0; i < this->nOutput; i++) {
 		if (this->output[i] > _max) {
 			_max = this->output[i];
@@ -229,10 +231,10 @@ int Model::getOutput() {
 	return idx + 1;
 }
 
-bool Model::check_success(int idx) {
+bool Model::check_success() {
 	int ans = 0;
 	for (int i = 0; i < nOutput; i++) {
-		if (target_set[idx][i] != 0) {
+		if (this->target[i] == 1) {
 			ans = i + 1;
 			break;
 		}

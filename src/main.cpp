@@ -44,7 +44,6 @@ int main(int argc, char** argv) {
 		evaluate_images[i].resize(784, 0);
 		for (int j = 0; j < 784; j++) {
 			evaluate_images[i][j] = pre_evaluate_images[i][j] != 0;
-			evaluate_images[i][j] /= 100.0;
 		}
 	}
 
@@ -65,26 +64,28 @@ int main(int argc, char** argv) {
 		}
 	}*/
 
-	Model mnist(784, 10);//image: 28 x 28, output 0 ~ 9;
+	Model mnist(784, 10);//input : 28 x 28, output 0 ~ 9;
 	mnist.setOutputFunction(ACTIVATION_FUNCTION::sigmoid);
 	mnist.setLoss(LOSS_FUNCTION::mean_squared_error);
 
-	Layer* temp = new Layer(392, ACTIVATION_FUNCTION::sigmoid);
+	Layer* temp = new Layer(384, ACTIVATION_FUNCTION::sigmoid);
 	mnist.addLayer(temp);
-	temp = new Layer(196, ACTIVATION_FUNCTION::sigmoid);
+	temp = new Layer(128, ACTIVATION_FUNCTION::sigmoid);
+	mnist.addLayer(temp);
+	temp = new Layer(32, ACTIVATION_FUNCTION::sigmoid);
 	mnist.addLayer(temp);
 
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(40000, 3); //batch, epoch
+	mnist.fit(40000, 5); //batch, epoch
 
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
 
 	std::cout << "training is done" << '\n';
 
-	mnist.evaluate(1000);
-	std::cout << mnist.getAccuracy() << '\n';
+	mnist.evaluate(7000);
+	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
 
 
 	return 0;
