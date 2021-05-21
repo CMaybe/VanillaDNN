@@ -227,6 +227,15 @@ const T& Vector<T>::operator()(const int& idx) const {
 }
 
 template<typename T>
+T& Vector<T>::operator()(const int& begin, const int& end)
+{
+	Vector<T> result = *this;
+	result.resize(end - begin);
+	result.vector = result.vector(begin, end);
+	return result;
+}
+
+template<typename T>
 const T& Vector<T>::operator[](const int& idx) const {
 	return this->vector[idx];
 }
@@ -241,6 +250,14 @@ int Vector<T>::get_size() const {
 template<typename T>
 void Vector<T>::push_back(T value) {
 	this->vector.push_back(value);
+}
+
+template<typename T>
+void Vector<T>::setRandom()
+{
+	for (int i = 0; i < this->size; i++) {
+		this->vector[i] = ((float)rand() / (RAND_MAX)) * 2 - 1;
+	}
 }
 
 #endif

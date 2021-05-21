@@ -25,6 +25,7 @@ private:
 	Vector<float> input;
 	Vector<float> target;
 	Vector<float> output;
+	std::vector<Vector<float>> input_batch;
 
 	std::vector<Vector<float>> input_set;
 	std::vector<Vector<float>> target_set;
@@ -36,8 +37,10 @@ private:
 	int batch;
 	int epoch;
 	int nEval;
+	int total;
 	float accuracy;
 	float error;
+	float learning_rate;
 
 public:
 	Model();
@@ -46,8 +49,8 @@ public:
 	void setLoss(Loss _loss);
 	void setOutputFunction(Activation _activation);
 	void init();
-	void fit(int batch, int _epoch);
-	void evaluate(int _batch);
+	void fit(int _total, int _epoch, int _batch = 1);
+	void evaluate(int _batch, bool show = false);
 	void feed_forward(int idx);
 	void back_propagation(int idx);
 	void addLayer(Layer* _layer);
@@ -58,6 +61,7 @@ public:
 	float getAccuracy();
 	float getError();
 	bool check_success();
+	void setLearningLate(float lr);
 
 
 

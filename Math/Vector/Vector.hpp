@@ -45,7 +45,7 @@ public:
 
 	T& operator()(const int& idx);
 	const T& operator()(const int& idx) const;
-
+	T& operator()(const int& begin, const int& end);
 
 	T& operator[](const int& idx);
 	const T& operator[](const int& idx) const;
@@ -56,6 +56,7 @@ public:
 
 	int get_size() const;
 	void push_back(T value);
+	void setRandom();
 	void resize(const int& _size);
 	void resize(const int& _size, const T& _init);
 

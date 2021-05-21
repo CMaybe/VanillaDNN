@@ -54,15 +54,6 @@ int main(int argc, char** argv) {
 	}
 
 
-	/*for (int i = 0; i < 10; i++) {
-		std::cout << training_labels[i] << '\n';
-		for (int j = 0; j < 28; j++) {
-			for (int k = 0; k < 28; k++) {
-				std::cout << training_images[i][28 * j + k];
-			}
-			std::cout << '\n';
-		}
-	}*/
 
 	Model mnist(784, 10);//input : 28 x 28, output 0 ~ 9;
 	mnist.setOutputFunction(ACTIVATION_FUNCTION::sigmoid);
@@ -71,10 +62,10 @@ int main(int argc, char** argv) {
 	mnist.addLayer(new Layer(384, ACTIVATION_FUNCTION::sigmoid));
 	mnist.addLayer(new Layer(128, ACTIVATION_FUNCTION::sigmoid));
 	mnist.addLayer(new Layer(32, ACTIVATION_FUNCTION::sigmoid));
-
+	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(50000, 10); //batch, epoch
+	mnist.fit(5000, 10); //batch, epoch
 
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);

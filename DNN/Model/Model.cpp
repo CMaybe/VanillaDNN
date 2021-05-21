@@ -4,16 +4,19 @@
 #include "Model.hpp"
 
 
-Model::Model() {
-
-}
-
 Model::Model(int _nInput, int _nOutput) {
 	this->depth = 0;
+	this->learning_rate = 1.0;
 	this->nInput = _nInput;
 	this->nOutput = _nOutput;
 	this->inputLayer = new Layer(_nInput);
 	this->outputLayer = new Layer(_nOutput);
+	this->batch = 1;
+	this->epoch = 0;
+	this->nEval = 0;
+	this->total = 0;
+	this->accuracy = 0;
+	this->error = 0;
 }
 
 Model::~Model() {
@@ -80,7 +83,7 @@ void Model::back_propagation(int idx) {
 	Layer* cur = nullptr;
 	Layer* next = nullptr;
 	this->target = target_set[idx];
-	
+
 	//output Layer
 	cur = this->outputLayer;
 	cur->dE_do = this->loss_diff(this->output, this->target);
@@ -92,11 +95,11 @@ void Model::back_propagation(int idx) {
 	for (int i = 0; i < this->nOutput; i++) {
 		for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
 			cur->dE_dw(i, j) = cur->dE_do[i] * cur->do_dz[i] * cur->dz_dw[j];
-			cur->weight(i, j) -= cur->dE_dw(i,j);
+			cur->weight(i, j) -= (this->learning_rate * cur->dE_dw(i, j));
 		}
 	}
 
-	cur->bias -= cur->dE_db;
+	cur->bias -= (cur->dE_db * this->learning_rate);
 	next = cur;
 	cur = cur->preLayer; //dE_dh = sigma(dE_Oi)
 	//hidden Layer
@@ -118,23 +121,24 @@ void Model::back_propagation(int idx) {
 			for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
 				cur->dE_dw(i, j) = cur->dE_do[i] * cur->do_dz[i] * cur->dz_dw[j];
 				//std::cout<<cur->dE_dw(j, k)<<'\t';
-				cur->weight(i, j) -= cur->dE_dw(i, j);
+				cur->weight(i, j) -= (cur->dE_dw(i, j) * this->learning_rate);
 			}
 			//std::cout<<'\n';
 		}
-		cur->bias -= cur->dE_db;
+		cur->bias -= (cur->dE_db * this->learning_rate);
 		next = cur;
 		cur = cur->preLayer;
 	} while (cur->preLayer != nullptr);
 
 }
 
-void Model::fit(int _batch, int _epoch) {
+void Model::fit(int _total, int _epoch, int _batch) {
 	this->init();
-	this->batch = _batch;
+	this->total = _total;
 	this->epoch = _epoch;
+	this->batch = _batch;
 	for (int i = 0; i < this->epoch; i++) {
-		for (int j = 0; j < this->batch; j++) {
+		for (int j = 0; j < this->total; j++) {
 			this->feed_forward(j);
 			this->back_propagation(j);
 		}
@@ -142,27 +146,28 @@ void Model::fit(int _batch, int _epoch) {
 	}
 }
 
-void Model::evaluate(int _batch) {
+void Model::evaluate(int _len,bool show) {
 	this->accuracy = 0;
 	float acc_sum = 0;
 	float error_sum = 0;
-	this->batch = _batch;
 
 	this->Layers[0]->preLayer = inputLayer;
 	this->inputLayer->preLayer = nullptr;
 	this->outputLayer->preLayer = this->Layers[this->depth - 1];
-	for (int i = 0; i < _batch; i++) {
+	for (int i = 0; i < _len; i++) {
 		this->target = this->target_set[i];
 		this->feed_forward(i);
-		std::cout << "\n\ntarget : \n";
-		std::cout << this->target;
-		std::cout << "output : " << this->getOutput() << '\n';
-		std::cout << this->output;
+		if (show) {
+			std::cout << "\n\ntarget : \n";
+			std::cout << this->target;
+			std::cout << "output : " << this->getOutput() << '\n';
+			std::cout << this->output;
+		}
 		if (this->check_success()) acc_sum += 1;
 		error_sum += this->loss(output, target_set[i]);
 	}
-	this->accuracy = acc_sum / _batch;
-	this->error = error_sum / _batch;
+	this->accuracy = acc_sum / _len;
+	this->error = error_sum / _len;
 }
 
 float Model::getAccuracy() {
@@ -240,6 +245,11 @@ bool Model::check_success() {
 		}
 	}
 	return getOutput() == ans;
+}
+
+void Model::setLearningLate(float lr)
+{
+	this->learning_rate = lr;
 }
 
 #endif
