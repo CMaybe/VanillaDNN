@@ -7,7 +7,11 @@ project(
 	LANGUAGES CXX
 )
 
+<<<<<<< HEAD
 set(CMAKE_BUILD_TYPE Release)
+=======
+
+>>>>>>> a70fa601389c0162b85b2f35dd5ab62ef96349d1
 add_definitions("-std=c++17")
 
 add_executable(Main
