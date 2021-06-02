@@ -57,8 +57,22 @@ void Model::init() {
 		cur->weight.resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt());
 		cur->weight.setRandom();
 		cur->dE_dw.resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0);
-		cur->dz_dw.resize(cur->preLayer->getNueronCnt());
+		cur->dE_do.resize(cur->getNueronCnt(), 0);
+		cur->do_dz.resize(cur->getNueronCnt(), 0);
+		cur->dz_dw.resize(cur->preLayer->getNueronCnt(),0);
 		cur->dE_db.resize(cur->getNueronCnt(), 0);
+		cur->dE_dz.resize(cur->getNueronCnt(), 0);
+		cur->dE_db.resize(cur->getNueronCnt(), 0);
+		
+		batch_dE_dw.insert(batch_dE_dw.begin(), Matrix<float>(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0));
+		batch_dE_do.insert(batch_dE_do.begin(), Vector<float>(cur->getNueronCnt(), 0));
+		batch_do_dz.insert(batch_do_dz.begin(), Vector<float>(cur->getNueronCnt(), 0));
+		batch_dz_dw.insert(batch_dz_dw.begin(), Vector<float>(cur->preLayer->getNueronCnt(),0));
+		batch_dE_dz.insert(batch_dE_dz.begin(), Vector<float>(cur->getNueronCnt(), 0));
+		batch_dE_db.insert(batch_dE_db.begin(), Vector<float>(cur->getNueronCnt(), 0));
+		batch_dz_db.insert(batch_dz_db.begin(), Vector<float>(cur->getNueronCnt(), 0));
+		
+
 		cur = cur->preLayer;
 	} while (cur->preLayer != nullptr);
 }
@@ -83,7 +97,7 @@ void Model::back_propagation(int idx) {
 	Layer* cur = nullptr;
 	Layer* next = nullptr;
 	this->target = target_set[idx];
-
+	int _depth = this->depth;
 	//output Layer
 	cur = this->outputLayer;
 	cur->dE_do = this->loss_diff(this->output, this->target);
@@ -92,14 +106,24 @@ void Model::back_propagation(int idx) {
 	cur->dE_dz = cur->dE_do * cur->do_dz;
 	cur->dz_db.resize(cur->getNueronCnt(), 1);
 	cur->dE_db = cur->dE_dz * cur->dz_db;
+	
+	this->batch_dE_do[_depth] += cur->dE_do;
+	this->batch_do_dz[_depth] += cur->do_dz;
+	this->batch_dz_dw[_depth] += cur->dz_dw;
+	this->batch_dE_dz[_depth] += cur->dE_dz;
+	this->batch_dz_db[_depth] += cur->dz_db;
+	this->batch_dE_db[_depth] += cur->dE_db;
+	
 	for (int i = 0; i < this->nOutput; i++) {
 		for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
 			cur->dE_dw(i, j) = cur->dE_do[i] * cur->do_dz[i] * cur->dz_dw[j];
-			cur->weight(i, j) -= (this->learning_rate * cur->dE_dw(i, j));
+			this->batch_dE_dw[_depth](i,j) += cur->dE_dw(i, j);
+			//cur->weight(i, j) -= (this->learning_rate * cur->dE_dw(i, j));
 		}
 	}
-
-	cur->bias -= (cur->dE_db * this->learning_rate);
+	
+	_depth -= 1;
+	//cur->bias -= (cur->dE_db * this->learning_rate);
 	next = cur;
 	cur = cur->preLayer; //dE_dh = sigma(dE_Oi)
 	//hidden Layer
@@ -116,20 +140,84 @@ void Model::back_propagation(int idx) {
 		cur->dE_dz = cur->dE_do * cur->do_dz;
 		cur->dz_db.resize(cur->getNueronCnt(), 1);
 		cur->dE_db = cur->dE_dz * cur->dz_db;
+		
+		this->batch_dE_do[_depth] += cur->dE_do;
+		this->batch_do_dz[_depth] += cur->do_dz;
+		this->batch_dz_dw[_depth] += cur->dz_dw;
+		this->batch_dE_dz[_depth] += cur->dE_dz;
+		this->batch_dz_db[_depth] += cur->dz_db;
+		this->batch_dE_db[_depth] += cur->dE_db;
+		
 		//gradient
 		for (int i = 0; i < cur->getNueronCnt(); i++) {
 			for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
 				cur->dE_dw(i, j) = cur->dE_do[i] * cur->do_dz[i] * cur->dz_dw[j];
 				//std::cout<<cur->dE_dw(j, k)<<'\t';
-				cur->weight(i, j) -= (cur->dE_dw(i, j) * this->learning_rate);
+				this->batch_dE_dw[_depth](i,j) += cur->dE_dw(i, j);
+				//cur->weight(i, j) -= (cur->dE_dw(i, j) * this->learning_rate);
 			}
 			//std::cout<<'\n';
 		}
-		cur->bias -= (cur->dE_db * this->learning_rate);
+		//cur->bias -= (cur->dE_db * this->learning_rate);
 		next = cur;
 		cur = cur->preLayer;
+		_depth -= 1;
 	} while (cur->preLayer != nullptr);
 
+}
+
+void Model::update(){
+	Layer* cur = nullptr;
+	int _depth = this->depth;
+	//output Layer
+	cur = this->outputLayer;
+	for (int i = 0; i < this->nOutput; i++) {
+		for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
+			cur->weight(i, j) -= (this->learning_rate * this->batch_dE_dw[_depth](i, j))/(this->batch);
+		}
+	}
+	
+	cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate)/(this->batch);
+	cur = cur->preLayer; //dE_dh = sigma(dE_Oi)
+	_depth-=1;
+
+	//hidden Layer
+	do {
+		//gradient
+		for (int i = 0; i < cur->getNueronCnt(); i++) {
+			for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
+				cur->weight(i, j) -= (this->batch_dE_dw[_depth](i, j) * this->learning_rate)/(this->batch);
+			}
+		}
+		cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate)/(this->batch);
+		_depth -= 1;
+		cur = cur->preLayer;
+	} while (cur->preLayer != nullptr);
+	
+	
+	// init batch data
+	
+	batch_dE_dw.clear();
+	batch_dE_do.clear();
+	batch_do_dz.clear();
+	batch_dz_dw.clear();
+	batch_dE_dz.clear();
+	batch_dE_db.clear();
+	batch_dz_db.clear();
+	
+	cur = this->outputLayer;
+	do {
+		
+		batch_dE_dw.insert(batch_dE_dw.begin(), Matrix<float>(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0));
+		batch_dE_do.insert(batch_dE_do.begin(), Vector<float>(cur->getNueronCnt(), 0));
+		batch_do_dz.insert(batch_do_dz.begin(), Vector<float>(cur->getNueronCnt(), 0));
+		batch_dz_dw.insert(batch_dz_dw.begin(), Vector<float>(cur->preLayer->getNueronCnt(),0));
+		batch_dE_dz.insert(batch_dE_dz.begin(), Vector<float>(cur->getNueronCnt(), 0));
+		batch_dE_db.insert(batch_dE_db.begin(), Vector<float>(cur->getNueronCnt(), 0));
+		batch_dz_db.insert(batch_dz_db.begin(), Vector<float>(cur->getNueronCnt(), 0));
+		
+		cur = cur->preLayer;
+	} while (cur->preLayer != nullptr);
 }
 
 void Model::fit(int _total, int _epoch, int _batch) {
@@ -138,12 +226,17 @@ void Model::fit(int _total, int _epoch, int _batch) {
 	this->epoch = _epoch;
 	this->batch = _batch;
 	for (int i = 0; i < this->epoch; i++) {
-		for (int j = 0; j < this->total; j++) {
-			this->feed_forward(j);
-			this->back_propagation(j);
+		for (int j = 0; j < this->total; j+=this->batch) {
+			for(int k = 0; k< this->batch; k++) {
+				this->feed_forward(j+k);
+				this->back_propagation(j+k);
+			}
+			this->update();
 		}
 		std::cout << i + 1 << " epoch is done\n";
 	}
+	
+
 }
 
 void Model::evaluate(int _len,bool show) {

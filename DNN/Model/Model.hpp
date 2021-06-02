@@ -25,10 +25,17 @@ private:
 	Vector<float> input;
 	Vector<float> target;
 	Vector<float> output;
-	std::vector<Vector<float>> input_batch;
 
 	std::vector<Vector<float>> input_set;
 	std::vector<Vector<float>> target_set;
+	
+	std::vector<Matrix<float>> batch_dE_dw;
+	std::vector<Vector<float>> batch_dE_do;
+	std::vector<Vector<float>> batch_do_dz;
+	std::vector<Vector<float>> batch_dz_dw;
+	std::vector<Vector<float>> batch_dE_dz;
+	std::vector<Vector<float>> batch_dE_db;
+	std::vector<Vector<float>> batch_dz_db;
 
 	Layer* inputLayer = nullptr;
 	Layer* outputLayer = nullptr;
@@ -53,6 +60,7 @@ public:
 	void evaluate(int _batch, bool show = false);
 	void feed_forward(int idx);
 	void back_propagation(int idx);
+	void update();
 	void addLayer(Layer* _layer);
 	void addLayers(std::vector<Layer*>& _layers);
 	void setInput(std::vector<Vector<float>>& _input_set);

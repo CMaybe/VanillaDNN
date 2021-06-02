@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
 	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(5000, 10); //batch, epoch
+	mnist.fit(1000, 5, 10); //batch, epoch
 
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
