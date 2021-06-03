@@ -7,7 +7,7 @@ VanillaDNN is DNN framework using only C++.
 
 ## Key Features
 
-  * C++ based DNN library
+  * C++ based Deep Learning framework
   * Dependency-free
   
   
@@ -83,7 +83,7 @@ ___
 - [ ] mean absolute error with epsilon range
 
 ### optimization algorithms
-- [ ] stochastic gradient descent 
+- [x] stochastic gradient descent 
 - [ ] momentum and Nesterov momentum
 - [ ] adagrad
 - [ ] rmsprop
@@ -92,7 +92,7 @@ ___
 
 
 ## Dependencies
-Nothing. All you need is a C++ compiler.(GCC/G++, GDB, Clang/Clang++)
+Nothing. All you need is a C++ compiler. (GCC/G++, GDB, Clang/Clang++)
 
 ## Quick Start
 

@@ -13,12 +13,12 @@ add_definitions("-std=c++17")
 
 add_executable(Main
 	source/ex1.cpp
-	../../Math/Matrix/Matrix.cpp
-	../../Math/Vector/Vector.cpp
-	../../DNN/Functions/DNNFunction.cpp
-	../../DNN/Layer/Layer.cpp
-	../../DNN/Model/Model.cpp
-	../../MNIST/MNIST.cpp
+	Math/Matrix/Matrix.cpp
+	Math/Vector/Vector.cpp
+	DNN/Functions/DNNFunction.cpp
+	DNN/Layer/Layer.cpp
+	DNN/Model/Model.cpp
+	MNIST/MNIST.cpp
 )
 
-target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/../..)

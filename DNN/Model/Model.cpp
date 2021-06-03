@@ -330,7 +330,7 @@ int Model::getOutput() {
 }
 
 
-void Model::setLearningLate(float lr)
+void Model::setLearningRate(float lr)
 {
 	this->learning_rate = lr;
 }

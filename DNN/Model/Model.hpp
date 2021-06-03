@@ -69,7 +69,7 @@ public:
 	float getAccuracy();
 	float getError();
 	bool check_success();
-	void setLearningLate(float lr);
+	void setLearningRate(float lr);
 
 
 
