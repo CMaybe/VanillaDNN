@@ -253,10 +253,10 @@ void Model::evaluate(int _len,bool show) {
 		if (show) {
 			std::cout << "\n\ntarget : \n";
 			std::cout << this->target;
-			std::cout << "output : " << this->getOutput() << '\n';
+			std::cout << "output : " << this->output << '\n';
 			std::cout << this->output;
 		}
-		if (this->check_success()) acc_sum += 1;
+		acc_sum += (1.0f - (this->target - this->output).norm());
 		error_sum += this->loss(output, target_set[i]);
 	}
 	this->accuracy = acc_sum / _len;
@@ -329,16 +329,6 @@ int Model::getOutput() {
 	return idx + 1;
 }
 
-bool Model::check_success() {
-	int ans = 0;
-	for (int i = 0; i < nOutput; i++) {
-		if (this->target[i] == 1) {
-			ans = i + 1;
-			break;
-		}
-	}
-	return getOutput() == ans;
-}
 
 void Model::setLearningLate(float lr)
 {

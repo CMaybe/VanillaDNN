@@ -5,6 +5,7 @@
 #include<stdexcept>
 #include<iostream>
 #include<vector>
+#include<cmath>
 
 template<typename T> class Matrix;
 
@@ -59,6 +60,7 @@ public:
 	void setRandom();
 	void resize(const int& _size);
 	void resize(const int& _size, const T& _init);
+	float norm();
 
 };
 

@@ -260,4 +260,13 @@ void Vector<T>::setRandom()
 	}
 }
 
+template<typename T>
+float Vector<T>::norm(){
+	float sum = 0;
+	for (int i = 0; i < this->size; i++) {
+		sum += static_cast<float>(this->vector[i] * this->vector[i]);
+	}
+	return sqrt(sum);
+}
+
 #endif

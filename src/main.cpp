@@ -11,11 +11,13 @@
 int main(int argc, char** argv) {
 	//training set
 	MNIST training_set("train");
+	
+	// Get MNIST Data
 	std::vector<std::vector<char>> pre_training_images = training_set.getImages();
 	std::vector<char> pre_training_labels = training_set.getLabels();
-
-	std::cout << pre_training_images.size() << '\n';
-
+	
+	
+	// For learning Data
 	std::vector<Vector<float>> training_images(pre_training_images.size());
 	std::vector<Vector<float>> training_labels(pre_training_labels.size());
 
@@ -56,6 +58,7 @@ int main(int argc, char** argv) {
 
 
 	Model mnist(784, 10);//input : 28 x 28, output 0 ~ 9;
+	
 	mnist.setOutputFunction(ACTIVATION_FUNCTION::sigmoid);
 	mnist.setLoss(LOSS_FUNCTION::mean_squared_error);
 
@@ -65,7 +68,7 @@ int main(int argc, char** argv) {
 	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(1000, 5, 10); //batch, epoch
+	mnist.fit(50000, 4, 10); //total, epoch, batch
 
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
