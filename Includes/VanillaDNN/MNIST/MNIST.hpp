@@ -5,13 +5,14 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <VanillaDNN/Math/Vector/Vector.hpp>
 
 class MNIST
 {
 private:
 	std::string set;
-	std::vector<std::vector<float>> images;
-	std::vector<std::vector<float>> labels;
+	std::vector<Vector<float>> images;
+	std::vector<Vector<float>> labels;
 
 
 public:
@@ -19,8 +20,8 @@ public:
 	MNIST(std::string _path, std::string _set,bool onehot = false);
 	MNIST(const MNIST& rhs);
 
-	std::vector<std::vector<float>> getImages();
-	std::vector<std::vector<float>> getLabels();
+	std::vector<Vector<float>> getImages();
+	std::vector<Vector<float>> getLabels();
 	std::string getSet();
 };
 

@@ -53,7 +53,7 @@ MNIST::MNIST(std::string _path,std::string _set,bool onehot)
 	imageInputStream.read(temp, 16);
 	for (int i = 0; i < imageSize; i += 784)
 	{
-		std::vector<float> image;
+		Vector<float> image;
 
 		for (int j = 0; j < 784; j++)
 		{
@@ -76,7 +76,7 @@ MNIST::MNIST(std::string _path,std::string _set,bool onehot)
 	{
 		char label;
 		labelInputStream.read(&label, 1);
-		std::vector<float> v(10,0);
+		Vector<float> v(10,0);
 		v[label] = 1;
 		this->labels.push_back(v);
 		
@@ -88,12 +88,12 @@ MNIST::MNIST(const MNIST& rhs)
 	set = "default";
 }
 
-std::vector<std::vector<float>> MNIST::getImages()
+std::vector<Vector<float>> MNIST::getImages()
 {
 	return this->images;
 }
 
-std::vector<std::vector<float>> MNIST::getLabels()
+std::vector<Vector<float>> MNIST::getLabels()
 {
 	return this->labels;
 }
