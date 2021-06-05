@@ -76,7 +76,6 @@ std::ostream& operator << (std::ostream& out, const Vector<U>& v)
 	return out;
 }
 
-
-#include"Vector.cpp"
+#include <VanillaDNN/Math/Vector/Vector.cpp>
 
 #endif

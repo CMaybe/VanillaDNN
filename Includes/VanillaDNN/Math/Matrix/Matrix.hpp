@@ -77,7 +77,6 @@ std::ostream& operator << (std::ostream& out, const Matrix<U>& m)
 	return out;
 }
 
-
-#include"Matrix.cpp"
+#include <VanillaDNN/Math/Matrix/Matrix.cpp>
 
 #endif
