@@ -10,17 +10,17 @@ class MNIST
 {
 private:
 	std::string set;
-	std::vector<std::vector<char>> images;
-	std::vector<char> labels;
+	std::vector<std::vector<float>> images;
+	std::vector<std::vector<float>> labels;
 
 
 public:
 	MNIST();
-	MNIST(std::string _path, std::string _set);
+	MNIST(std::string _path, std::string _set,bool onehot = false);
 	MNIST(const MNIST& rhs);
 
-	std::vector<std::vector<char>> getImages();
-	std::vector<char> getLabels();
+	std::vector<std::vector<float>> getImages();
+	std::vector<std::vector<float>> getLabels();
 	std::string getSet();
 };
 

@@ -2,12 +2,13 @@
 #define VANILLA_MNIST_CPP
 
 #include <VanillaDNN/MNIST/MNIST.hpp>
+#include <iostream>
 MNIST::MNIST()
 {
 	set = "defalut";
 }
 
-MNIST::MNIST(std::string _path,std::string _set)
+MNIST::MNIST(std::string _path,std::string _set,bool onehot)
 {
 	
 	std::string trainSetFileName[2] = \
@@ -52,15 +53,19 @@ MNIST::MNIST(std::string _path,std::string _set)
 	imageInputStream.read(temp, 16);
 	for (int i = 0; i < imageSize; i += 784)
 	{
-		std::vector<char> image;
+		std::vector<float> image;
 
 		for (int j = 0; j < 784; j++)
 		{
 			char pixel;
 			imageInputStream.read(&pixel, 1);
-			image.push_back(pixel);
+			if(onehot){
+				image.push_back(static_cast<float>(static_cast<unsigned char>(pixel!=0)));
+			}
+			else{
+				image.push_back(static_cast<float>(static_cast<unsigned char>(pixel)));
+			}
 		}
-
 		this->images.push_back(image);
 	}
 
@@ -71,7 +76,10 @@ MNIST::MNIST(std::string _path,std::string _set)
 	{
 		char label;
 		labelInputStream.read(&label, 1);
-		this->labels.push_back(label);
+		std::vector<float> v(10,0);
+		v[label] = 1;
+		this->labels.push_back(v);
+		
 	}
 }
 
@@ -80,12 +88,12 @@ MNIST::MNIST(const MNIST& rhs)
 	set = "default";
 }
 
-std::vector<std::vector<char>> MNIST::getImages()
+std::vector<std::vector<float>> MNIST::getImages()
 {
 	return this->images;
 }
 
-std::vector<char> MNIST::getLabels()
+std::vector<std::vector<float>> MNIST::getLabels()
 {
 	return this->labels;
 }
