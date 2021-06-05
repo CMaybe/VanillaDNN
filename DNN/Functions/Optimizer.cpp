@@ -13,18 +13,12 @@ Optimizer::Optimizer()
 	this->epsilon = EPSILON;
 	this->rho = 1.0;
 	this->decay = 1.0;
-	this->optimizer = OPTIMIZER::GD;
+	this->optimizer = OPTIMIZER::BGD;
 }
 
 Optimizer::~Optimizer()
 {
 
-}
-
-void Optimizer::setGD(float lr)
-{
-	this->optimizer = OPTIMIZER::GD;
-	this->learning_rate = lr;
 }
 
 void Optimizer::setSGD(float lr)

@@ -32,21 +32,21 @@ private:
 	float epsilon;
 	float rho;
 	float decay;
+	int batch_size;
 	OPTIMIZER optimizer;
 
 public:
 	Optimizer();
 	virtual ~Optimizer();
-	void setGD(float lr);
 	void setSGD(float lr);  //  Stochastic Gradient Descent
 	void setBGD(float lr);  //  Batch Gradient Descent
 	void setMBGD(float lr); //  Mini-Batfch Gradient Descent
 	void setMomentum(float lr, float _momentum);
+	void setAdagrad(float lr, float _epsilon);
 	void setNAG(float lr);
 	void setNadam(float lr);
 	void setAdam(float lr, float _beta1, float _beta2, float _decay);
 	void setRMSProp(float lr, float _rho, float _epsilon);
-	void setAdagrad(float lr, float _epsilon);
 	void setAdaDelta(float lr);
 	float getLearningRate();
 	float getCalculatedWeight(float weight, float dE_dW);

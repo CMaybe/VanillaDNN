@@ -11,7 +11,7 @@ Model::Model(int _nInput, int _nOutput) {
 	this->nOutput = _nOutput;
 	this->inputLayer = new Layer(_nInput);
 	this->outputLayer = new Layer(_nOutput);
-	this->batch = 1;
+	this->batch_size = 1;
 	this->epoch = 0;
 	this->nEval = 0;
 	this->total = 0;
@@ -171,25 +171,16 @@ void Model::update(){
 	int _depth = this->depth;
 	//output Layer
 	cur = this->outputLayer;
-	for (int i = 0; i < this->nOutput; i++) {
-		for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
-			cur->weight(i, j) -= (this->learning_rate * this->batch_dE_dw[_depth](i, j))/(this->batch);
-		}
-	}
-	
-	cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate)/(this->batch);
+	cur->weight -= (this->batch_dE_dw[_depth] * this->learning_rate);///(this->batch);
+	cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate);///(this->batch);
 	cur = cur->preLayer; //dE_dh = sigma(dE_Oi)
-	_depth-=1;
+	_depth -= 1;
 
 	//hidden Layer
 	do {
 		//gradient
-		for (int i = 0; i < cur->getNueronCnt(); i++) {
-			for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
-				cur->weight(i, j) -= (this->batch_dE_dw[_depth](i, j) * this->learning_rate)/(this->batch);
-			}
-		}
-		cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate)/(this->batch);
+		cur->weight -= (this->batch_dE_dw[_depth] * this->learning_rate);///(this->batch);
+		cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate);///(this->batch);
 		_depth -= 1;
 		cur = cur->preLayer;
 	} while (cur->preLayer != nullptr);
@@ -224,12 +215,18 @@ void Model::fit(int _total, int _epoch, int _batch) {
 	this->init();
 	this->total = _total;
 	this->epoch = _epoch;
-	this->batch = _batch;
+	this->batch_size = _batch;
+	std::vector<std::future<void>> batch_tasks;
 	for (int i = 0; i < this->epoch; i++) {
-		for (int j = 0; j < this->total; j+=this->batch) {
-			for(int k = 0; k< this->batch; k++) {
-				this->feed_forward(j+k);
-				this->back_propagation(j+k);
+		for (int j = 0; j < this->total; j+=this->batch_size) {
+			for(int k = 0; k< this->batch_size; k++) {
+				batch_tasks.push_back(std::async(std::launch::async,[j,k,this](){
+					this->feed_forward(j+k);
+					this->back_propagation(j+k);
+				}));
+			}
+			for(int i =0;i<batch_tasks.size();i++){
+				batch_tasks[i].wait();
 			}
 			this->update();
 		}
@@ -253,7 +250,7 @@ void Model::evaluate(int _len,bool show) {
 		if (show) {
 			std::cout << "\n\ntarget : \n";
 			std::cout << this->target;
-			std::cout << "output : " << this->output << '\n';
+			std::cout << "output : \n";
 			std::cout << this->output;
 		}
 		acc_sum += (1.0f - (this->target - this->output).norm());

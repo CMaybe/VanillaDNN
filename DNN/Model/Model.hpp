@@ -2,16 +2,18 @@
 #define VANILLA_DNN_MODEL_HPP
 
 
-#include<any>
-#include<functional>
-#include<vector>
-#include<iostream>
-#include<random>
+#include <any>
+#include <functional>
+#include <vector>
+#include <iostream>
+#include <random>
+#include <future>
+#include <thread>
 #include"Math/Matrix/Matrix.hpp"
 #include"Math/Vector/Vector.hpp"
 #include"DNN/Layer/Layer.hpp"
+#include"DNN/Functions/Optimizer.hpp"
 #include "MNIST/MNIST.hpp"
-
 
 class Model {
 private:
@@ -20,8 +22,10 @@ private:
 	using  Loss_diff = std::function<Vector<float>(Vector<float>, Vector<float>)>;
 	Loss loss;
 	Loss_diff loss_diff;
+	
+	Optimizer optimizer;
 	std::vector<Layer*> Layers; // exclude input&output Layer;
-
+	
 	Vector<float> input;
 	Vector<float> target;
 	Vector<float> output;
@@ -41,7 +45,7 @@ private:
 	Layer* outputLayer = nullptr;
 	int depth;
 	int nInput, nOutput;
-	int batch;
+	int batch_size;
 	int epoch;
 	int nEval;
 	int total;
@@ -65,6 +69,7 @@ public:
 	void addLayers(std::vector<Layer*>& _layers);
 	void setInput(std::vector<Vector<float>>& _input_set);
 	void setTarget(std::vector<Vector<float>>& _target_set);
+	void setOptimizer(Optimizer _optimizer);
 	int getOutput();
 	float getAccuracy();
 	float getError();

@@ -69,14 +69,14 @@ int main(int argc, char** argv) {
 	mnist.setLearningRate(0.8f);
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(50000, 5, 5); //total, epoch, batch
+	mnist.fit(50000, 10, 50); //total, epoch, batch
 
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
 
 	std::cout << "training is done" << '\n';
 
-	mnist.evaluate(9000);
+	mnist.evaluate(7000);
 	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
 
 

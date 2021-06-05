@@ -83,7 +83,7 @@ ___
 - [ ] mean absolute error with epsilon range
 
 ### optimization algorithms
-- [x] stochastic gradient descent 
+- [ ] stochastic gradient descent 
 - [ ] momentum and Nesterov momentum
 - [ ] adagrad
 - [ ] rmsprop

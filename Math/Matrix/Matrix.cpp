@@ -198,7 +198,7 @@ template<typename T>
 Matrix<T> Matrix<T>::operator+(const T& rhs) {
 	int row = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(cols, rows, 0);
+	Matrix<T> result(rows, cols, 0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -213,7 +213,7 @@ template<typename T>
 Matrix<T> Matrix<T>::operator-(const T& rhs) {
 	int row = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(cols, rows, 0);
+	Matrix<T> result(rows, cols, 0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -228,7 +228,7 @@ template<typename T>
 Matrix<T> Matrix<T>::operator*(const T& rhs) {
 	int row = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(cols, rows, 0);
+	Matrix<T> result(rows, cols, 0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -243,7 +243,7 @@ template<typename T>
 Matrix<T> Matrix<T>::operator/(const T& rhs) {
 	int row = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(cols, rows, 0);
+	Matrix<T> result(rows, cols, 0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
