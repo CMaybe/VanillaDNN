@@ -31,7 +31,8 @@ private:
 	Vector<float> output;
 
 	std::vector<Vector<float>> input_set;
-	std::vector<Vector<float>> target_set;
+	std::vector<Vector<float>> target_set;;
+	std::vector<Vector<float>> output_set;
 	
 	std::vector<Matrix<float>> batch_dE_dw;
 	std::vector<Vector<float>> batch_dE_do;

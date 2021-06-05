@@ -56,13 +56,25 @@ void Model::init() {
 	do {
 		cur->weight.resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt());
 		cur->weight.setRandom();
-		cur->dE_dw.resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0);
-		cur->dE_do.resize(cur->getNueronCnt(), 0);
-		cur->do_dz.resize(cur->getNueronCnt(), 0);
-		cur->dz_dw.resize(cur->preLayer->getNueronCnt(),0);
-		cur->dE_db.resize(cur->getNueronCnt(), 0);
-		cur->dE_dz.resize(cur->getNueronCnt(), 0);
-		cur->dE_db.resize(cur->getNueronCnt(), 0);
+		cur->bias.resize(cur->getNueronCnt());
+		cur->inputNeuron.resize(this->batch_size);
+		cur->outputNeuron.resize(this->batch_size);
+		cur->dE_dw.resize(this->batch_size);
+		cur->dE_do.resize(this->batch_size);
+		cur->do_dz.resize(this->batch_size);
+		cur->dz_dw.resize(this->batch_size);
+		cur->dE_db.resize(this->batch_size);
+		cur->dE_dz.resize(this->batch_size);
+		cur->dE_db.resize(this->batch_size);
+		for(int i = 0; i < this->batch_size; i++){
+			cur->dE_dw[i].resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0);
+			cur->dE_do[i].resize(cur->getNueronCnt(), 0);
+			cur->do_dz[i].resize(cur->getNueronCnt(), 0);
+			cur->dz_dw[i].resize(cur->preLayer->getNueronCnt(),0);
+			cur->dE_db[i].resize(cur->getNueronCnt(), 0);
+			cur->dE_dz[i].resize(cur->getNueronCnt(), 0);
+			cur->dE_db[i].resize(cur->getNueronCnt(), 0);
+		}
 		
 		batch_dE_dw.insert(batch_dE_dw.begin(), Matrix<float>(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0));
 		batch_dE_do.insert(batch_dE_do.begin(), Vector<float>(cur->getNueronCnt(), 0));
@@ -78,92 +90,84 @@ void Model::init() {
 }
 
 void Model::feed_forward(int idx) {
-
-	this->inputLayer->inputNeuron = this->input_set[idx];
-	this->inputLayer->outputNeuron = this->inputLayer->inputNeuron;
+	this->inputLayer->inputNeuron[idx % this->batch_size] = this->input_set[idx];
+	this->inputLayer->outputNeuron[idx % this->batch_size] = this->input_set[idx];;
 
 	for (Layer* layer : Layers) {
-		layer->inputNeuron = (layer->weight * layer->preLayer->outputNeuron) + layer->bias;
-		layer->outputNeuron = layer->activation(layer->inputNeuron);
+		layer->inputNeuron[idx % this->batch_size] = (layer->weight * layer->preLayer->outputNeuron[idx % this->batch_size]) + layer->bias;
+		layer->outputNeuron[idx % this->batch_size] = layer->activation(layer->inputNeuron[idx % this->batch_size]);
 	}
 	Layer* cur = this->outputLayer;
-	cur->inputNeuron = (cur->weight * cur->preLayer->outputNeuron) + cur->bias;
-	cur->outputNeuron = cur->activation(cur->inputNeuron);
-	this->output = cur->outputNeuron;
+	cur->inputNeuron[idx % this->batch_size] = (cur->weight * cur->preLayer->outputNeuron[idx % this->batch_size]) + cur->bias;
+	cur->outputNeuron[idx % this->batch_size] = cur->activation(cur->inputNeuron[idx % this->batch_size]);
+	this->output_set[idx % this->batch_size] = cur->outputNeuron[idx % this->batch_size];
 	return;
 }
 
 void Model::back_propagation(int idx) {
 	Layer* cur = nullptr;
 	Layer* next = nullptr;
-	this->target = target_set[idx];
 	int _depth = this->depth;
 	//output Layer
 	cur = this->outputLayer;
-	cur->dE_do = this->loss_diff(this->output, this->target);
-	cur->do_dz = cur->activation_diff(cur->inputNeuron);
-	cur->dz_dw = cur->preLayer->outputNeuron;
-	cur->dE_dz = cur->dE_do * cur->do_dz;
-	cur->dz_db.resize(cur->getNueronCnt(), 1);
-	cur->dE_db = cur->dE_dz * cur->dz_db;
+	cur->dE_do[idx % this->batch_size] = this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx % this->batch_size]);
+	cur->do_dz[idx % this->batch_size] = cur->activation_diff(cur->inputNeuron[idx % this->batch_size]);
+	cur->dz_dw[idx % this->batch_size] = cur->preLayer->outputNeuron[idx % this->batch_size];
+	cur->dE_dz[idx % this->batch_size] = cur->dE_do[idx % this->batch_size] * cur->do_dz[idx % this->batch_size];
+	cur->dz_db[idx % this->batch_size].resize(cur->getNueronCnt(), 1);
+	cur->dE_db[idx % this->batch_size] = cur->dE_dz[idx % this->batch_size] * cur->dz_db[idx % this->batch_size];
 	
-	this->batch_dE_do[_depth] += cur->dE_do;
-	this->batch_do_dz[_depth] += cur->do_dz;
-	this->batch_dz_dw[_depth] += cur->dz_dw;
-	this->batch_dE_dz[_depth] += cur->dE_dz;
-	this->batch_dz_db[_depth] += cur->dz_db;
-	this->batch_dE_db[_depth] += cur->dE_db;
+	this->batch_dE_do[_depth] += cur->dE_do[idx % this->batch_size];
+	this->batch_do_dz[_depth] += cur->do_dz[idx % this->batch_size];
+	this->batch_dz_dw[_depth] += cur->dz_dw[idx % this->batch_size];
+	this->batch_dE_dz[_depth] += cur->dE_dz[idx % this->batch_size];
+	this->batch_dz_db[_depth] += cur->dz_db[idx % this->batch_size];
+	this->batch_dE_db[_depth] += cur->dE_db[idx % this->batch_size];
 	
 	for (int i = 0; i < this->nOutput; i++) {
 		for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
-			cur->dE_dw(i, j) = cur->dE_do[i] * cur->do_dz[i] * cur->dz_dw[j];
-			this->batch_dE_dw[_depth](i,j) += cur->dE_dw(i, j);
-			//cur->weight(i, j) -= (this->learning_rate * cur->dE_dw(i, j));
+			cur->dE_dw[idx % this->batch_size](i, j) = cur->dE_do[idx % this->batch_size][i] * cur->do_dz[idx % this->batch_size][i] * cur->dz_dw[idx % this->batch_size][j];
+			this->batch_dE_dw[_depth](i,j) += cur->dE_dw[idx % this->batch_size](i, j);
 		}
 	}
 	
 	_depth -= 1;
-	//cur->bias -= (cur->dE_db * this->learning_rate);
 	next = cur;
-	cur = cur->preLayer; //dE_dh = sigma(dE_Oi)
+	cur = cur->preLayer; 
 	//hidden Layer
 	do {
 		for (int i = 0; i < cur->getNueronCnt(); i++) {
 			float temp = 0;
 			for (int j = 0; j < next->getNueronCnt(); j++) {
-				temp += next->dE_dz[j] * next->weight(j, i);
+				temp += next->dE_dz[idx % this->batch_size][j] * next->weight(j, i);
 			}
-			cur->dE_do[i] = temp;
+			cur->dE_do[idx % this->batch_size][i] = temp;
 		}
-		cur->do_dz = cur->activation_diff(cur->inputNeuron);
-		cur->dz_dw = cur->preLayer->outputNeuron;
-		cur->dE_dz = cur->dE_do * cur->do_dz;
-		cur->dz_db.resize(cur->getNueronCnt(), 1);
-		cur->dE_db = cur->dE_dz * cur->dz_db;
+		cur->do_dz[idx % this->batch_size] = cur->activation_diff(cur->inputNeuron[idx % this->batch_size]);
+		cur->dz_dw[idx % this->batch_size] = cur->preLayer->outputNeuron[idx % this->batch_size];
+		cur->dE_dz[idx % this->batch_size] = cur->dE_do[idx % this->batch_size] * cur->do_dz[idx % this->batch_size];
+		cur->dz_db[idx % this->batch_size].resize(cur->getNueronCnt(), 1);
+		cur->dE_db[idx % this->batch_size] = cur->dE_dz[idx % this->batch_size] * cur->dz_db[idx % this->batch_size];
 		
-		this->batch_dE_do[_depth] += cur->dE_do;
-		this->batch_do_dz[_depth] += cur->do_dz;
-		this->batch_dz_dw[_depth] += cur->dz_dw;
-		this->batch_dE_dz[_depth] += cur->dE_dz;
-		this->batch_dz_db[_depth] += cur->dz_db;
-		this->batch_dE_db[_depth] += cur->dE_db;
+		this->batch_dE_do[_depth] += cur->dE_do[idx % this->batch_size];
+		this->batch_do_dz[_depth] += cur->do_dz[idx % this->batch_size];
+		this->batch_dz_dw[_depth] += cur->dz_dw[idx % this->batch_size];
+		this->batch_dE_dz[_depth] += cur->dE_dz[idx % this->batch_size];
+		this->batch_dz_db[_depth] += cur->dz_db[idx % this->batch_size];
+		this->batch_dE_db[_depth] += cur->dE_db[idx % this->batch_size];
 		
 		//gradient
 		for (int i = 0; i < cur->getNueronCnt(); i++) {
 			for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
-				cur->dE_dw(i, j) = cur->dE_do[i] * cur->do_dz[i] * cur->dz_dw[j];
-				//std::cout<<cur->dE_dw(j, k)<<'\t';
-				this->batch_dE_dw[_depth](i,j) += cur->dE_dw(i, j);
-				//cur->weight(i, j) -= (cur->dE_dw(i, j) * this->learning_rate);
+				cur->dE_dw[idx % this->batch_size](i, j) = cur->dE_do[idx % this->batch_size][i] * cur->do_dz[idx % this->batch_size][i] * cur->dz_dw[idx % this->batch_size][j];
+				this->batch_dE_dw[_depth](i,j) += cur->dE_dw[idx % this->batch_size](i, j);
 			}
 			//std::cout<<'\n';
 		}
-		//cur->bias -= (cur->dE_db * this->learning_rate);
 		next = cur;
 		cur = cur->preLayer;
 		_depth -= 1;
 	} while (cur->preLayer != nullptr);
-
 }
 
 void Model::update(){

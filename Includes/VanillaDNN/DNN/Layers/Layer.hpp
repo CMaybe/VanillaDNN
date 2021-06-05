@@ -24,16 +24,16 @@ public:
 	Layer* preLayer;
 	Matrix<float> weight;
 	Vector<float> bias;
-	Vector<float> inputNeuron; // before activate : preLayer->weight * neuronOutput
-	Vector<float> outputNeuron; // after actionte : actinvation(neuronInput)
+	std::vector<Vector<float>> inputNeuron; // before activate : preLayer->weight * neuronOutput
+	std::vector<Vector<float>> outputNeuron; // after actionte : actinvation(neuronInput)
 
-	Matrix<float> dE_dw;
-	Vector<float> dE_do;
-	Vector<float> do_dz;
-	Vector<float> dz_dw;
-	Vector<float> dE_dz;
-	Vector<float> dE_db;
-	Vector<float> dz_db;
+	std::vector<Matrix<float>> dE_dw;
+	std::vector<Vector<float>> dE_do;
+	std::vector<Vector<float>> do_dz;
+	std::vector<Vector<float>> dz_dw;
+	std::vector<Vector<float>> dE_dz;
+	std::vector<Vector<float>> dE_db;
+	std::vector<Vector<float>> dz_db;
 
 	virtual ~Layer();
 	void setActivation(Activation _activation);

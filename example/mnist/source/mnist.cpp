@@ -25,11 +25,11 @@ int main(int argc, char** argv) {
 	}
 
 	std::cout<< "Data processing is done!\n";
+	
 	Model mnist(784, 10);//input : 28 x 28, output 0 ~ 9;
 	
 	mnist.setOutputFunction(ACTIVATION_FUNCTION::sigmoid);
 	mnist.setLoss(LOSS_FUNCTION::mean_squared_error);
-
 	mnist.addLayer(new Layer(384, ACTIVATION_FUNCTION::sigmoid));
 	mnist.addLayer(new Layer(128, ACTIVATION_FUNCTION::sigmoid));
 	mnist.addLayer(new Layer(32, ACTIVATION_FUNCTION::sigmoid));
@@ -37,8 +37,7 @@ int main(int argc, char** argv) {
 	mnist.setLearningRate(0.8f);
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(50000, 10, 40); //total, epoch, batch
-
+	mnist.fit(5000, 10, 10); //total, epoch, batch
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
 
