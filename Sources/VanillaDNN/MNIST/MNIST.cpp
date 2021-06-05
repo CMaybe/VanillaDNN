@@ -27,16 +27,16 @@ MNIST::MNIST(std::string _path,std::string _set)
 	this->set = _set;
 	if (this->set == "train")
 	{
-		imageInputStream.open(this->trainSetFileName[0],
+		imageInputStream.open(trainSetFileName[0],
 			std::ios::in | std::ios::binary);
-		labelInputStream.open(this->trainSetFileName[1],
+		labelInputStream.open(trainSetFileName[1],
 			std::ios::in | std::ios::binary);
 	}
 	else if (this->set == "test")
 	{
-		imageInputStream.open(this->testSetFileName[0],
+		imageInputStream.open(testSetFileName[0],
 			std::ios::in | std::ios::binary);
-		labelInputStream.open(this->testSetFileName[1],
+		labelInputStream.open(testSetFileName[1],
 			std::ios::in | std::ios::binary);
 	}
 

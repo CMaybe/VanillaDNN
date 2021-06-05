@@ -16,7 +16,7 @@ private:
 
 public:
 	MNIST();
-	MNIST(std::string _set);
+	MNIST(std::string _path, std::string _set);
 	MNIST(const MNIST& rhs);
 
 	std::vector<std::vector<char>> getImages();

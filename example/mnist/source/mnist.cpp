@@ -1,14 +1,14 @@
-#include "DNN/Layer/Layer.hpp"
-#include "DNN/Model/Model.hpp"
-#include "DNN/Functions/DNNFunction.hpp"
-#include "MNIST/MNIST.hpp"
+#include <VanillaDNN/DNN/Layers/Layer.hpp>
+#include <VanillaDNN/DNN/Model/Model.hpp>
+#include <VanillaDNN/DNN/Functions/DNNFunction.hpp>
+#include <VanillaDNN/MNIST/MNIST.hpp>
 #include <iostream>
 #include <cstdlib>
 #include <vector>
 
 int main(int argc, char** argv) {
 	//training set
-	MNIST training_set(MNIST_DATA_DIR, "train");
+	MNIST training_set(MNIST_DATA_LOCATION, "train");
 	
 	// Get MNIST Data
 	std::vector<std::vector<char>> pre_training_images = training_set.getImages();
@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 	}
 
 	//evaluate set
-	MNIST evaluate_set(MNIST_DATA_DIR, "test");
+	MNIST evaluate_set(MNIST_DATA_LOCATION, "test");
 	std::vector<std::vector<char>> pre_evaluate_images = evaluate_set.getImages();
 	std::vector<char> pre_evaluate_labels = evaluate_set.getLabels();
 
