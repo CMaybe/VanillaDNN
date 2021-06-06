@@ -179,7 +179,7 @@ void Model::update(){
 	int _depth = this->depth;
 	//output Layer
 	cur = this->outputLayer;
-	cur->weight -= this->optimizer->getWeightGradient(this->batch_dE_dw[_depth]) / this->batch_size;
+	cur->weight -= this->optimizer->getWeightGradient(this->batch_dE_dw[_depth], _depth) / this->batch_size;
 	cur->bias -= this->batch_dE_db[_depth]  / this->batch_size;
 	cur = cur->preLayer; //dE_dh = sigma(dE_Oi)
 	_depth -= 1;
@@ -187,7 +187,7 @@ void Model::update(){
 	//hidden Layer
 	do {
 		//gradient
-		cur->weight -= this->optimizer->getWeightGradient(this->batch_dE_dw[_depth]) / this->batch_size;
+		cur->weight -= this->optimizer->getWeightGradient(this->batch_dE_dw[_depth], _depth) / this->batch_size;
 		cur->bias -= this->batch_dE_db[_depth]  / this->batch_size;
 		_depth -= 1;
 		cur = cur->preLayer;
@@ -275,6 +275,11 @@ float Model::getAccuracy() {
 float Model::getError() {
 	return this->error;
 }
+
+int Model::getDepth() {
+	return this->depth;
+}
+
 
 void Model::setOutputFunction(Activation _activation) {
 	this->outputLayer->setActivation(_activation);

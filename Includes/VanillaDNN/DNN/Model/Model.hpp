@@ -73,6 +73,7 @@ public:
 	int getOutput();
 	float getAccuracy();
 	float getError();
+	int getDepth();
 	bool check_success();
 	void setLearningRate(float lr);
 

@@ -4,6 +4,8 @@
 
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
+#include <vector>
+
 
 #define EPSILON 1e-6
 
@@ -16,7 +18,7 @@ public:
 	virtual ~Optimizer();
 	float getLearningRate();
 	void setLearningRate(float lr);
-	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
+	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1);
 	//virtual Vector<float> getBiasGradient(Matrix<float>& dE_dW);
 };
 
@@ -24,12 +26,12 @@ class Momentum : public Optimizer
 {
 private:
 	float momentum;
-	Matrix<float> vel;
+	std::vector<Matrix<float>> vel;
 public:	
-	Momentum(float lr, float _momentum);
+	Momentum(float lr, float _momentum, int _depth);
 	virtual ~Momentum(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
 };
 
 class NAG : public Optimizer
@@ -38,7 +40,7 @@ public:
 	NAG(float lr);
 	virtual ~NAG(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
 };
 
 class Nadam : public Optimizer
@@ -47,7 +49,7 @@ public:
 	Nadam(float lr);
 	virtual ~Nadam(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
 };
 
 class Adam : public Optimizer
@@ -58,7 +60,7 @@ public:
 	Adam(float lr, float _beta1, float _beta2, float _decay);
 	virtual ~Adam(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
 };
 
 class RMSProp : public Optimizer
@@ -70,7 +72,7 @@ public:
 	RMSProp(float lr, float _rho, float _epsilo);
 	virtual ~RMSProp(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
 };
 
 class Adagrad : public Optimizer
@@ -81,7 +83,7 @@ public:
 	Adagrad(float lr, float _epsilon);
 	virtual ~Adagrad(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
 };
 
 class AdaDelta : public Optimizer
@@ -90,7 +92,7 @@ public:
 	AdaDelta(float lr);
 	virtual ~AdaDelta(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
 };
 
 
