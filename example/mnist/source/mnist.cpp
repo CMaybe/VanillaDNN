@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 	mnist.setLearningRate(0.8f);
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(5000, 10, 10); //total, epoch, batch
+	mnist.fit(50000, 10, 40); //total, epoch, batch
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
 

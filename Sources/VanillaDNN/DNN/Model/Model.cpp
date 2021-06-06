@@ -49,8 +49,11 @@ void Model::setLoss(Loss _loss) {
 }
 
 void Model::init() {
+	this->output_set.resize(this->batch_size);
 	this->Layers[0]->preLayer = inputLayer;
 	this->inputLayer->preLayer = nullptr;
+	this->inputLayer->inputNeuron.resize(this->batch_size);
+	this->inputLayer->outputNeuron.resize(this->batch_size);
 	this->outputLayer->preLayer = this->Layers[this->depth - 1];
 	Layer* cur = this->outputLayer;
 	do {
@@ -65,7 +68,7 @@ void Model::init() {
 		cur->dz_dw.resize(this->batch_size);
 		cur->dE_db.resize(this->batch_size);
 		cur->dE_dz.resize(this->batch_size);
-		cur->dE_db.resize(this->batch_size);
+		cur->dz_db.resize(this->batch_size);
 		for(int i = 0; i < this->batch_size; i++){
 			cur->dE_dw[i].resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0);
 			cur->dE_do[i].resize(cur->getNueronCnt(), 0);
@@ -73,7 +76,7 @@ void Model::init() {
 			cur->dz_dw[i].resize(cur->preLayer->getNueronCnt(),0);
 			cur->dE_db[i].resize(cur->getNueronCnt(), 0);
 			cur->dE_dz[i].resize(cur->getNueronCnt(), 0);
-			cur->dE_db[i].resize(cur->getNueronCnt(), 0);
+			cur->dz_db[i].resize(cur->getNueronCnt(), 0);
 		}
 		
 		batch_dE_dw.insert(batch_dE_dw.begin(), Matrix<float>(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0));
@@ -92,7 +95,6 @@ void Model::init() {
 void Model::feed_forward(int idx) {
 	this->inputLayer->inputNeuron[idx % this->batch_size] = this->input_set[idx];
 	this->inputLayer->outputNeuron[idx % this->batch_size] = this->input_set[idx];;
-
 	for (Layer* layer : Layers) {
 		layer->inputNeuron[idx % this->batch_size] = (layer->weight * layer->preLayer->outputNeuron[idx % this->batch_size]) + layer->bias;
 		layer->outputNeuron[idx % this->batch_size] = layer->activation(layer->inputNeuron[idx % this->batch_size]);
@@ -126,7 +128,8 @@ void Model::back_propagation(int idx) {
 	
 	for (int i = 0; i < this->nOutput; i++) {
 		for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
-			cur->dE_dw[idx % this->batch_size](i, j) = cur->dE_do[idx % this->batch_size][i] * cur->do_dz[idx % this->batch_size][i] * cur->dz_dw[idx % this->batch_size][j];
+			cur->dE_dw[idx % this->batch_size](i, j) = 
+				cur->dE_do[idx % this->batch_size][i] * cur->do_dz[idx % this->batch_size][i] * cur->dz_dw[idx % this->batch_size][j];
 			this->batch_dE_dw[_depth](i,j) += cur->dE_dw[idx % this->batch_size](i, j);
 		}
 	}
@@ -159,7 +162,8 @@ void Model::back_propagation(int idx) {
 		//gradient
 		for (int i = 0; i < cur->getNueronCnt(); i++) {
 			for (int j = 0; j < cur->preLayer->getNueronCnt(); j++) {
-				cur->dE_dw[idx % this->batch_size](i, j) = cur->dE_do[idx % this->batch_size][i] * cur->do_dz[idx % this->batch_size][i] * cur->dz_dw[idx % this->batch_size][j];
+				cur->dE_dw[idx % this->batch_size](i, j) = 
+					cur->dE_do[idx % this->batch_size][i] * cur->do_dz[idx % this->batch_size][i] * cur->dz_dw[idx % this->batch_size][j];
 				this->batch_dE_dw[_depth](i,j) += cur->dE_dw[idx % this->batch_size](i, j);
 			}
 			//std::cout<<'\n';
@@ -175,16 +179,16 @@ void Model::update(){
 	int _depth = this->depth;
 	//output Layer
 	cur = this->outputLayer;
-	cur->weight -= (this->batch_dE_dw[_depth] * this->learning_rate);///(this->batch);
-	cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate);///(this->batch);
+	cur->weight -= (this->batch_dE_dw[_depth] * this->learning_rate / this->batch_size);
+	cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate / this->batch_size);
 	cur = cur->preLayer; //dE_dh = sigma(dE_Oi)
 	_depth -= 1;
 
 	//hidden Layer
 	do {
 		//gradient
-		cur->weight -= (this->batch_dE_dw[_depth] * this->learning_rate);///(this->batch);
-		cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate);///(this->batch);
+		cur->weight -= (this->batch_dE_dw[_depth] * this->learning_rate) / this->batch_size;
+		cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate) / this->batch_size;
 		_depth -= 1;
 		cur = cur->preLayer;
 	} while (cur->preLayer != nullptr);
@@ -216,10 +220,10 @@ void Model::update(){
 }
 
 void Model::fit(int _total, int _epoch, int _batch) {
-	this->init();
 	this->total = _total;
 	this->epoch = _epoch;
 	this->batch_size = _batch;
+	this->init();
 	std::vector<std::future<void>> batch_tasks;
 	for (int i = 0; i < this->epoch; i++) {
 		for (int j = 0; j < this->total; j+=this->batch_size) {
@@ -244,13 +248,13 @@ void Model::evaluate(int _len,bool show) {
 	this->accuracy = 0;
 	float acc_sum = 0;
 	float error_sum = 0;
-
 	this->Layers[0]->preLayer = inputLayer;
 	this->inputLayer->preLayer = nullptr;
 	this->outputLayer->preLayer = this->Layers[this->depth - 1];
 	for (int i = 0; i < _len; i++) {
 		this->target = this->target_set[i];
 		this->feed_forward(i);
+		this->output = this->output_set[i % this->batch_size];
 		if (show) {
 			std::cout << "\n\ntarget : \n";
 			std::cout << this->target;
@@ -258,7 +262,7 @@ void Model::evaluate(int _len,bool show) {
 			std::cout << this->output;
 		}
 		acc_sum += (this->target - this->output).norm();
-		error_sum += this->loss(output, target_set[i]);
+		error_sum += this->loss(this->output, target_set[i]);
 	}
 	this->accuracy = 1.0f - (acc_sum / _len);
 	this->error = error_sum / _len;

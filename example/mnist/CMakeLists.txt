@@ -4,6 +4,7 @@ project(mnist)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/bin)
 set(CMAKE_BUILD_TYPE Release)
+# set(CMAKE_BUILD_TYPE Degug)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(Threads REQUIRED)
