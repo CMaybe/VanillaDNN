@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <stdexcept>
+#include <cmath>
 
 template<typename T> class Vector;
 
@@ -34,7 +35,7 @@ public:
 	Matrix<T>& operator*=(const Matrix<T>& rhs);
 
 	Matrix<T> transpose();
-
+	Matrix<T> square();
 
 	//scalar	
 	Matrix<T> operator+(const T& rhs);
@@ -50,6 +51,8 @@ public:
 
 	T& operator()(const int& row, const int& col);
 	const T& operator()(const int& row, const int& col) const;
+	
+	
 
 	//cout overloading 
 	template<typename U>
@@ -59,6 +62,7 @@ public:
 	int get_cols_size() const;
 	void resize(int _rows, int _cols, T _init = 0);
 	void setRandom();
+	float norm();
 
 };
 
