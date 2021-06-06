@@ -14,7 +14,7 @@ add_definitions("-std=c++17")
 
 add_executable(mnist
 	source/mnist.cpp
-	${VanillaDNN_SOURCE_DIR}/VanillaDNN/DNN/Functions/DNNFunction.cpp
+	${VanillaDNN_SOURCE_DIR}/VanillaDNN/DNN/Functions/Functions.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/DNN/Functions/Optimizer.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/DNN/Layers/Layer.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/DNN/Model/Model.cpp

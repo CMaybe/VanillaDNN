@@ -7,51 +7,90 @@
 
 #define EPSILON 1e-6
 
-
-enum class OPTIMIZER
-{
-	GD,
-	SGD,
-	BGD,
-	MBGD,
-	MOMENTUM,
-	NAG,
-	NADAM,
-	ADAM,
-	RMSPROP,
-	ADAGRAD,
-	ADADELTA
-};
-
 class Optimizer
 {
-private:
+protected:
 	float learning_rate;
-	float momentum,vel;
-	float beta1, bete2;
-	float epsilon;
-	float rho;
-	float decay;
-	int batch_size;
-	OPTIMIZER optimizer;
-
 public:
 	Optimizer();
 	virtual ~Optimizer();
-	void setSGD(float lr);  //  Stochastic Gradient Descent
-	void setBGD(float lr);  //  Batch Gradient Descent
-	void setMBGD(float lr); //  Mini-Batfch Gradient Descent
-	void setMomentum(float lr, float _momentum);
-	void setAdagrad(float lr, float _epsilon);
-	void setNAG(float lr);
-	void setNadam(float lr);
-	void setAdam(float lr, float _beta1, float _beta2, float _decay);
-	void setRMSProp(float lr, float _rho, float _epsilon);
-	void setAdaDelta(float lr);
 	float getLearningRate();
-	float getCalculatedWeight(float weight, float dE_dW);
-	OPTIMIZER getOptimizer();
+	void setLearningRate(float lr);
+	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
+	//virtual Vector<float> getBiasGradient(Matrix<float>& dE_dW);
+};
 
+class Momentum : public Optimizer
+{
+private:
+	float momentum;
+	Matrix<float> vel;
+public:	
+	Momentum(float lr, float _momentum);
+	virtual ~Momentum(){};
+	
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+};
+
+class NAG : public Optimizer
+{
+public:	
+	NAG(float lr);
+	virtual ~NAG(){};
+	
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+};
+
+class Nadam : public Optimizer
+{
+public:	
+	Nadam(float lr);
+	virtual ~Nadam(){};
+	
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+};
+
+class Adam : public Optimizer
+{
+private:
+	float beta1, beta2, decay;
+public:	
+	Adam(float lr, float _beta1, float _beta2, float _decay);
+	virtual ~Adam(){};
+	
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+};
+
+class RMSProp : public Optimizer
+{
+private:
+	float epsilon;
+	float rho;
+public:	
+	RMSProp(float lr, float _rho, float _epsilo);
+	virtual ~RMSProp(){};
+	
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+};
+
+class Adagrad : public Optimizer
+{
+private:
+	float epsilon;
+public:	
+	Adagrad(float lr, float _epsilon);
+	virtual ~Adagrad(){};
+	
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+};
+
+class AdaDelta : public Optimizer
+{
+public:	
+	AdaDelta(float lr);
+	virtual ~AdaDelta(){};
+	
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
 };
 
 

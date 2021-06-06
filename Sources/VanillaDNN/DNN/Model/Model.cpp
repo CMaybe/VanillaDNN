@@ -6,7 +6,6 @@
 
 Model::Model(int _nInput, int _nOutput) {
 	this->depth = 0;
-	this->learning_rate = 1.0;
 	this->nInput = _nInput;
 	this->nOutput = _nOutput;
 	this->inputLayer = new Layer(_nInput);
@@ -17,6 +16,7 @@ Model::Model(int _nInput, int _nOutput) {
 	this->total = 0;
 	this->accuracy = 0;
 	this->error = 0;
+	this->optimizer = new Optimizer();
 }
 
 Model::~Model() {
@@ -179,16 +179,16 @@ void Model::update(){
 	int _depth = this->depth;
 	//output Layer
 	cur = this->outputLayer;
-	cur->weight -= (this->batch_dE_dw[_depth] * this->learning_rate) / this->batch_size;
-	cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate) / this->batch_size;
+	cur->weight -= this->optimizer->getWeightGradient(this->batch_dE_dw[_depth]) / this->batch_size;
+	cur->bias -= this->batch_dE_db[_depth]  / this->batch_size;
 	cur = cur->preLayer; //dE_dh = sigma(dE_Oi)
 	_depth -= 1;
 
 	//hidden Layer
 	do {
 		//gradient
-		cur->weight -= (this->batch_dE_dw[_depth] * this->learning_rate) / this->batch_size;
-		cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate) / this->batch_size;
+		cur->weight -= this->optimizer->getWeightGradient(this->batch_dE_dw[_depth]) / this->batch_size;
+		cur->bias -= this->batch_dE_db[_depth]  / this->batch_size;
 		_depth -= 1;
 		cur = cur->preLayer;
 	} while (cur->preLayer != nullptr);
@@ -313,6 +313,11 @@ void Model::addLayers(std::vector<Layer*>& _layers) {
 	return;
 }
 
+void Model::setOptimizer(Optimizer *_optimizer) {
+	if(this->optimizer != nullptr) delete this->optimizer;
+	this->optimizer = _optimizer;
+}
+
 void Model::setInput(std::vector<Vector<float>>& _input_set) {
 	this->input_set = _input_set;
 }
@@ -337,7 +342,7 @@ int Model::getOutput() {
 
 void Model::setLearningRate(float lr)
 {
-	this->learning_rate = lr;
+	this->optimizer->setLearningRate(lr);
 }
 
 #endif

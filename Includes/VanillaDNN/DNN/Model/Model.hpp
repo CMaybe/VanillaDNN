@@ -23,7 +23,7 @@ private:
 	Loss loss;
 	Loss_diff loss_diff;
 	
-	Optimizer optimizer;
+	Optimizer *optimizer = nullptr;
 	std::vector<Layer*> Layers; // exclude input&output Layer;
 	
 	Vector<float> input;
@@ -52,7 +52,6 @@ private:
 	int total;
 	float accuracy;
 	float error;
-	float learning_rate;
 
 public:
 	Model();
@@ -70,7 +69,7 @@ public:
 	void addLayers(std::vector<Layer*>& _layers);
 	void setInput(std::vector<Vector<float>>& _input_set);
 	void setTarget(std::vector<Vector<float>>& _target_set);
-	void setOptimizer(Optimizer _optimizer);
+	void setOptimizer(Optimizer *_optimizer);
 	int getOutput();
 	float getAccuracy();
 	float getError();

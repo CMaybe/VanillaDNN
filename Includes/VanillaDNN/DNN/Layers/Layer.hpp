@@ -6,7 +6,7 @@
 #include <memory>
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
-#include <VanillaDNN/DNN/Functions/DNNFunction.hpp>
+#include <VanillaDNN/DNN/Functions/Functions.hpp>
 
 
 
