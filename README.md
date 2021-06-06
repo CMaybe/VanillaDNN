@@ -18,7 +18,7 @@ VanillaDNN is DNN framework using only C++.
 - [x] ~~Testing Func~~
 - [X] ~~Feed forward~~
 - [X] ~~Back propagation~~
-- [ ] Optimizer
+- [x] ~~Optimizer~~
 - [ ] TBA
 ___
 ### Math
@@ -48,7 +48,7 @@ ___
 - [x] ~~Set input~~
 - [x] ~~Set target~~
 - [x] ~~Get accuracy~~
-- [ ] Optimizer handle
+- [x] ~~Optimizer handle~~
 - [ ] TBA
 
 ___
@@ -83,10 +83,12 @@ ___
 - [ ] mean absolute error with epsilon range
 
 ### optimization algorithms
-- [ ] stochastic gradient descent 
-- [ ] momentum and Nesterov momentum
-- [ ] adagrad
-- [ ] rmsprop
+- [x] ~~stochastic gradient descent~~
+- [x] ~~batch gradient descent~~
+- [x] ~~mini-batch gradient descent~~ 
+- [x] ~~momentum~~
+- [x] ~~adagrad~~
+- [x] ~~rmsprop~~
 - [ ] adam
 - [ ] adamax
 

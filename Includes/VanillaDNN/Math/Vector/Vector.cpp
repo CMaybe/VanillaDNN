@@ -275,10 +275,10 @@ float Vector<T>::norm(){
 }
 
 template<typename T>
-Vector<T> Vector<T>::onthot(){
+Vector<T> Vector<T>::onehot(){
 	int size = this->size;
 	Vector<T> result(size, 0);
-	float _max = std::max(this->vector.begin(), this->vector.end());
+	float _max = *std::max_element(this->vector.begin(), this->vector.end());
 	for(int i = 0; i < size; i++){
 		if (_max == this->vector[i]){
 			result[i] = 1;

@@ -28,12 +28,13 @@ int main(int argc, char** argv) {
 	mnist.addLayer(new Layer(128, ACTIVATION_FUNCTION::sigmoid));
 	mnist.addLayer(new Layer(32, ACTIVATION_FUNCTION::sigmoid));
 	
-	mnist.setOptimizer(new Momentum(0.1,0.9,mnist.getDepth()));
-	
+	// mnist.setOptimizer(new Momentum(0.1,0.9,mnist.getDepth()));
+	// mnist.setOptimizer(new Adagrad(0.01f,1e-6,mnist.getDepth()));
+	mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-6,mnist.getDepth())); //lr, _rho, _epsilon, _depth
 	mnist.setLearningRate(0.8f);
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(10000, 5, 10); //total, epoch, batch
+	mnist.fit(5000, 5, 10); //total, epoch, batch
 	
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);

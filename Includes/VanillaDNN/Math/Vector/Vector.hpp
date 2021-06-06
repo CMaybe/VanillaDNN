@@ -56,7 +56,7 @@ public:
 	template<typename U>
 	friend std::ostream& operator << (std::ostream& out, const Vector<U>& v);
 
-	Vector<T> onthot();
+	Vector<T> onehot();
 	int get_size() const;
 	void push_back(T value);
 	void setRandom();

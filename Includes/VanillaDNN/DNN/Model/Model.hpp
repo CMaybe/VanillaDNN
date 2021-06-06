@@ -70,11 +70,9 @@ public:
 	void setInput(std::vector<Vector<float>>& _input_set);
 	void setTarget(std::vector<Vector<float>>& _target_set);
 	void setOptimizer(Optimizer *_optimizer);
-	int getOutput();
 	float getAccuracy();
 	float getError();
 	int getDepth();
-	bool check_success();
 	void setLearningRate(float lr);
 
 

@@ -261,10 +261,10 @@ void Model::evaluate(int _len,bool show) {
 			std::cout << "output : \n";
 			std::cout << this->output;
 		}
-		acc_sum += (this->target - this->output).norm();
+		acc_sum += static_cast<float>(this->target == this->output.onehot());
 		error_sum += this->loss(this->output, target_set[i]);
 	}
-	this->accuracy = 1.0f - (acc_sum / _len);
+	this->accuracy = acc_sum / _len;
 	this->error = error_sum / _len;
 }
 
@@ -329,21 +329,7 @@ void Model::setInput(std::vector<Vector<float>>& _input_set) {
 
 void Model::setTarget(std::vector<Vector<float>>& _target_set) {
 	this->target_set = _target_set;
-
 }
-
-int Model::getOutput() {
-	int idx = 0;
-	float _max = -1e9;
-	for (int i = 0; i < this->nOutput; i++) {
-		if (this->output[i] > _max) {
-			_max = this->output[i];
-			idx = i;
-		}
-	}
-	return idx + 1;
-}
-
 
 void Model::setLearningRate(float lr)
 {
