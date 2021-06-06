@@ -112,7 +112,7 @@ void Model::back_propagation(int idx) {
 	int _depth = this->depth;
 	//output Layer
 	cur = this->outputLayer;
-	cur->dE_do[idx % this->batch_size] = this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx % this->batch_size]);
+	cur->dE_do[idx % this->batch_size] = this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]);
 	cur->do_dz[idx % this->batch_size] = cur->activation_diff(cur->inputNeuron[idx % this->batch_size]);
 	cur->dz_dw[idx % this->batch_size] = cur->preLayer->outputNeuron[idx % this->batch_size];
 	cur->dE_dz[idx % this->batch_size] = cur->dE_do[idx % this->batch_size] * cur->do_dz[idx % this->batch_size];
@@ -179,8 +179,8 @@ void Model::update(){
 	int _depth = this->depth;
 	//output Layer
 	cur = this->outputLayer;
-	cur->weight -= (this->batch_dE_dw[_depth] * this->learning_rate / this->batch_size);
-	cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate / this->batch_size);
+	cur->weight -= (this->batch_dE_dw[_depth] * this->learning_rate) / this->batch_size;
+	cur->bias -= (this->batch_dE_db[_depth] * this->learning_rate) / this->batch_size;
 	cur = cur->preLayer; //dE_dh = sigma(dE_Oi)
 	_depth -= 1;
 

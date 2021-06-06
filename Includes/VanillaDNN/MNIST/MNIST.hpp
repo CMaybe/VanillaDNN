@@ -7,6 +7,8 @@
 #include <vector>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
 
+#define ONE_HOT true
+
 class MNIST
 {
 private:

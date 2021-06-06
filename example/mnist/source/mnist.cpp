@@ -7,22 +7,15 @@
 
 int main(int argc, char** argv) {
 	//training set
-	MNIST training_set(MNIST_DATA_LOCATION, "train");
+	MNIST training_set(MNIST_DATA_LOCATION, "train", ONE_HOT);
 	std::vector<Vector<float>> training_images(training_set.getImages());
 	std::vector<Vector<float>> training_labels(training_set.getLabels());
 
-	for (int i = 0; i < training_images.size(); i++) {
-		training_images[i] /= 255.0f;
-	}
-
 	//evaluate set
-	MNIST evaluate_set(MNIST_DATA_LOCATION, "test");
+	MNIST evaluate_set(MNIST_DATA_LOCATION, "test", ONE_HOT);
 	std::vector<Vector<float>> evaluate_images(evaluate_set.getImages());
 	std::vector<Vector<float>> evaluate_labels(evaluate_set.getLabels());
 
-	for (int i = 0; i < evaluate_images.size(); i++) {
-		evaluate_images[i] /= 255.0f;
-	}
 
 	std::cout<< "Data processing is done!\n";
 	
@@ -37,13 +30,13 @@ int main(int argc, char** argv) {
 	mnist.setLearningRate(0.8f);
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(50000, 10, 40); //total, epoch, batch
+	mnist.fit(10000, 5, 10); //total, epoch, batch
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
 
 	std::cout << "training is done!" << '\n';
 
-	mnist.evaluate(7000);
+	mnist.evaluate(100, true);
 	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
 
 
