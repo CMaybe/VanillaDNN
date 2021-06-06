@@ -6,6 +6,7 @@
 #include<iostream>
 #include<vector>
 #include<cmath>
+#include <algorithm>
 
 template<typename T> class Matrix;
 
@@ -20,8 +21,8 @@ public:
 	Vector(const Vector<T>& rhs);
 	Vector(const std::vector<T>& rhs);
 	Vector<T>& operator=(const Vector<T>& rhs);
-
-
+	bool operator==(const Vector<T>& rhs);
+	
 	virtual ~Vector();
 
 
@@ -55,6 +56,7 @@ public:
 	template<typename U>
 	friend std::ostream& operator << (std::ostream& out, const Vector<U>& v);
 
+	Vector<T> onthot();
 	int get_size() const;
 	void push_back(T value);
 	void setRandom();

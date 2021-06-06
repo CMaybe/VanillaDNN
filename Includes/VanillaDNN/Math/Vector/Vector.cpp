@@ -187,6 +187,10 @@ Vector<T>& Vector<T>::operator/=(const T& rhs) {
 
 	return *this;
 }
+template<typename T>
+bool Vector<T>::operator==(const Vector<T>& rhs){
+	return (*this - rhs).norm() < 0.001f;
+}
 
 template<typename T>
 Matrix<T> Vector<T>::transpose() {
@@ -268,6 +272,20 @@ float Vector<T>::norm(){
 		sum += static_cast<float>(this->vector[i] * this->vector[i]);
 	}
 	return sqrt(sum);
+}
+
+template<typename T>
+Vector<T> Vector<T>::onthot(){
+	int size = this->size;
+	Vector<T> result(size, 0);
+	float _max = std::max(this->vector.begin(), this->vector.end());
+	for(int i = 0; i < size; i++){
+		if (_max == this->vector[i]){
+			result[i] = 1;
+			break;
+		}
+	}
+	return result;
 }
 
 #endif
