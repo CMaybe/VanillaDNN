@@ -64,6 +64,47 @@ Matrix<float> Nadam::getWeightGradient(Matrix<float>& dE_dW, int _depth){
 	return result;
 }
 
+
+
+Adagrad::Adagrad(float lr, float _epsilon, int _depth)
+{
+	this->learning_rate = lr;
+	this->epsilon = _epsilon;
+	this->G.resize(_depth+1);
+}
+
+Matrix<float> Adagrad::getWeightGradient(Matrix<float>& dE_dW, int _depth){
+	Matrix<float> result;
+	if(this->G[_depth].get_rows_size() == 0){
+		this->G[_depth] = dE_dW.square();
+	}
+	else{
+		this->G[_depth] = this->G[_depth] + dE_dW.square();
+	}
+	result = dE_dW * this->learning_rate / sqrt(G[_depth].norm() + this->epsilon);
+	return result;
+}
+
+RMSProp::RMSProp(float lr, float _rho, float _epsilon, int _depth)
+{
+	this->learning_rate = lr;
+	this->rho = _rho;
+	this->epsilon = _epsilon;
+	this->G.resize(_depth+1);
+}
+
+Matrix<float> RMSProp::getWeightGradient(Matrix<float>& dE_dW, int _depth){
+	Matrix<float> result;
+	if(this->G[_depth].get_rows_size() == 0){
+		this->G[_depth] = dE_dW.square() * (1.0f - this->rho);
+	}
+	else{
+		this->G[_depth] = (this->G[_depth] * this->rho) + (dE_dW.square() * (1.0f - this->rho));
+	}
+	result = dE_dW * this->learning_rate / sqrt(G[_depth].norm() + this->epsilon);
+	return result;
+}
+
 Adam::Adam(float lr, float _beta1, float _beta2, float _decay)
 {
 	this->learning_rate = lr;
@@ -73,29 +114,6 @@ Adam::Adam(float lr, float _beta1, float _beta2, float _decay)
 }
 
 Matrix<float> Adam::getWeightGradient(Matrix<float>& dE_dW, int _depth){
-	Matrix<float> result;
-	return result;
-}
-
-RMSProp::RMSProp(float lr, float _rho, float _epsilon)
-{
-	this->learning_rate = lr;
-	this->rho = _rho;
-	this->epsilon = _epsilon;
-}
-
-Matrix<float> RMSProp::getWeightGradient(Matrix<float>& dE_dW, int _depth){
-	Matrix<float> result;
-	return result;
-}
-
-Adagrad::Adagrad(float lr, float _epsilon)
-{
-	this->learning_rate = lr;
-	this->epsilon = _epsilon;
-}
-
-Matrix<float> Adagrad::getWeightGradient(Matrix<float>& dE_dW, int _depth){
 	Matrix<float> result;
 	return result;
 }

@@ -5,6 +5,7 @@
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
 #include <vector>
+#include <cmath>
 
 
 #define EPSILON 1e-6
@@ -66,24 +67,26 @@ public:
 class RMSProp : public Optimizer
 {
 private:
+	std::vector<Matrix<float>> G; 
 	float epsilon;
 	float rho;
 public:	
-	RMSProp(float lr, float _rho, float _epsilo);
+	RMSProp(float lr, float _rho, float _epsilon, int _depth);
 	virtual ~RMSProp(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth) override;
 };
 
 class Adagrad : public Optimizer
 {
 private:
+	std::vector<Matrix<float>> G; 
 	float epsilon;
 public:	
-	Adagrad(float lr, float _epsilon);
+	Adagrad(float lr, float _epsilon, int _depth);
 	virtual ~Adagrad(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth) override;
 };
 
 class AdaDelta : public Optimizer
