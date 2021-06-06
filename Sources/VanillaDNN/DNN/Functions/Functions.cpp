@@ -2,7 +2,7 @@
 #define VANILLA_DNN_FUNCTIONS_CPP
 
 
-#include <VanillaDNN/DNN/Functions/DNNFunction.hpp>
+#include <VanillaDNN/DNN/Functions/Functions.hpp>
 
 Vector<float> ACTIVATION_FUNCTION::sigmoid(Vector<float> input) {
 	Vector<float> output(input.get_size(), 0);
