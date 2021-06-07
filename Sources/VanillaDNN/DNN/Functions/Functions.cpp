@@ -128,17 +128,16 @@ Vector<float> DIFF_FUNCTION::leaky_ReLU_diff(Vector<float> input) {
 	return output;
 }
 
-/*
-Vector<float> DIFF_FUNCTION::soft_max_diff(Vector<float> input){
-	Vector<float> output(input.get_size(),0);
-	float sum=0;
-	for(int i = 0;i<output.get_size();i++){
-		output(i) = exp(input(i));
-		sum += output(i);
-	}
-	return output/sum;
-}
-*/
+
+// Vector<float> DIFF_FUNCTION::soft_max_diff(Vector<float> input){
+// 	Vector<float> output(input.get_size(), 0);
+// 	Vector<float> temp = ACTIVATION_FUNCTION::sigmoid(input);
+// 	for (int i = 0; i < input.get_size(); i++) {
+// 		output(i) = temp(i) * (1 - temp(i));
+// 	}
+// 	return output;
+// }
+
 
 Vector<float> DIFF_FUNCTION::mean_squared_error_diff(Vector<float> y_hat, Vector<float> y) {
 	int N = y.get_size();
