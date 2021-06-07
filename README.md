@@ -133,6 +133,20 @@ build on VS
 ## Examples
 #### Mnist
 
+```
+git clone https://github.com/CMaybe/VanillaDNN.git
+```
+```
+cd example/mnist
+mkdir build
+cd build
+cmake ..
+make
+```
+```
+../bin/mnist
+```
+
 ##### Source code
 ```cpp
 #include <VanillaDNN/DNN/Layers/Layer.hpp>
