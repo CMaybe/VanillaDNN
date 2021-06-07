@@ -275,6 +275,17 @@ float Vector<T>::norm(){
 }
 
 template<typename T>
+Vector<T> Vector<T>::square() {
+	int size = this->size;
+	Vector<T> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = this->vector[i] * this->vector[i];
+	}
+	return result;
+}
+
+template<typename T>
 Vector<T> Vector<T>::onehot(){
 	int size = this->size;
 	Vector<T> result(size, 0);

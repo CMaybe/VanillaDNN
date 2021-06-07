@@ -44,6 +44,7 @@ public:
 	//vector
 	Matrix<T> transpose();
 	T dot(const Vector<T>& rhs);
+	Vector<T> square();
 
 	T& operator()(const int& idx);
 	const T& operator()(const int& idx) const;
