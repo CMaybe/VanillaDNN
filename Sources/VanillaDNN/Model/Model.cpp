@@ -1,7 +1,7 @@
 #ifndef VANILLA_DNN_MODEL_CPP
 #define VANILLA_DNN_MODEL_CPP
 
-#include <VanillaDNN/DNN/Model/Model.hpp>
+#include <VanillaDNN/Model/Model.hpp>
 
 
 Model::Model(int _nInput, int _nOutput) {
@@ -36,8 +36,8 @@ void Model::setLoss(Loss _loss) {
 	else if (*(_loss.target<float(*)(Vector<float>, Vector<float>)>()) == LOSS_FUNCTION::root_mean_squared_error) {
 		loss_diff = std::bind(DIFF_FUNCTION::root_mean_squared_error_diff, std::placeholders::_1, std::placeholders::_2);
 	}
-	else if (*(_loss.target<float(*)(Vector<float>, Vector<float>)>()) == LOSS_FUNCTION::cross_entropy_error) {
-		loss_diff = std::bind(DIFF_FUNCTION::cross_entropy_error_diff, std::placeholders::_1, std::placeholders::_2);
+	else if (*(_loss.target<float(*)(Vector<float>, Vector<float>)>()) == LOSS_FUNCTION::categorical_cross_entropy) {
+		loss_diff = std::bind(DIFF_FUNCTION::categorical_cross_entropy_diff, std::placeholders::_1, std::placeholders::_2);
 	}
 	else if (*(_loss.target<float(*)(Vector<float>, Vector<float>)>()) == LOSS_FUNCTION::binary_cross_entropy) {
 		loss_diff = std::bind(DIFF_FUNCTION::binary_cross_entropy_diff, std::placeholders::_1, std::placeholders::_2);

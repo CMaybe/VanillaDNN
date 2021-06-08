@@ -1,7 +1,7 @@
 #ifndef VANILLA_DNN_LAYER_CPP
 #define VANILLA_DNN_LAYER_CPP
 
-#include <VanillaDNN/DNN/Layers/Layer.hpp>
+#include <VanillaDNN/Layers/Layer.hpp>
 
 
 Layer::Layer(int _nNueron) {

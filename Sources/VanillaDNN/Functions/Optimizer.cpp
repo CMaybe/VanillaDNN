@@ -1,7 +1,7 @@
 #ifndef VANILLA_DNN_OPTIMIZER_CPP
 #define VANILLA_DNN_OPTIMIZER_CPP
 
-#include <VanillaDNN/DNN/Functions/Optimizer.hpp>
+#include <VanillaDNN/Functions/Optimizer.hpp>
 
 Optimizer::Optimizer()
 {

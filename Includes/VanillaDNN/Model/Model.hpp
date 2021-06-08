@@ -11,8 +11,8 @@
 #include <thread>
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
-#include <VanillaDNN/DNN/Layers/Layer.hpp>
-#include <VanillaDNN/DNN/Functions/Optimizer.hpp>
+#include <VanillaDNN/Layers/Layer.hpp>
+#include <VanillaDNN/Functions/Optimizer.hpp>
 #include <VanillaDNN/MNIST/MNIST.hpp>
 
 class Model {
