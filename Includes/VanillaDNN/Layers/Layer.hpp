@@ -11,8 +11,8 @@
 
 
 class Layer {
-private:
-	using Activation = std::function<Vector<float>(Vector<float>)>;
+protected:
+	using Activation = std::function<Vector<float>(Vector<float>&)>;
 	int nNueron;
 
 public:

@@ -30,16 +30,16 @@ Model::~Model() {
 
 void Model::setLoss(Loss _loss) {
 	this->loss = std::move(std::bind(_loss, std::placeholders::_1, std::placeholders::_2));
-	if (*(_loss.target<float(*)(Vector<float>, Vector<float>)>()) == LOSS_FUNCTION::mean_squared_error) {
+	if (*(_loss.target<float(*)(Vector<float>&, Vector<float>&)>()) == LOSS_FUNCTION::mean_squared_error) {
 		loss_diff = std::bind(DIFF_FUNCTION::mean_squared_error_diff, std::placeholders::_1, std::placeholders::_2);
 	}
-	else if (*(_loss.target<float(*)(Vector<float>, Vector<float>)>()) == LOSS_FUNCTION::root_mean_squared_error) {
+	else if (*(_loss.target<float(*)(Vector<float>&, Vector<float>&)>()) == LOSS_FUNCTION::root_mean_squared_error) {
 		loss_diff = std::bind(DIFF_FUNCTION::root_mean_squared_error_diff, std::placeholders::_1, std::placeholders::_2);
 	}
-	else if (*(_loss.target<float(*)(Vector<float>, Vector<float>)>()) == LOSS_FUNCTION::categorical_cross_entropy) {
+	else if (*(_loss.target<float(*)(Vector<float>&, Vector<float>&)>()) == LOSS_FUNCTION::categorical_cross_entropy) {
 		loss_diff = std::bind(DIFF_FUNCTION::categorical_cross_entropy_diff, std::placeholders::_1, std::placeholders::_2);
 	}
-	else if (*(_loss.target<float(*)(Vector<float>, Vector<float>)>()) == LOSS_FUNCTION::binary_cross_entropy) {
+	else if (*(_loss.target<float(*)(Vector<float>&, Vector<float>&)>()) == LOSS_FUNCTION::binary_cross_entropy) {
 		loss_diff = std::bind(DIFF_FUNCTION::binary_cross_entropy_diff, std::placeholders::_1, std::placeholders::_2);
 	}
 	else {

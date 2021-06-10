@@ -12,14 +12,15 @@
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
 #include <VanillaDNN/Layers/Layer.hpp>
+#include <VanillaDNN/Layers/InputLayer.hpp>
 #include <VanillaDNN/Functions/Optimizer.hpp>
 #include <VanillaDNN/MNIST/MNIST.hpp>
 
 class Model {
 private:
-	using Activation = std::function<Vector<float>(Vector<float>)>;
-	using  Loss = std::function<float(Vector<float>, Vector<float>)>;
-	using  Loss_diff = std::function<Vector<float>(Vector<float>, Vector<float>)>;
+	using Activation = std::function<Vector<float>(Vector<float>&)>;
+	using  Loss = std::function<float(Vector<float>&, Vector<float>&)>;
+	using  Loss_diff = std::function<Vector<float>(Vector<float>&, Vector<float>&)>;
 	Loss loss;
 	Loss_diff loss_diff;
 	
