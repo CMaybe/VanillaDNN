@@ -33,19 +33,20 @@ int main(int argc, char** argv) {
 	Model mnist(784, 10);//input : 28 x 28, output 0 ~ 9;
 	
 	
-	mnist.setLoss(LOSS_FUNCTION::mean_squared_error);
-	mnist.addLayer(new Layer(256, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new Layer(128, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new Layer(64, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new Layer(32, ACTIVATION_FUNCTION::sigmoid));
-	mnist.setOutputFunction(ACTIVATION_FUNCTION::sigmoid);
+	mnist.setLoss(LOSS_FUNCTION::categorical_cross_entropy);
+	mnist.addLayer(new Layer(512, ACTIVATION_FUNCTION::ReLU));
+	mnist.addLayer(new Layer(256, ACTIVATION_FUNCTION::ReLU));
+	mnist.addLayer(new Layer(128, ACTIVATION_FUNCTION::ReLU));
+	mnist.addLayer(new Layer(64, ACTIVATION_FUNCTION::ReLU));
+	mnist.addLayer(new Layer(32, ACTIVATION_FUNCTION::ReLU));
+	mnist.setOutputFunction(ACTIVATION_FUNCTION::soft_max);
 	
-	mnist.setOptimizer(new Momentum(0.001,0.9,mnist.getDepth()));
+	// mnist.setOptimizer(new Momentum(0.01,0.9,mnist.getDepth()));
 	// mnist.setOptimizer(new Adagrad(0.01f,1e-6,mnist.getDepth()));
-	// mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-8,mnist.getDepth())); //lr, _rho, _epsilon, _depth
+	mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-8,mnist.getDepth())); //lr, _rho, _epsilon, _depth
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(5000, 10, 32); //total, epoch, batch
+	mnist.fit(5000, 5, 10); //total, epoch, batch
 	
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);

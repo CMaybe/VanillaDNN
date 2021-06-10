@@ -85,9 +85,11 @@ Vector<float> DIFF_FUNCTION::leaky_ReLU_diff(Vector<float>& input) {
 
 Vector<float> DIFF_FUNCTION::soft_max_diff(Vector<float>& input){
 	Vector<float> output(input.get_size(), 0);
-	Vector<float> temp = ACTIVATION_FUNCTION::sigmoid(input);
+	Vector<float> temp = ACTIVATION_FUNCTION::soft_max(input);
 	for (int i = 0; i < input.get_size(); i++) {
-		output(i) = temp(i) * (1 - temp(i));
+		for(int j = 0; j < input.get_size(); j++){
+			output(i) += temp(i)*((static_cast<int>(i==j)) - temp(j));
+		}
 	}
 	return output;
 }
