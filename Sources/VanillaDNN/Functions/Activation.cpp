@@ -22,7 +22,7 @@ Vector<float> ACTIVATION_FUNCTION::hyper_tan(Vector<float>& input) {
 Vector<float> ACTIVATION_FUNCTION::ReLU(Vector<float>& input) {
 	Vector<float> output(input.get_size(), 0);
 	for (int i = 0; i < output.get_size(); i++) {
-		output(i) = 0 > input(i) ? 0 : input(i);
+		output(i) = std::max(output(i), 0.0f);
 	}
 	return output;
 }
@@ -69,7 +69,7 @@ Vector<float> DIFF_FUNCTION::hyper_tan_diff(Vector<float>& input) {
 Vector<float> DIFF_FUNCTION::ReLU_diff(Vector<float>& input) {
 	Vector<float> output(input.get_size(), 0);
 	for (int i = 0; i < output.get_size(); i++) {
-		output(i) = 0 > input(i) ? 0 : 1;
+		output(i) = static_cast<int>(0.0f < input(i));
 	}
 	return output;
 }

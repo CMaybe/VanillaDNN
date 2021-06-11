@@ -34,11 +34,9 @@ int main(int argc, char** argv) {
 	
 	
 	mnist.setLoss(LOSS_FUNCTION::categorical_cross_entropy);
-	mnist.addLayer(new Layer(512, ACTIVATION_FUNCTION::ReLU));
-	mnist.addLayer(new Layer(256, ACTIVATION_FUNCTION::ReLU));
-	mnist.addLayer(new Layer(128, ACTIVATION_FUNCTION::ReLU));
-	mnist.addLayer(new Layer(64, ACTIVATION_FUNCTION::ReLU));
-	mnist.addLayer(new Layer(32, ACTIVATION_FUNCTION::ReLU));
+	mnist.addLayer(new Layer(384, ACTIVATION_FUNCTION::sigmoid));
+	mnist.addLayer(new Layer(128, ACTIVATION_FUNCTION::sigmoid));
+	mnist.addLayer(new Layer(32, ACTIVATION_FUNCTION::sigmoid));
 	mnist.setOutputFunction(ACTIVATION_FUNCTION::soft_max);
 	
 	// mnist.setOptimizer(new Momentum(0.01,0.9,mnist.getDepth()));
@@ -46,14 +44,14 @@ int main(int argc, char** argv) {
 	mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-8,mnist.getDepth())); //lr, _rho, _epsilon, _depth
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(5000, 5, 10); //total, epoch, batch
+	mnist.fit(50000, 10, 32); //total, epoch, batch
 	
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
 
 	std::cout << "training is done!" << '\n';
 
-	mnist.evaluate(7000);
+	mnist.evaluate(7000,true);
 	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
 
 

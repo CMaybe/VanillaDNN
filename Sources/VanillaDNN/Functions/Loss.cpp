@@ -24,17 +24,17 @@ float LOSS_FUNCTION::root_mean_squared_error(Vector<float>& y_hat, Vector<float>
 
 float LOSS_FUNCTION::categorical_cross_entropy(Vector<float>& y_hat, Vector<float>& y) {
 	float ans = 0;
-	float delta = 1e-7;
+	float delta = 1e-4;
 	int N = y.get_size();
 	for (int i = 0; i < N; i++) {
 		ans += -y(i) * log(y_hat(i) + delta);
 	}
-	return ans;
+	return ans / N;
 }
 
 float LOSS_FUNCTION::binary_cross_entropy(Vector<float>& y_hat, Vector<float>& y) {
 	float ans = 0;
-	float delta = 1e-7;
+	float delta = 1e-4;
 	int N = y.get_size();
 	for (int i = 0; i < N; i++) {
 		ans += -y(i) * log(y_hat(i) + delta) - (1 - y(i)) * log(1 - y_hat(i) + delta);
@@ -65,11 +65,11 @@ Vector<float> DIFF_FUNCTION::root_mean_squared_error_diff(Vector<float>& y_hat, 
 Vector<float> DIFF_FUNCTION::categorical_cross_entropy_diff(Vector<float>& y_hat, Vector<float>& y){
 	int N = y.get_size();
 	Vector<float> result(N, 0);
-	float delta = 1e-7;
+	float delta = 1e-4;
 	for (int i = 0; i < N; i++) {
 		result(i) = -y(i) / (y_hat(i) + delta);
 	}
-	return result;
+	return result / N;
 }
 
 Vector<float> DIFF_FUNCTION::binary_cross_entropy_diff(Vector<float>& y_hat, Vector<float>& y) {
