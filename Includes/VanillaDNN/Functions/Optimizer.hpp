@@ -57,18 +57,6 @@ public:
 	Vector<float> getBiasGradient(Vector<float>& dE_db, int _depth = 1) override;
 };
 
-class Adam : public Optimizer
-{
-private:
-	float beta1, beta2, decay;
-public:	
-	Adam(float lr, float _beta1, float _beta2, float _decay);
-	virtual ~Adam(){};
-	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db, int _depth = 1) override;
-};
-
 class RMSProp : public Optimizer
 {
 private:
@@ -98,15 +86,18 @@ public:
 	Vector<float> getBiasGradient(Vector<float>& dE_db, int _depth = 1) override;
 };
 
-class AdaDelta : public Optimizer
+class Adam : public Optimizer
 {
+private:
+	float beta1, beta2, decay;
 public:	
-	AdaDelta(float lr);
-	virtual ~AdaDelta(){};
+	Adam(float lr, float _beta1, float _beta2, float _decay);
+	virtual ~Adam(){};
 	
 	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
 	Vector<float> getBiasGradient(Vector<float>& dE_db, int _depth = 1) override;
 };
+
 
 
 

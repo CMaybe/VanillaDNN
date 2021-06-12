@@ -111,7 +111,12 @@ Matrix<float> Adagrad::getWeightGradient(Matrix<float>& dE_dW, int _depth){
 	else{
 		this->G_weight[_depth] = this->G_weight[_depth] + dE_dW.square();
 	}
-	result = dE_dW * this->learning_rate / sqrt(G_weight[_depth].norm() + this->epsilon);
+	result = (G_weight[_depth] + this->epsilon).sqrt().inv() * this->learning_rate;
+	for(int i = 0;i<result.get_rows_size();i++){
+		for(int j = 0;j < result.get_cols_size();j++){
+			result(i,j) *= dE_dW(i,j);
+		}
+	}
 	return result;
 }
 
@@ -123,7 +128,10 @@ Vector<float> Adagrad::getBiasGradient(Vector<float>& dE_db, int _depth){
 	else{
 		this->G_bias[_depth] = this->G_bias[_depth] + dE_db.square();
 	}
-	result = dE_db * this->learning_rate / sqrt(G_bias[_depth].norm() + this->epsilon);
+	result =  (G_bias[_depth] + this->epsilon).sqrt().inv() * this->learning_rate;
+	for(int i = 0;i<result.get_size();i++){
+		result(i) *= dE_db(i);
+	}
 	return result;
 }
 
@@ -145,7 +153,12 @@ Matrix<float> RMSProp::getWeightGradient(Matrix<float>& dE_dW, int _depth){
 	else{
 		this->G_weight[_depth] = (this->G_weight[_depth] * this->rho) + (dE_dW.square() * (1.0f - this->rho));
 	}
-	result = dE_dW * this->learning_rate / sqrt(G_weight[_depth].norm() + this->epsilon);
+	result =  (G_weight[_depth] + this->epsilon).sqrt().inv() * this->learning_rate;
+	for(int i = 0;i<result.get_rows_size();i++){
+		for(int j = 0;j < result.get_cols_size();j++){
+			result(i,j) *= dE_dW(i,j);
+		}
+	}
 	return result;
 }
 
@@ -157,7 +170,10 @@ Vector<float> RMSProp::getBiasGradient(Vector<float>& dE_db, int _depth){
 	else{
 		this->G_bias[_depth] = (this->G_bias[_depth] * this->rho) + (dE_db.square() * (1.0f - this->rho));
 	}
-	result = dE_db * this->learning_rate / sqrt(G_bias[_depth].norm() + this->epsilon);
+	result =  (G_bias[_depth] + this->epsilon).sqrt().inv() * this->learning_rate;
+	for(int i = 0;i<result.get_size();i++){
+		result(i) *= dE_db(i);
+	}
 	return result;
 }
 
@@ -175,21 +191,6 @@ Matrix<float> Adam::getWeightGradient(Matrix<float>& dE_dW, int _depth){
 }
 
 Vector<float> Adam::getBiasGradient(Vector<float>& dE_db, int _depth){
-	Vector<float> result;
-	return result;
-}
-
-AdaDelta::AdaDelta(float lr)
-{
-	this->learning_rate = lr;
-}
-
-Matrix<float> AdaDelta::getWeightGradient(Matrix<float>& dE_dW, int _depth){
-	Matrix<float> result;
-	return result;
-}
-
-Vector<float> AdaDelta::getBiasGradient(Vector<float>& dE_db, int _depth){
 	Vector<float> result;
 	return result;
 }
