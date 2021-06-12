@@ -139,6 +139,30 @@ Vector<T>& Vector<T>::operator*=(const Vector<T>& rhs) {
 
 //scalar
 template<typename T>
+Vector<T> Vector<T>::operator+(const T& rhs) {
+	int size = this->size;
+	Vector<T> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = this->vector[i] + rhs;
+	}
+
+	return result;
+}
+
+template<typename T>
+Vector<T> Vector<T>::operator-(const T& rhs) {
+	int size = this->size;
+	Vector<T> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = this->vector[i] - rhs;
+	}
+
+	return result;
+}
+
+template<typename T>
 Vector<T> Vector<T>::operator*(const T& rhs) {
 	int size = this->size;
 	Vector<T> result(size, 0);
@@ -165,12 +189,33 @@ Vector<T> Vector<T>::operator/(const T& rhs) {
 
 //ref
 template<typename T>
-Vector<T>& Vector<T>::operator*=(const T& rhs) {
+Vector<T>& Vector<T>::operator+=(const T& rhs) {
 	int size = this->size;
-	Vector<T> result(size, 0);
 
 	for (int i = 0; i < size; i++) {
-		result(i) = this->vector[i] * rhs;
+		 this->vector[i] += rhs;
+	}
+
+	return *this;
+}
+
+template<typename T>
+Vector<T>& Vector<T>::operator-=(const T& rhs) {
+	int size = this->size;
+
+	for (int i = 0; i < size; i++) {
+		 this->vector[i] -= rhs;
+	}
+
+	return *this;
+}
+
+template<typename T>
+Vector<T>& Vector<T>::operator*=(const T& rhs) {
+	int size = this->size;
+
+	for (int i = 0; i < size; i++) {
+		 this->vector[i] *= rhs;
 	}
 
 	return *this;
@@ -179,14 +224,14 @@ Vector<T>& Vector<T>::operator*=(const T& rhs) {
 template<typename T>
 Vector<T>& Vector<T>::operator/=(const T& rhs) {
 	int size = this->size;
-	Vector<T> result(size, 0);
 
 	for (int i = 0; i < size; i++) {
-		result(i) = this->vector[i] / rhs;
+		 this->vector[i] /= rhs;
 	}
 
 	return *this;
 }
+
 template<typename T>
 bool Vector<T>::operator==(const Vector<T>& rhs){
 	return (*this - rhs).norm() < 0.001f;
@@ -271,7 +316,7 @@ float Vector<T>::norm(){
 	for (int i = 0; i < this->size; i++) {
 		sum += static_cast<float>(this->vector[i] * this->vector[i]);
 	}
-	return sqrt(sum);
+	return std::sqrt(sum);
 }
 
 template<typename T>
@@ -284,6 +329,30 @@ Vector<T> Vector<T>::square() {
 	}
 	return result;
 }
+
+template<typename T>
+Vector<T> Vector<T>::sqrt() {
+	int size = this->size;
+	Vector<T> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = std::sqrt(this->vector[i]);
+	}
+	return result;
+}
+
+
+template<typename T>
+Vector<T> Vector<T>::inv() {
+	int size = this->size;
+	Vector<T> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = 1.0f / this->vector[i];
+	}
+	return result;
+}
+
 
 template<typename T>
 Vector<T> Vector<T>::onehot(){

@@ -356,6 +356,34 @@ Matrix<T> Matrix<T>::square() {
 }
 
 template<typename T>
+Matrix<T> Matrix<T>::inv(){
+	int row = this->rows;
+	int cols = this->cols;
+	Matrix<T> result(rows, cols, 0);
+
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			result(i, j) = 1.0f / this->matrix[i][j];
+		}
+	}
+	return result;
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::sqrt(){
+	int row = this->rows;
+	int cols = this->cols;
+	Matrix<T> result(rows, cols, 0);
+
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			result(i, j) = std::sqrt(this->matrix[i][j]);
+		}
+	}
+	return result;
+}
+
+template<typename T>
 float Matrix<T>::norm(){
 	float sum = 0;
 	for (int i = 0; i < rows; i++) {
@@ -363,7 +391,7 @@ float Matrix<T>::norm(){
 			sum += static_cast<float>(this->matrix[i][j] * this->matrix[i][j]);
 		}
 	}
-	return sqrt(sum);
+	return std::sqrt(sum);
 }
 
 template<typename T>

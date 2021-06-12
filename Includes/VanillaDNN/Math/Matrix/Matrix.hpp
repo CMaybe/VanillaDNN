@@ -36,6 +36,8 @@ public:
 
 	Matrix<T> transpose();
 	Matrix<T> square();
+	Matrix<T> sqrt();
+	Matrix<T> inv();
 
 	//scalar	
 	Matrix<T> operator+(const T& rhs);
