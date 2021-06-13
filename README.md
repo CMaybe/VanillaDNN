@@ -88,7 +88,7 @@ ___
 - [x] ~~momentum~~
 - [x] ~~adagrad~~
 - [x] ~~rmsprop~~
-- [ ] adam
+- [x] ~~adam~~
 - [ ] adamax
 
 
@@ -106,28 +106,6 @@ git clone https://github.com/CMaybe/VanillaDNN.git
 ```
 
 Second, write your code 
-
-### Build
-
-
-#### For Linux
-
-```
-mkdir build
-cd build
-cmake ..
-make
-```
-
-#### For Windows (Visual Studio 2019)
-
-Open with visual studio(2019)
-
-`build` folder will be created automatically.
-
-copy `data` folder to `build` folder(for MNIST)
-
-build on VS
 
 ## Examples
 #### Mnist

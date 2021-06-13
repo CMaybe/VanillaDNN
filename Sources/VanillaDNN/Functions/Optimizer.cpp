@@ -177,21 +177,61 @@ Vector<float> RMSProp::getBiasGradient(Vector<float>& dE_db, int _depth){
 	return result;
 }
 
-Adam::Adam(float lr, float _beta1, float _beta2, float _decay)
+Adam::Adam(float lr, float _beta1, float _beta2, float _epsilon, int _depth)
 {
 	this->learning_rate = lr;
 	this->beta1 = _beta1;
 	this->beta2 = _beta2;
-	this->decay = _decay;
+	this->epsilon = _epsilon;
+	this->m_weight.resize(_depth + 1);
+	this->v_weight.resize(_depth + 1);
+	this->m_bias.resize(_depth + 1);
+	this->v_bias.resize(_depth + 1);
 }
 
 Matrix<float> Adam::getWeightGradient(Matrix<float>& dE_dW, int _depth){
-	Matrix<float> result;
+	Matrix<float> result, m_weight_hat, v_weight_hat;
+	beta1_t *= beta1;
+	beta2_t *= beta2;
+	if(this->m_weight[_depth].get_rows_size() == 0){
+		this->m_weight[_depth] = dE_dW * (1.0f - this->beta1);
+		this->v_weight[_depth] = dE_dW.square() * (1.0f - this->beta2);
+	}
+	else{
+		this->m_weight[_depth] = (this->m_weight[_depth] * this->beta1) + (dE_dW * (1.0f - this->beta1));
+		this->v_weight[_depth] = (this->v_weight[_depth] * this->beta2) + (dE_dW.square() * (1.0f - this->beta2));
+	}
+	m_weight_hat = this->m_weight[_depth] / (1.0f - this->beta1_t);
+	v_weight_hat = this->v_weight[_depth] / (1.0f - this->beta2_t);
+	
+	result =  (v_weight_hat.sqrt() + this->epsilon).inv() * this->learning_rate;
+	for(int i = 0;i<result.get_rows_size();i++){
+		for(int j = 0;j < result.get_cols_size();j++){
+			result(i,j) *= m_weight_hat(i,j);
+		}
+	}
+	
 	return result;
 }
 
 Vector<float> Adam::getBiasGradient(Vector<float>& dE_db, int _depth){
-	Vector<float> result;
+	Vector<float> result, m_bias_hat, v_bias_hat;
+	beta1_t *= beta1;
+	beta2_t *= beta2;
+	if(this->m_bias[_depth].get_size() == 0){
+		this->m_bias[_depth] = dE_db * (1.0f - this->beta1);
+		this->v_bias[_depth] = dE_db.square() * (1.0f - this->beta2);
+	}
+	else{
+		this->m_bias[_depth] = (this->m_bias[_depth] * this->beta1) + (dE_db * (1.0f - this->beta1));
+		this->v_bias[_depth] = (this->v_bias[_depth] * this->beta2) + (dE_db.square() * (1.0f - this->beta2));
+	}
+	m_bias_hat = this->m_bias[_depth] / (1.0f - this->beta1_t);
+	v_bias_hat = this->v_bias[_depth] / (1.0f - this->beta2_t);
+	result =  (v_bias_hat.sqrt() + this->epsilon).inv() * this->learning_rate;
+	for(int i = 0;i<result.get_size();i++){
+		result(i) *= m_bias_hat(i);
+	}
 	return result;
 }
 

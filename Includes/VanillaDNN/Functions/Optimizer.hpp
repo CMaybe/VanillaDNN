@@ -89,9 +89,13 @@ public:
 class Adam : public Optimizer
 {
 private:
-	float beta1, beta2, decay;
+	float beta1, beta2, epsilon, beta1_t = 1, beta2_t = 1;
+	std::vector<Matrix<float>> m_weight; 
+	std::vector<Matrix<float>> v_weight;
+	std::vector<Vector<float>> m_bias; 
+	std::vector<Vector<float>> v_bias; 
 public:	
-	Adam(float lr, float _beta1, float _beta2, float _decay);
+	Adam(float lr, float _beta1, float _beta2, float _epsilon,  int _depth);
 	virtual ~Adam(){};
 	
 	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
