@@ -33,11 +33,12 @@ int main(int argc, char** argv) {
 	Model mnist(784, 10);//input : 28 x 28, output 0 ~ 9;
 	
 	
-	mnist.setLoss(LOSS_FUNCTION::categorical_cross_entropy);
-	mnist.addLayer(new Layer(384, ACTIVATION_FUNCTION::sigmoid));
+	mnist.setLoss(LOSS_FUNCTION::mean_squared_error);
+	mnist.addLayer(new Layer(512, ACTIVATION_FUNCTION::sigmoid));
+	mnist.addLayer(new Layer(256, ACTIVATION_FUNCTION::sigmoid));
 	mnist.addLayer(new Layer(128, ACTIVATION_FUNCTION::sigmoid));
 	mnist.addLayer(new Layer(32, ACTIVATION_FUNCTION::sigmoid));
-	mnist.setOutputFunction(ACTIVATION_FUNCTION::soft_max);
+	mnist.setOutputFunction(ACTIVATION_FUNCTION::sigmoid);
 	
 	// mnist.setOptimizer(new Momentum(0.01,0.9,mnist.getDepth()));
 	// mnist.setOptimizer(new Adagrad(0.01f,1e-6,mnist.getDepth()));

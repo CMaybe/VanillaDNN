@@ -27,7 +27,6 @@ ___
 - [x] ~~Matrices and vector operations~~
 - [x] ~~Matrices and scala operations~~
 - [x] ~~Transpose~~
-- [ ] Inverse
 - [ ] TBA
 
 ##### Vector

@@ -24,7 +24,7 @@ float LOSS_FUNCTION::root_mean_squared_error(Vector<float>& y_hat, Vector<float>
 
 float LOSS_FUNCTION::categorical_cross_entropy(Vector<float>& y_hat, Vector<float>& y) {
 	float ans = 0;
-	float delta = 1e-4;
+	float delta = 1e-6;
 	int N = y.get_size();
 	for (int i = 0; i < N; i++) {
 		ans += -y(i) * log(y_hat(i) + delta);

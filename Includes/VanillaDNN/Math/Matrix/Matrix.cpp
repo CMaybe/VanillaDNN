@@ -196,7 +196,7 @@ Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs) {
 //scalar
 template<typename T>
 Matrix<T> Matrix<T>::operator+(const T& rhs) {
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(rows, cols, 0);
 
@@ -343,7 +343,7 @@ Matrix<T> Matrix<T>::transpose() {
 
 template<typename T>
 Matrix<T> Matrix<T>::square() {
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(rows, cols, 0);
 
@@ -357,7 +357,7 @@ Matrix<T> Matrix<T>::square() {
 
 template<typename T>
 Matrix<T> Matrix<T>::inv(){
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(rows, cols, 0);
 
@@ -371,7 +371,7 @@ Matrix<T> Matrix<T>::inv(){
 
 template<typename T>
 Matrix<T> Matrix<T>::sqrt(){
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(rows, cols, 0);
 
