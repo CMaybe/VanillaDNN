@@ -6,19 +6,10 @@
 #include <memory>
 #include <VanillaDNN/Layers/Layer.hpp>
 
-class OutLayer {
-private:
-	using Activation = std::function<Vector<float>(Vector<float>)>;
-	int nNueron;
-
+class OutputLayer : public Layer {
 public:
-	InputLayer(int _nNueron);
-	std::vector<Vector<float>> inputNeuron; // before activate : preLayer->weight * neuronOutput
-	std::vector<Vector<float>> outputNeuron; // after actionte : actinvation(neuronInput)
-
-	virtual ~InputLayer();
-
-
+	OutputLayer(int _nNueron);
+	virtual ~OutputLayer();
 
 };
 

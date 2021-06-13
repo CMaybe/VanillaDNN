@@ -16,7 +16,7 @@ protected:
 	int nNueron;
 
 public:
-
+	Layer();
 	Layer(int _nNueron);
 	Layer(int _nNueron, Activation _activation);
 

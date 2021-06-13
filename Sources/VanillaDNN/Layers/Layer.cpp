@@ -3,6 +3,7 @@
 
 #include <VanillaDNN/Layers/Layer.hpp>
 
+Layer::Layer(){}
 
 Layer::Layer(int _nNueron) {
 	this->nNueron = _nNueron;
