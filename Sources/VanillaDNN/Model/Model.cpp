@@ -9,7 +9,7 @@ Model::Model(int _nInput, int _nOutput) {
 	this->nInput = _nInput;
 	this->nOutput = _nOutput;
 	this->inputLayer = new Layer(_nInput);
-	this->outputLayer = new Layer(_nOutput);
+	this->outputLayer = new OutputLayer(_nOutput);
 	this->batch_size = 1;
 	this->epoch = 0;
 	this->nEval = 0;

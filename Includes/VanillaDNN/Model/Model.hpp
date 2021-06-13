@@ -12,7 +12,7 @@
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
 #include <VanillaDNN/Layers/Layer.hpp>
-#include <VanillaDNN/Layers/InputLayer.hpp>
+#include <VanillaDNN/Layers/OutputLayer.hpp>
 #include <VanillaDNN/Functions/Optimizer.hpp>
 #include <VanillaDNN/MNIST/MNIST.hpp>
 
@@ -44,7 +44,7 @@ private:
 	std::vector<Vector<float>> batch_dz_db;
 
 	Layer* inputLayer = nullptr;
-	Layer* outputLayer = nullptr;
+	OutputLayer * outputLayer = nullptr;
 	int depth;
 	int nInput, nOutput;
 	int batch_size;
