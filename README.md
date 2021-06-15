@@ -104,8 +104,15 @@ First, clone the code:
 ```
 git clone https://github.com/CMaybe/VanillaDNN.git
 ```
+```
+cd example/mnist
+mkdir build
+cd build
+cmake ..
+make
+```
 
-Second, write your code 
+
 
 ## Examples
 #### Mnist
@@ -127,6 +134,15 @@ make
 ##### Source code
 ```cpp
 #include <VanillaDNN/Layers/Layer.hpp>
+#include <VanillaDNN/Model/Model.hpp>
+#include <VanillaDNN/Functions/Functions.hpp>
+#include <VanillaDNN/Functions/Optimizer.hpp>
+#include <VanillaDNN/MNIST/MNIST.hpp>
+#include <iostream>
+#include <vector>
+
+int main(int argc, char** argv) {
+	#include <VanillaDNN/Layers/Layer.hpp>
 #include <VanillaDNN/Model/Model.hpp>
 #include <VanillaDNN/Functions/Functions.hpp>
 #include <VanillaDNN/Functions/Optimizer.hpp>
@@ -161,30 +177,32 @@ int main(int argc, char** argv) {
 	Model mnist(784, 10);//input : 28 x 28, output 0 ~ 9;
 	
 	
-	mnist.setLoss(LOSS_FUNCTION::categorical_cross_entropy);
+	mnist.setLoss(LOSS_FUNCTION::mean_squared_error);
 	mnist.addLayer(new Layer(256, ACTIVATION_FUNCTION::sigmoid));
 	mnist.addLayer(new Layer(128, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new Layer(64, ACTIVATION_FUNCTION::sigmoid));
 	mnist.addLayer(new Layer(32, ACTIVATION_FUNCTION::sigmoid));
 	mnist.setOutputFunction(ACTIVATION_FUNCTION::sigmoid);
 	
 	// mnist.setOptimizer(new Momentum(0.01,0.9,mnist.getDepth()));
 	// mnist.setOptimizer(new Adagrad(0.01f,1e-6,mnist.getDepth()));
-	mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-8,mnist.getDepth())); //lr, _rho, _epsilon, _depth
+	// mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-8,mnist.getDepth())); //lr, _rho, _epsilon, _depth
+	mnist.setOptimizer(new Adam(0.01f, 0.9f, 0.999f, 1e-8,mnist.getDepth())); //lr, _rho, _epsilon, _depth
+	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(10000, 10, 32); //total, epoch, batch
+	mnist.fit(5000, 10, 32); //total, epoch, batch
 	
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
 
 	std::cout << "training is done!" << '\n';
 
-	mnist.evaluate(7000);
+	mnist.evaluate(7000,true);
 	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
 
 
 	return 0;
+}
 }
 ```
 ##### CMakeLists.txt
@@ -192,30 +210,20 @@ int main(int argc, char** argv) {
 cmake_minimum_required(VERSION 3.10)
 
 project(mnist)
+
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/bin)
 set(CMAKE_BUILD_TYPE Release)
+# set(CMAKE_BUILD_TYPE Degug)
+
+
+find_package(VanillaDNN REQUIRED)
 add_definitions("-std=c++17")
-
-# for std::async
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-find_package(VanillaDNN PATHS ../..)
-
 
 add_executable(mnist
 	source/mnist.cpp
-	${VanillaDNN_SOURCE_DIR}/VanillaDNN/DNN/Functions/DNNFunction.cpp
-	${VanillaDNN_SOURCE_DIR}/VanillaDNN/DNN/Functions/Optimizer.cpp
-	${VanillaDNN_SOURCE_DIR}/VanillaDNN/DNN/Layers/Layer.cpp
-	${VanillaDNN_SOURCE_DIR}/VanillaDNN/DNN/Model/Model.cpp
-	${VanillaDNN_SOURCE_DIR}/VanillaDNN/MNIST/MNIST.cpp
-	${VanillaDNN_INCLUDE_DIR}/VanillaDNN/Math/Matrix/Matrix.cpp
-	${VanillaDNN_INCLUDE_DIR}/VanillaDNN/Math/Vector/Vector.cpp
 )
 
-target_link_libraries(mnist PRIVATE Threads::Threads) # for std::async
-target_include_directories(mnist PUBLIC ${VanillaDNN_INCLUDE_DIR})
-target_compile_definitions(mnist PRIVATE MNIST_DATA_LOCATION="${MNIST_DATA_DIR}") # for MNIST
+target_compile_definitions(mnist PRIVATE MNIST_DATA_LOCATION="${MNIST_DATA_DIR}") # for mnist
 ```
 
 
