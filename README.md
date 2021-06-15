@@ -99,13 +99,11 @@ Nothing. All you need is a C++ compiler. (GCC/G++, GDB, Clang/Clang++)
 
 You will need CMake to build the code.
 
-First, clone the code:
 
 ```
 git clone https://github.com/CMaybe/VanillaDNN.git
 ```
 ```
-cd example/mnist
 mkdir build
 cd build
 cmake ..
@@ -113,13 +111,9 @@ make
 ```
 
 
-
 ## Examples
 #### Mnist
 
-```
-git clone https://github.com/CMaybe/VanillaDNN.git
-```
 ```
 cd example/mnist
 mkdir build
@@ -142,7 +136,7 @@ make
 #include <vector>
 
 int main(int argc, char** argv) {
-	#include <VanillaDNN/Layers/Layer.hpp>
+#include <VanillaDNN/Layers/Layer.hpp>
 #include <VanillaDNN/Model/Model.hpp>
 #include <VanillaDNN/Functions/Functions.hpp>
 #include <VanillaDNN/Functions/Optimizer.hpp>
@@ -202,7 +196,6 @@ int main(int argc, char** argv) {
 
 
 	return 0;
-}
 }
 ```
 ##### CMakeLists.txt
