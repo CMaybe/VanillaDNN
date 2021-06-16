@@ -136,15 +136,6 @@ make
 #include <vector>
 
 int main(int argc, char** argv) {
-#include <VanillaDNN/Layers/Layer.hpp>
-#include <VanillaDNN/Model/Model.hpp>
-#include <VanillaDNN/Functions/Functions.hpp>
-#include <VanillaDNN/Functions/Optimizer.hpp>
-#include <VanillaDNN/MNIST/MNIST.hpp>
-#include <iostream>
-#include <vector>
-
-int main(int argc, char** argv) {
 	//training set
 	MNIST training_set(MNIST_DATA_LOCATION, "train");
 	std::vector<Vector<float>> training_images(training_set.getImages());
