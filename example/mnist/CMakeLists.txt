@@ -13,6 +13,6 @@ add_definitions("-std=c++17")
 add_executable(mnist
 	source/mnist.cpp
 )
-
+target_link_libraries(mnist ${VanillaDNN_LIBRARY_DIR}/libVanillaDNN.a)
 target_compile_definitions(mnist PRIVATE MNIST_DATA_LOCATION="${MNIST_DATA_DIR}")
 

@@ -22,7 +22,7 @@ Vector<float> ACTIVATION_FUNCTION::hyper_tan(Vector<float>& input) {
 Vector<float> ACTIVATION_FUNCTION::ReLU(Vector<float>& input) {
 	Vector<float> output(input.get_size(), 0);
 	for (int i = 0; i < output.get_size(); i++) {
-		output(i) = std::max(output(i), 0.0f);
+		output(i) = std::max(input(i), 0.0f);
 	}
 	return output;
 }
