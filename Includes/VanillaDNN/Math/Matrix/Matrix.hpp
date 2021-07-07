@@ -5,6 +5,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
 
 template<typename T> class Vector;
 

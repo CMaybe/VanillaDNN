@@ -305,8 +305,9 @@ void Vector<T>::push_back(T value) {
 template<typename T>
 void Vector<T>::setRandom()
 {
+	std::srand(std::time(0));
 	for (int i = 0; i < this->size; i++) {
-		this->vector[i] = ((float)rand() / (RAND_MAX)) * 2 - 1;
+		this->vector[i] = ((float)std::rand() / ((float)RAND_MAX)) * 2 - 1;
 	}
 }
 
