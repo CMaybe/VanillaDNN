@@ -79,7 +79,7 @@ Vector<float> DIFF_FUNCTION::cross_entropy_diff(Vector<float>& y_hat, Vector<flo
 	for (int i = 0; i < N; i++) {
 		result(i) = -y(i) / (y_hat(i) + delta);
 	}
-	return result / N;
+	return result / (float)N;
 }
 
 Vector<float> DIFF_FUNCTION::binary_cross_entropy_diff(Vector<float>& y_hat, Vector<float>& y) {
@@ -92,10 +92,13 @@ Vector<float> DIFF_FUNCTION::binary_cross_entropy_diff(Vector<float>& y_hat, Vec
 }
 
 Vector<float> DIFF_FUNCTION::categorical_cross_entropy_diff(Vector<float>& y_hat, Vector<float>& y){
+	float delta = 1e-6;
 	int N = y.get_size();
 	Vector<float> result(N, 0);
-	result = y_hat - y;
-	return result / N;
+	for (int i = 0; i < N; i++) {
+		result(i) = -y(i) / (y_hat(i) + delta);
+	}
+	return result / (float)N;
 }
 
 #endif
