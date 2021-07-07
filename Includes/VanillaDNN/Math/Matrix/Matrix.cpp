@@ -3,14 +3,14 @@
 
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 
-template<typename T>
-Matrix<T>::Matrix() {
-	rows = 0;
-	cols = 0;
+template<typename T,size_t _Rows,size_t _Cols> 
+Matrix<T, _Rows, _Cols>::Matrix() {
+	rows = _Rows;
+	cols = _Cols;
 }
 
-template<typename T>
-Matrix<T>::Matrix(int _rows, int _cols) {
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols>::Matrix(int _rows, int _cols,const T& _init) {
 	matrix.resize(_rows);
 	for (int i = 0; i < matrix.size(); i++) {
 		matrix[i].resize(_cols, 0);
@@ -19,41 +19,50 @@ Matrix<T>::Matrix(int _rows, int _cols) {
 	cols = _cols;
 }
 
-template<typename T>
-Matrix<T>::Matrix(int _rows, int _cols, const T& _init) {
-	matrix.resize(_rows);
+template<typename T,size_t _Rows,size_t _Cols> 
+Matrix<T, _Rows, _Cols>::Matrix(const T& _init) {
+	matrix.resize(_Rows);
 	for (int i = 0; i < matrix.size(); i++) {
-		matrix[i].resize(_cols, _init);
+		matrix[i].resize(_Cols, _init);
 	}
-	rows = _rows;
-	cols = _cols;
+	rows = _Rows;
+	cols = _Cols;
 }
 
-template<typename T>
-Matrix<T>::Matrix(const Matrix<T>& rhs) {
-	matrix = rhs.matrix;
-	rows = rhs.get_rows_size();
-	cols = rhs.get_cols_size();
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols>::Matrix(const Matrix<T, _Rows, _Cols>& rhs) {
+	this->matrix = rhs.matrix;
+	this->rows = rhs.get_rows_size();
+	this->cols = rhs.get_cols_size();
 }
 
-template<typename T>
-Matrix<T>::Matrix(const std::vector<std::vector<T>>& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+template<size_t Other_Rows,size_t Other_Cols>
+Matrix<T, _Rows, _Cols>::Matrix(const Matrix<T, Other_Rows, Other_Cols>& rhs) {
+	this->matrix = rhs.matrix;
+	this->rows = rhs.get_rows_size();
+	this->cols = rhs.get_cols_size();
+}
+
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols>::Matrix(const std::vector<std::vector<T>>& rhs) {
 	this->rows = rhs.size();
 	this->cols = rhs[0].size();
 	this->matrix.resize(this->rows);
 	for (int i = 0; i < this->rows; i++) {
-		matrix[i].resize(this->cols, 0);
+		this->matrix[i].resize(this->cols, 0);
 		for (int j = 0; j < this->cols; j++) {
 			this->matrix[i][j] = rhs[i][j];
 		}
 	}
 }
 
-template<typename T>
-Matrix<T>::~Matrix() {}
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols>::~Matrix() {}
 
-template<typename T>
-void Matrix<T>::resize(int _rows, int _cols, T _init) {
+
+template<typename T,size_t _Rows,size_t _Cols>
+void Matrix<T, _Rows, _Cols>::resize(int _rows, int _cols, T _init) {
 	matrix.resize(_rows);
 	for (int i = 0; i < matrix.size(); i++) {
 		matrix[i].resize(_cols, _init);
@@ -62,19 +71,20 @@ void Matrix<T>::resize(int _rows, int _cols, T _init) {
 	cols = _cols;
 }
 
-template<typename T>
-void Matrix<T>::setRandom()
+template<typename T,size_t _Rows,size_t _Cols> 
+void Matrix<T, _Rows, _Cols>::setRandom()
 {
 	std::srand(std::time(0));
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
-			this->matrix[i][j] = ((float)std::rand() / ((float)RAND_MAX)) * 2 - 1;
+			this->matrix[i][j] = (static_cast<T>(std::rand()) / static_cast<T>(RAND_MAX)) * 2 - 1;
 		}
 	}
 }
 
-template<typename T>
-Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+template<size_t Other_Rows,size_t Other_Cols>
+Matrix<T, _Rows, _Cols>& Matrix<T, _Rows, _Cols>::operator=(const Matrix<T, Other_Rows, Other_Cols>& rhs) {
 	if (&rhs == this) return *this;
 
 	int new_rows = rhs.get_rows_size();
@@ -99,11 +109,12 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs) {
 
 
 
-template<typename T>
-Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs) {
+template<typename T,size_t _Rows,size_t _Cols> 
+template<size_t Other_Rows,size_t Other_Cols>
+Matrix<T, _Rows, _Cols> Matrix<T, _Rows, _Cols>::operator+(const Matrix<T, Other_Rows, Other_Cols>& rhs) {
 	int rows = rhs.get_rows_size();
 	int cols = rhs.get_cols_size();
-	Matrix<T> result(rows, cols, 0);
+	Matrix<T, _Rows, _Cols> result(rows, cols, 0);
 	if (this->cols != cols || this->rows != rows)
 		throw std::out_of_range("Index out of bounds");
 
@@ -115,12 +126,13 @@ Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs) {
 	return result;
 }
 
-template<typename T>
-Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+template<size_t Other_Rows,size_t Other_Cols>
+Matrix<T, _Rows, _Cols> Matrix<T, _Rows, _Cols>::operator-(const Matrix<T, Other_Rows, Other_Cols>& rhs) {
 	int rows = rhs.get_rows_size();
 	int cols = rhs.get_cols_size();
 
-	Matrix<T> result(rows, cols, 0);
+	Matrix<T, _Rows, _Cols> result(rows, cols, 0);
 	if (this->cols != cols || this->rows != rows)
 		throw std::out_of_range("Index out of bounds");
 
@@ -132,11 +144,12 @@ Matrix<T> Matrix<T>::operator-(const Matrix<T>& rhs) {
 	return result;
 }
 
-template<typename T>
-Matrix<T> Matrix<T>::operator*(const Matrix<T>& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+template<size_t Other_Rows,size_t Other_Cols>
+Matrix<T, _Rows, Other_Cols> Matrix<T, _Rows, _Cols>::operator*(const Matrix<T, Other_Rows, Other_Cols>& rhs) {
 	int rows = rhs.get_rows_size();
 	int cols = rhs.get_cols_size();
-	Matrix<T> result(rows, cols, 0);
+	Matrix<T, _Rows, _Cols> result(rows, cols, 0);
 
 	if (this->cols != rows)
 		throw std::out_of_range("Index out of bounds");
@@ -153,8 +166,9 @@ Matrix<T> Matrix<T>::operator*(const Matrix<T>& rhs) {
 }
 
 
-template<typename T>
-Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+template<size_t Other_Rows,size_t Other_Cols>
+Matrix<T, _Rows, _Cols>& Matrix<T, _Rows, _Cols>::operator+=(const Matrix<T, Other_Rows, Other_Cols>& rhs) {
 	int rows = rhs.get_rows_size();
 	int cols = rhs.get_cols_size();
 	if (this->cols != cols || this->rows != rows)
@@ -169,8 +183,9 @@ Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& rhs) {
 	return *this;
 }
 
-template<typename T>
-Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& rhs) {
+template<typename T,size_t _Rows,size_t _Cols> 
+template<size_t Other_Rows,size_t Other_Cols>
+Matrix<T, _Rows, _Cols>& Matrix<T, _Rows, _Cols>::operator-=(const Matrix<T, Other_Rows, Other_Cols>& rhs) {
 	int rows = rhs.get_rows_size();
 	int cols = rhs.get_cols_size();
 	if (this->cols != cols || this->rows != rows)
@@ -186,8 +201,9 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& rhs) {
 }
 
 
-template<typename T>
-Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+template<size_t Other_Rows,size_t Other_Cols>
+Matrix<T, _Rows, Other_Cols>& Matrix<T, _Rows, _Cols>::operator*=(const Matrix<T, Other_Rows, Other_Cols>& rhs) {
 	Matrix result = (*this) * rhs;
 	(*this) = result;
 	return *this;
@@ -195,11 +211,11 @@ Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs) {
 
 
 //scalar
-template<typename T>
-Matrix<T> Matrix<T>::operator+(const T& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols> Matrix<T, _Rows, _Cols>::operator+(const T& rhs) {
 	int rows = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(rows, cols, 0);
+	Matrix<T, _Rows, _Cols> result(rows, cols, 0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -210,11 +226,11 @@ Matrix<T> Matrix<T>::operator+(const T& rhs) {
 	return result;
 }
 
-template<typename T>
-Matrix<T> Matrix<T>::operator-(const T& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols> Matrix<T, _Rows, _Cols>::operator-(const T& rhs) {
 	int row = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(rows, cols, 0);
+	Matrix<T, _Rows, _Cols> result(rows, cols, 0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -225,11 +241,11 @@ Matrix<T> Matrix<T>::operator-(const T& rhs) {
 	return result;
 }
 
-template<typename T>
-Matrix<T> Matrix<T>::operator*(const T& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols> Matrix<T, _Rows, _Cols>::operator*(const T& rhs) {
 	int row = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(rows, cols, 0);
+	Matrix<T, _Rows, _Cols> result(rows, cols, 0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -240,11 +256,11 @@ Matrix<T> Matrix<T>::operator*(const T& rhs) {
 	return result;
 }
 
-template<typename T>
-Matrix<T> Matrix<T>::operator/(const T& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols> Matrix<T, _Rows, _Cols>::operator/(const T& rhs) {
 	int row = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(rows, cols, 0);
+	Matrix<T, _Rows, _Cols> result(rows, cols, 0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -257,8 +273,8 @@ Matrix<T> Matrix<T>::operator/(const T& rhs) {
 
 
 //ref
-template<typename T>
-Matrix<T>& Matrix<T>::operator+=(const T& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols>& Matrix<T, _Rows, _Cols>::operator+=(const T& rhs) {
 	int row = this->rows;
 	int cols = this->cols;
 
@@ -271,8 +287,8 @@ Matrix<T>& Matrix<T>::operator+=(const T& rhs) {
 	return *this;
 }
 
-template<typename T>
-Matrix<T>& Matrix<T>::operator-=(const T& rhs) {
+template<typename T,size_t _Rows,size_t _Cols> 
+Matrix<T, _Rows, _Cols>& Matrix<T, _Rows, _Cols>::operator-=(const T& rhs) {
 	int row = this->rows;
 	int cols = this->cols;
 
@@ -285,8 +301,8 @@ Matrix<T>& Matrix<T>::operator-=(const T& rhs) {
 	return *this;
 }
 
-template<typename T>
-Matrix<T>& Matrix<T>::operator*=(const T& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols>& Matrix<T, _Rows, _Cols>::operator*=(const T& rhs) {
 	int row = this->rows;
 	int cols = this->cols;
 
@@ -299,8 +315,8 @@ Matrix<T>& Matrix<T>::operator*=(const T& rhs) {
 	return *this;
 }
 
-template<typename T>
-Matrix<T>& Matrix<T>::operator/=(const T& rhs) {
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols>& Matrix<T, _Rows, _Cols>::operator/=(const T& rhs) {
 	int row = this->rows;
 	int cols = this->cols;
 
@@ -313,26 +329,12 @@ Matrix<T>& Matrix<T>::operator/=(const T& rhs) {
 	return *this;
 }
 
-template<typename T>
-Vector<T> Matrix<T>::operator*(const Vector<T>& rhs) {
-	if (rhs.get_size() != this->cols) {
-		throw std::out_of_range("Index out of bounds");
-	}
-	Vector<T> result(this->rows, 0);
-	for (int i = 0; i < this->get_rows_size(); i++) {
-		for (int j = 0; j < this->get_cols_size(); j++) {
-			result(i) += this->matrix[i][j] * rhs(j);
-		}
-	}
 
-	return result;
-}
-
-template<typename T>
-Matrix<T> Matrix<T>::transpose() {
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Cols, _Rows> Matrix<T, _Rows, _Cols>::transpose() {
 	int row = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(cols, rows, 0);
+	Matrix<T, _Cols, _Rows> result(0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -342,11 +344,11 @@ Matrix<T> Matrix<T>::transpose() {
 	return result;
 }
 
-template<typename T>
-Matrix<T> Matrix<T>::square() {
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols> Matrix<T, _Rows, _Cols>::square() {
 	int rows = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(rows, cols, 0);
+	Matrix<T, _Rows, _Cols> result(rows, cols, 0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -356,11 +358,11 @@ Matrix<T> Matrix<T>::square() {
 	return result;
 }
 
-template<typename T>
-Matrix<T> Matrix<T>::inv(){
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols> Matrix<T, _Rows, _Cols>::inv(){
 	int rows = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(rows, cols, 0);
+	Matrix<T, _Rows, _Cols> result(rows, cols, 0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -370,11 +372,11 @@ Matrix<T> Matrix<T>::inv(){
 	return result;
 }
 
-template<typename T>
-Matrix<T> Matrix<T>::sqrt(){
+template<typename T,size_t _Rows,size_t _Cols>
+Matrix<T, _Rows, _Cols> Matrix<T, _Rows, _Cols>::sqrt(){
 	int rows = this->rows;
 	int cols = this->cols;
-	Matrix<T> result(rows, cols, 0);
+	Matrix<T, _Rows, _Cols> result(rows, cols, 0);
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -384,8 +386,8 @@ Matrix<T> Matrix<T>::sqrt(){
 	return result;
 }
 
-template<typename T>
-float Matrix<T>::norm(){
+template<typename T,size_t _Rows,size_t _Cols>
+float Matrix<T, _Rows, _Cols>::norm(){
 	float sum = 0;
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -395,24 +397,397 @@ float Matrix<T>::norm(){
 	return std::sqrt(sum);
 }
 
-template<typename T>
-T& Matrix<T>::operator()(const int& row, const int& col) {
+template<typename T,size_t _Rows,size_t _Cols>
+T& Matrix<T, _Rows, _Cols>::operator()(const int& row, const int& col) {
 	return this->matrix[row][col];
 }
 
-template<typename T>
-const T& Matrix<T>::operator()(const int& row, const int& col) const {
+template<typename T,size_t _Rows,size_t _Cols> 
+const T& Matrix<T, _Rows, _Cols>::operator()(const int& row, const int& col) const {
 	return this->matrix[row][col];
 }
 
-template<typename T>
-int Matrix<T>::get_rows_size() const {
+template<typename T,size_t _Rows,size_t _Cols> 
+int Matrix<T, _Rows, _Cols>::get_rows_size() const {
 	return this->rows;
 }
 
-template<typename T>
-int Matrix<T>::get_cols_size() const {
+template<typename T,size_t _Rows,size_t _Cols> 
+int Matrix<T, _Rows, _Cols>::get_cols_size() const {
 	return this->cols;
+}
+
+
+
+
+// Vector
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1>::Matrix() {
+	this->size = 0;
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1>::Matrix(int _size, const T& _init) {
+	this->vector.resize(_size, _init);
+	this->size = _size;
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1>::Matrix(const T& _init) {
+	this->vector.resize(_Rows, _init);
+	this->size = _Rows;
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1>::Matrix(const Matrix<T, _Rows, 1>& rhs) {
+	this->vector = rhs.vector;
+	this->size = rhs.get_size();
+}
+
+template<typename T, size_t _Rows> 
+template<size_t Other_Rows>
+Matrix<T, _Rows, 1>::Matrix(const Matrix<T, Other_Rows, 1>& rhs) {
+	this->vector = rhs.vector;
+	this->size = rhs.get_size();
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1>::~Matrix() {}
+
+template<typename T, size_t _Rows> 
+void Matrix<T, _Rows, 1>::resize(const int& _size, const T& _init) {
+	this->vector.resize(_size, _init);
+	this->size = _size;
+}
+
+template<typename T, size_t _Rows> 
+void Matrix<T, _Rows, 1>::resize(const int& _size) {
+	this->vector.resize(_size, 0);
+	this->size = _size;
+}
+
+template<typename T, size_t _Rows>
+template<size_t Other_Rows>
+Matrix<T, _Rows, 1>& Matrix<T, _Rows, 1>::operator=(const Matrix<T, Other_Rows, 1>& rhs) {
+	if (&rhs == this) return *this;
+
+	int new_size = rhs.get_size();
+
+	this->vector.resize(new_size);
+
+	for (int i = 0; i < new_size; i++) {
+		this->vector[i] = rhs(i);
+	}
+
+	this->size = new_size;
+
+	return *this;
+}
+
+template<typename T, size_t _Rows>
+template<size_t Other_Rows>
+Matrix<T, _Rows, 1> Matrix<T, _Rows, 1>::operator+(const Matrix<T, Other_Rows, 1>& rhs) {
+	int size = rhs.get_size();
+	Matrix<T, _Rows, 1> result(size, 0);
+	if (this->size != size)
+		throw std::out_of_range("Index out of bounds");
+
+	for (int i = 0; i < size; i++) {
+		result(i) = this->vector[i] + rhs(i);
+	}
+	return result;
+}
+
+template<typename T, size_t _Rows> 
+template<size_t Other_Rows>
+Matrix<T, _Rows, 1> Matrix<T, _Rows, 1>::operator-(const Matrix<T, Other_Rows, 1>& rhs) {
+	int size = rhs.get_size();
+	Matrix<T, _Rows, 1> result(size, 0);
+	if (this->size != size)
+		throw std::out_of_range("Index out of bounds");
+
+	for (int i = 0; i < size; i++) {
+		result(i) = this->vector[i] - rhs(i);
+	}
+	return result;
+}
+
+template<typename T, size_t _Rows>
+template<size_t Other_Rows>
+Matrix<T, _Rows, 1> Matrix<T, _Rows, 1>::operator*(const Matrix<T, Other_Rows, 1>& rhs) {
+	int size = rhs.get_size();
+	Matrix<T, _Rows, 1> result(size, 0);
+	if (this->size != size)
+		throw std::out_of_range("Index out of bounds");
+
+	for (int i = 0; i < size; i++) {
+		result(i) = this->vector[i] * rhs(i);
+	}
+	return result;
+}
+
+
+template<typename T, size_t _Rows>
+template<size_t Other_Rows>
+Matrix<T, _Rows, 1>& Matrix<T, _Rows, 1>::operator+=(const Matrix<T, Other_Rows, 1>& rhs) {
+	int size = rhs.get_size();
+	if (this->size != size)
+		throw std::out_of_range("Index out of bounds");
+
+	for (int i = 0; i < size; i++) {
+		this->vector[i] += rhs(i);
+	}
+	return *this;
+}
+
+template<typename T, size_t _Rows>
+template<size_t Other_Rows>
+Matrix<T, _Rows, 1>& Matrix<T, _Rows, 1>::operator-=(const Matrix<T, Other_Rows, 1>& rhs) {
+	int size = rhs.get_size();
+	if (this->size != size)
+		throw std::out_of_range("Index out of bounds");
+
+	for (int i = 0; i < size; i++) {
+		this->vector[i] -= rhs(i);
+	}
+	return *this;
+}
+
+template<typename T, size_t _Rows>
+template<size_t Other_Rows>
+Matrix<T, _Rows, 1>& Matrix<T, _Rows, 1>::operator*=(const Matrix<T, Other_Rows, 1>& rhs) {
+	int size = rhs.get_size();
+	if (this->size != size)
+		throw std::out_of_range("Index out of bounds");
+
+	for (int i = 0; i < size; i++) {
+		this->vector[i] *= rhs(i);
+	}
+	return *this;
+}
+
+//scalar
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1> Matrix<T, _Rows, 1>::operator+(const T& rhs) {
+	int size = this->size;
+	Matrix<T, _Rows, 1> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = this->vector[i] + rhs;
+	}
+
+	return result;
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1> Matrix<T, _Rows, 1>::operator-(const T& rhs) {
+	int size = this->size;
+	Matrix<T, _Rows, 1> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = this->vector[i] - rhs;
+	}
+
+	return result;
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1> Matrix<T, _Rows, 1>::operator*(const T& rhs) {
+	int size = this->size;
+	Matrix<T, _Rows, 1> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = this->vector[i] * rhs;
+	}
+
+	return result;
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1> Matrix<T, _Rows, 1>::operator/(const T& rhs) {
+	int size = this->size;
+	Matrix<T, _Rows, 1> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = this->vector[i] / rhs;
+	}
+
+	return result;
+}
+
+
+//ref
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1>& Matrix<T, _Rows, 1>::operator+=(const T& rhs) {
+	int size = this->size;
+
+	for (int i = 0; i < size; i++) {
+		 this->vector[i] += rhs;
+	}
+
+	return *this;
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1>& Matrix<T, _Rows, 1>::operator-=(const T& rhs) {
+	int size = this->size;
+
+	for (int i = 0; i < size; i++) {
+		 this->vector[i] -= rhs;
+	}
+
+	return *this;
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1>& Matrix<T, _Rows, 1>::operator*=(const T& rhs) {
+	int size = this->size;
+
+	for (int i = 0; i < size; i++) {
+		 this->vector[i] *= rhs;
+	}
+
+	return *this;
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1>& Matrix<T, _Rows, 1>::operator/=(const T& rhs) {
+	int size = this->size;
+
+	for (int i = 0; i < size; i++) {
+		 this->vector[i] /= rhs;
+	}
+
+	return *this;
+}
+
+template<typename T, size_t _Rows> 
+bool Matrix<T, _Rows, 1>::operator==(const Matrix<T, _Rows, 1>& rhs){
+	return (*this - rhs).norm() < 0.001f;
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, 1, _Rows> Matrix<T, _Rows, 1>::transpose() {
+	int rows = 1;
+	int cols = this->size;
+	Matrix<T, 1, _Rows> result(0);
+
+	for (int i = 0; i < cols; i++) {
+		result(0, i) = this->vector(i);
+	}
+	return result;
+}
+
+template<typename T, size_t _Rows> 
+T Matrix<T, _Rows, 1>::dot(const Matrix<T, _Rows, 1>& rhs) {
+	T result = 0;
+	if (this->size != rhs.get_size())
+		throw std::out_of_range("Index out of bounds");
+	for (int i = 0; i < this->size; i++) {
+		result += (this->vector(i) * rhs(i));
+	}
+}
+
+template<typename T, size_t _Rows> 
+T& Matrix<T, _Rows, 1>::operator()(const int& idx) {
+	return this->vector[idx];
+}
+
+template<typename T, size_t _Rows> 
+T& Matrix<T, _Rows, 1>::operator[](const int& idx) {
+	return this->vector[idx];
+}
+
+
+template<typename T, size_t _Rows> 
+const T& Matrix<T, _Rows, 1>::operator()(const int& idx) const {
+	return this->vector[idx];
+}
+
+template<typename T, size_t _Rows> 
+const T& Matrix<T, _Rows, 1>::operator[](const int& idx) const {
+	return this->vector[idx];
+}
+
+
+template<typename T, size_t _Rows> 
+int Matrix<T, _Rows, 1>::get_size(){
+	return this->size;
+}
+
+
+template<typename T, size_t _Rows> 
+void Matrix<T, _Rows, 1>::push_back(T value) {
+	this->vector.push_back(value);
+	this->size = vector.size();
+}
+
+template<typename T, size_t _Rows> 
+void Matrix<T, _Rows, 1>::setRandom()
+{
+	std::srand(std::time(0));
+	for (int i = 0; i < this->size; i++) {
+		this->vector[i] = ((float)std::rand() / ((float)RAND_MAX)) * 2 - 1;
+	}
+}
+
+template<typename T, size_t _Rows> 
+float Matrix<T, _Rows, 1>::norm(){
+	float sum = 0;
+	for (int i = 0; i < this->size; i++) {
+		sum += static_cast<float>(this->vector[i] * this->vector[i]);
+	}
+	return std::sqrt(sum);
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1> Matrix<T, _Rows, 1>::square() {
+	int size = this->size;
+	Matrix<T, _Rows, 1> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = this->vector[i] * this->vector[i];
+	}
+	return result;
+}
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1> Matrix<T, _Rows, 1>::sqrt() {
+	int size = this->size;
+	Matrix<T, _Rows, 1> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = std::sqrt(this->vector[i]);
+	}
+	return result;
+}
+
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1> Matrix<T, _Rows, 1>::inv() {
+	int size = this->size;
+	Matrix<T, _Rows, 1> result(size, 0);
+
+	for (int i = 0; i < size; i++) {
+		result(i) = 1.0f / this->vector[i];
+	}
+	return result;
+}
+
+
+template<typename T, size_t _Rows> 
+Matrix<T, _Rows, 1> Matrix<T, _Rows, 1>::onehot(){
+	int size = this->size;
+	Matrix<T, _Rows, 1> result(size, 0);
+	float _max = *std::max_element(this->vector.begin(), this->vector.end());
+	for(int i = 0; i < size; i++){
+		if (_max == this->vector[i]){
+			result[i] = 1;
+			break;
+		}
+	}
+	return result;
 }
 
 #endif
