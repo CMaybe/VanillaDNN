@@ -79,7 +79,7 @@ public:
 };
 
 
-template<typename T, size_t _Rows> class Matrix<T, _Rows,1> {
+template<typename T, size_t _Rows> class Matrix<T, _Rows=0,1> {
 private:
 	std::vector<T> vector;
 	int size;
