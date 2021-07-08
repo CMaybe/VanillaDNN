@@ -10,3 +10,4 @@ add_library(Math STATIC
 	./Matrix/Matrix.cpp
 	./Vector/Vector.hpp
 )
+
