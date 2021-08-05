@@ -21,8 +21,7 @@ add_library(VanillaDNN STATIC
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Model/Model.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/MNIST/MNIST.cpp
 	${VanillaDNN_INCLUDE_DIR}/VanillaDNN/Math/Matrix/Matrix.cpp
-	${VanillaDNN_INCLUDE_DIR}/VanillaDNN/Math/Vector/Vector.cpp
-	
+	${VanillaDNN_INCLUDE_DIR}/VanillaDNN/Math/Vector/Vector.hpp
 )
 
 target_link_libraries(VanillaDNN PRIVATE Threads::Threads)
