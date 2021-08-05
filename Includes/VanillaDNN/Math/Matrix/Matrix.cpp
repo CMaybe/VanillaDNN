@@ -65,9 +65,10 @@ void Matrix<T>::resize(int _rows, int _cols, T _init) {
 template<typename T>
 void Matrix<T>::setRandom()
 {
+	std::srand(std::time(0));
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
-			this->matrix[i][j] = ((float)rand() / (RAND_MAX)) * 2 - 1;
+			this->matrix[i][j] = ((float)std::rand() / ((float)RAND_MAX)) * 2 - 1;
 		}
 	}
 }
