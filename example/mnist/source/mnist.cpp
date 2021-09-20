@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 
 	std::cout<< "loaded mnist!\n";
 	
-	Model mnist(784, 10);//input : 28 x 28, output 0 ~ 9;
+	Model mnist;//input : 28 x 28, output 0 ~ 9;
 	
 	
 	mnist.setLoss(LOSS_FUNCTION::mean_squared_error);
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(5000, 10, 32); //total, epoch, batch
+	mnist.fit(5000, 2, 2); //total, epoch, batch
 	
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);

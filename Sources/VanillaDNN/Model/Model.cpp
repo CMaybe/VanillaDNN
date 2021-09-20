@@ -4,10 +4,7 @@
 #include <VanillaDNN/Model/Model.hpp>
 
 
-Model::Model(int _nInput, int _nOutput) {
-	this->depth = 0;
-	this->nInput = _nInput;
-	this->nOutput = _nOutput;
+Model::Model() {
 	this->batch_size = 1;
 	this->epoch = 0;
 	this->nEval = 0;
@@ -53,6 +50,7 @@ void Model::init() {
 	this->inputLayer->outputNeuron.resize(this->batch_size);
 	Layer* cur = this->outputLayer;
 	do {
+		
 		cur->weight.resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt());
 		cur->weight.setRandom();
 		cur->bias.resize(cur->getNueronCnt());
@@ -65,6 +63,7 @@ void Model::init() {
 		cur->dE_db.resize(this->batch_size);
 		cur->dE_dz.resize(this->batch_size);
 		cur->dz_db.resize(this->batch_size);
+
 		for(int i = 0; i < this->batch_size; i++){
 			cur->dE_dw[i].resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0);
 			cur->dE_do[i].resize(cur->getNueronCnt(), 0);
@@ -74,10 +73,9 @@ void Model::init() {
 			cur->dE_dz[i].resize(cur->getNueronCnt(), 0);
 			cur->dz_db[i].resize(cur->getNueronCnt(), 0);
 		}
-		
+
 		batch_dE_dw.insert(batch_dE_dw.begin(), Matrix<float>(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0));
 		batch_dE_db.insert(batch_dE_db.begin(), Vector<float>(cur->getNueronCnt(), 0));
-		
 		cur = cur->preLayer;
 	} while (cur->preLayer != nullptr);
 }
@@ -85,16 +83,17 @@ void Model::init() {
 void Model::feed_forward(int idx) {
 	this->inputLayer->inputNeuron[idx % this->batch_size] = this->input_set[idx];
 	this->inputLayer->outputNeuron[idx % this->batch_size] = this->input_set[idx];
-	for (Layer* layer : this->layers) {
-		layer->feed_forward(idx % this->batch_size);	
+	for(int i =  1;i<this->layers.size();i++) {
+		layers[i]->feed_forward(idx % this->batch_size);	
 	}
+
 	this->output_set[idx % this->batch_size] = this->outputLayer->outputNeuron[idx % this->batch_size];
+
 	return;
 }
 
 void Model::back_propagation(int idx) {
 	Layer* cur = nullptr;
-	int _depth = this->depth;
 	//output Layer
 	cur = this->outputLayer;
 	this->outputLayer->dE_do[idx % this->batch_size] = this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]);
@@ -118,8 +117,6 @@ void Model::update(){
 		layers[i]->update(this->optimizer->getWeightGradient(this->batch_dE_dw[i], i) / this->batch_size, this->batch_dE_db[i]  / this->batch_size);
 	}
 	
-	
-	
 	batch_dE_dw.clear();
 	batch_dE_db.clear();
 	
@@ -138,6 +135,8 @@ void Model::fit(int _total, int _epoch, int _batch) {
 	this->epoch = _epoch;
 	this->batch_size = _batch;
 	this->init();
+	this->inputLayer->preLayer = nullptr;
+	this->outputLayer->postLayer = nullptr;
 	std::vector<std::future<void>> batch_tasks;
 	for (int i = 0; i < this->epoch; i++) {
 		for (int j = 0; j < this->total; j+=this->batch_size) {
@@ -162,9 +161,6 @@ void Model::evaluate(int _len,bool show) {
 	this->accuracy = 0;
 	float acc_sum = 0;
 	float error_sum = 0;
-	this->layers[0]->preLayer = inputLayer;
-	this->inputLayer->preLayer = nullptr;
-	this->outputLayer->preLayer = this->layers[this->depth - 1];
 	for (int i = 0; i < _len; i++) {
 		this->target = this->target_set[i];
 		this->feed_forward(i);
@@ -191,16 +187,15 @@ float Model::getError() {
 }
 
 int Model::getDepth() {
-	return this->depth;
+	return this->layers.size();
 }
 
 
 void Model::addLayer(Layer* _layer) {
 	this->layers.push_back(_layer);
-	this->depth = layers.size();
 	if (this->layers.size() == 1) {
-		this ->inputLayer = this->layers[0];
-		this ->outputLayer = this->layers[0];
+		this ->inputLayer = _layer;
+		this ->outputLayer = _layer;
 	}
 	else {
 		this->outputLayer->connect(_layer);
@@ -209,24 +204,6 @@ void Model::addLayer(Layer* _layer) {
 	return;
 }
 
-void Model::addLayers(std::vector<Layer*>& _layers) {
-	this->depth += _layers.size();
-	for (Layer* layer : _layers) {
-		this->layers.push_back(layer);
-		if (layers.size() != 1) {
-			layers[layers.size() - 1]->preLayer = layers[layers.size() - 2];
-		}
-	}
-	if (layers.size() == _layers.size()) {
-		layers[0]->preLayer = inputLayer;
-	}
-	else {
-		outputLayer->preLayer = layers[depth - 1];
-		layers[depth - 1]->preLayer = layers[depth - 2];
-	}
-	outputLayer->preLayer = layers[depth - 1];
-	return;
-}
 
 void Model::setOptimizer(Optimizer *_optimizer) {
 	if(this->optimizer != nullptr) delete this->optimizer;

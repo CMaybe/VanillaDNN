@@ -345,7 +345,7 @@ Matrix<T> Matrix<T>::dot(const Matrix<T>& rhs) {
 
 template<typename T>
 Vector<T> Matrix<T>::dot(const Vector<T>& rhs) {
-	if (rhs.get_size() != this->cols) {
+	if (rhs.get_size() != this->rows) {
 		throw std::out_of_range("Index out of bounds");
 	}
 	Vector<T> result(this->rows, 0);

@@ -40,8 +40,7 @@ private:
 
 	Layer* inputLayer = nullptr;
 	Layer * outputLayer = nullptr;
-	int depth;
-	int nInput, nOutput;
+	
 	int batch_size;
 	int epoch;
 	int nEval;
@@ -51,20 +50,24 @@ private:
 
 public:
 	Model();
-	Model(int _nInput, int _nOutput);
 	virtual ~Model();
 	void setLoss(Loss _loss);
+	
 	void init();
 	void fit(int _total, int _epoch, int _batch = 1);
+	
 	void evaluate(int _batch, bool show = false);
 	void feed_forward(int idx);
 	void back_propagation(int idx);
 	void update();
+	
 	void addLayer(Layer* _layer);
-	void addLayers(std::vector<Layer*>& _layers);
+	
 	void setInput(std::vector<Vector<float>>& _input_set);
 	void setTarget(std::vector<Vector<float>>& _target_set);
+	
 	void setOptimizer(Optimizer *_optimizer);
+	
 	float getAccuracy();
 	float getError();
 	int getDepth();
