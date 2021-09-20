@@ -36,8 +36,8 @@ Momentum::Momentum(float lr, float _momentum, int _depth)
 {
 	this->learning_rate = lr;
 	this->momentum = _momentum;
-	this->vel_weight.resize(_depth+1);
-	this->vel_bias.resize(_depth+1);
+	this->vel_weight.resize(_depth);
+	this->vel_bias.resize(_depth);
 }
 
 Matrix<float> Momentum::getWeightGradient(Matrix<float>& dE_dW, int _depth){
@@ -99,8 +99,8 @@ Adagrad::Adagrad(float lr, float _epsilon, int _depth)
 {
 	this->learning_rate = lr;
 	this->epsilon = _epsilon;
-	this->G_weight.resize(_depth+1);
-	this->G_bias.resize(_depth+1);
+	this->G_weight.resize(_depth);
+	this->G_bias.resize(_depth);
 }
 
 Matrix<float> Adagrad::getWeightGradient(Matrix<float>& dE_dW, int _depth){
@@ -141,8 +141,8 @@ RMSProp::RMSProp(float lr, float _rho, float _epsilon, int _depth)
 	this->learning_rate = lr;
 	this->rho = _rho;
 	this->epsilon = _epsilon;
-	this->G_weight.resize(_depth+1);
-	this->G_bias.resize(_depth+1);
+	this->G_weight.resize(_depth);
+	this->G_bias.resize(_depth);
 }
 
 Matrix<float> RMSProp::getWeightGradient(Matrix<float>& dE_dW, int _depth){
@@ -183,10 +183,10 @@ Adam::Adam(float lr, float _beta1, float _beta2, float _epsilon, int _depth)
 	this->beta1 = _beta1;
 	this->beta2 = _beta2;
 	this->epsilon = _epsilon;
-	this->m_weight.resize(_depth + 1);
-	this->v_weight.resize(_depth + 1);
-	this->m_bias.resize(_depth + 1);
-	this->v_bias.resize(_depth + 1);
+	this->m_weight.resize(_depth);
+	this->v_weight.resize(_depth);
+	this->m_bias.resize(_depth);
+	this->v_bias.resize(_depth);
 }
 
 Matrix<float> Adam::getWeightGradient(Matrix<float>& dE_dW, int _depth){

@@ -44,4 +44,9 @@ int Layer::getNueronCnt() {
 	return this->nNueron;
 }
 
+void Layer::connect(Layer * layer){
+	layer->preLayer = this;
+	this->postLayer  = layer;
+}
+
 #endif

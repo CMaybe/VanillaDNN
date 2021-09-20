@@ -12,7 +12,7 @@
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
 #include <VanillaDNN/Layers/Layer.hpp>
-#include <VanillaDNN/Layers/OutputLayer.hpp>
+#include <VanillaDNN/Layers/DenseLayer.hpp>
 #include <VanillaDNN/Functions/Optimizer.hpp>
 #include <VanillaDNN/MNIST/MNIST.hpp>
 
@@ -25,26 +25,21 @@ private:
 	Loss_diff loss_diff;
 	
 	Optimizer *optimizer = nullptr;
-	std::vector<Layer*> Layers; // exclude input&output Layer;
+	std::vector<Layer*> layers; // exclude input&output Layer;
 	
 	Vector<float> input;
 	Vector<float> target;
 	Vector<float> output;
 
 	std::vector<Vector<float>> input_set;
-	std::vector<Vector<float>> target_set;;
+	std::vector<Vector<float>> target_set;
 	std::vector<Vector<float>> output_set;
 	
 	std::vector<Matrix<float>> batch_dE_dw;
-	std::vector<Vector<float>> batch_dE_do;
-	std::vector<Vector<float>> batch_do_dz;
-	std::vector<Vector<float>> batch_dz_dw;
-	std::vector<Vector<float>> batch_dE_dz;
 	std::vector<Vector<float>> batch_dE_db;
-	std::vector<Vector<float>> batch_dz_db;
 
 	Layer* inputLayer = nullptr;
-	OutputLayer * outputLayer = nullptr;
+	Layer * outputLayer = nullptr;
 	int depth;
 	int nInput, nOutput;
 	int batch_size;
@@ -59,7 +54,6 @@ public:
 	Model(int _nInput, int _nOutput);
 	virtual ~Model();
 	void setLoss(Loss _loss);
-	void setOutputFunction(Activation _activation);
 	void init();
 	void fit(int _total, int _epoch, int _batch = 1);
 	void evaluate(int _batch, bool show = false);

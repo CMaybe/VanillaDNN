@@ -17,11 +17,11 @@ add_library(VanillaDNN STATIC
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Functions/Loss.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Functions/Optimizer.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Layers/Layer.cpp
-	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Layers/OutputLayer.cpp
+	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Layers/DenseLayer.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Model/Model.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/MNIST/MNIST.cpp
 	${VanillaDNN_INCLUDE_DIR}/VanillaDNN/Math/Matrix/Matrix.cpp
-	${VanillaDNN_INCLUDE_DIR}/VanillaDNN/Math/Vector/Vector.hpp
+	${VanillaDNN_INCLUDE_DIR}/VanillaDNN/Math/Vector/Vector.cpp
 )
 
 target_link_libraries(VanillaDNN PRIVATE Threads::Threads)

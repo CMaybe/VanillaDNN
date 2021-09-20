@@ -50,6 +50,7 @@ public:
 
 	//vector
 	Matrix<T> transpose();
+	Matrix<T> dot(const Matrix<T>& rhs);
 	T dot(const Vector<T>& rhs);
 	Vector<T> square();
 	Vector<T> sqrt();
