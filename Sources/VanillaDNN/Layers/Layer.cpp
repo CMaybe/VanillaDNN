@@ -31,9 +31,5 @@ void Layer::setActivation(Activation _activation) {
 }
 
 
-void Layer::connect(Layer * layer){
-	layer->preLayer = this;
-	this->postLayer  = layer;
-}
 
 #endif

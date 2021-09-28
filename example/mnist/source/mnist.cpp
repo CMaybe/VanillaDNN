@@ -29,7 +29,8 @@ int main(int argc, char** argv) {
 
 
 	std::cout<< "mnist loaded!\n";
-	
+	std::cout<<training_images.size()<<'\n';
+	std::cout<<training_labels.size()<<'\n';
 	Model mnist;//input : 28 x 28, output 0 ~ 9;
 	
 	
@@ -43,7 +44,7 @@ int main(int argc, char** argv) {
 	// mnist.setOptimizer(new Momentum(0.01,0.9,mnist.getDepth()));
 	// mnist.setOptimizer(new Adagrad(0.01f,1e-6,mnist.getDepth()));
 	// mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-8,mnist.getDepth())); //lr, _rho, _epsilon, _depth
-	mnist.setOptimizer(new Adam(0.01f, 0.9f, 0.999f, 1e-8,mnist.getDepth())); //lr, _rho, _epsilon, _depth
+	mnist.setOptimizer(new Adam(0.01f, 0.9f, 0.999f, 1e-8)); //lr, _rho, _epsilon, _depth
 	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);

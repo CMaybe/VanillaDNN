@@ -29,10 +29,16 @@ public:
 	virtual void feed_forward(int idx) = 0;
 	virtual void back_propagation(int idx) = 0;
 	virtual void update() = 0;
+	virtual void connect(Layer * layer) = 0;
 	virtual void init(int batch_size, Optimizer *_optimizer) = 0;
+	virtual void setInput(const Vector<float>& _input, const int& idx) = 0;
+	virtual void setError(const Vector<float>& error, const int& idx) = 0;
+	
+	virtual Layer* getPostLayer()=0;
+	virtual Layer* getPreLayer()=0;
+	virtual Vector<float> getOutput(const int& idx) = 0;
 	
 	
-	void connect(Layer * layer);
 	void setActivation(Activation _activation);
 
 

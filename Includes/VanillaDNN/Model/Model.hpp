@@ -70,7 +70,6 @@ public:
 	
 	float getAccuracy();
 	float getError();
-	int getDepth();
 	void setLearningRate(float lr);
 
 

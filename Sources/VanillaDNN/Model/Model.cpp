@@ -11,6 +11,8 @@ Model::Model() {
 	this->total = 0;
 	this->accuracy = 0;
 	this->error = 0;
+	this->inputLayer = nullptr;
+	this->outputLayer = nullptr;
 	this->optimizer = new Optimizer();
 }
 
@@ -45,35 +47,47 @@ void Model::setLoss(Loss _loss) {
 
 void Model::init() {
 	Layer* cur = this->inputLayer;
+	std::cout<< this->inputLayer->input.size() << '\n';
 	do {
 		cur->init(this->batch_size, this->optimizer);
-	} while ((cur = cur->postLayer) != nullptr);
+	} while ((cur = cur->getPostLayer()) != nullptr);
+	std::cout<< this->inputLayer->input.size() << '\n';
 }
 
 void Model::feed_forward(int idx) {
-	this->inputLayer->input[idx % this->batch_size] = this->input_set[idx];
-	for(int i =  1;i<this->layers.size();i++) {
-		layers[i]->feed_forward(idx % this->batch_size);	
-	}
-	this->output_set[idx % this->batch_size] = this->outputLayer->output[idx % this->batch_size];
+	this->inputLayer->setInput(this->input_set[idx], idx % this->batch_size);
+	Layer* cur = this->inputLayer;
+	do {
+		cur->feed_forward(idx % this->batch_size);	
+	} while ((cur = cur->getPostLayer()) != nullptr);
+	std::cout<<"test1\n";
+	this->output_set[idx % this->batch_size] = this->outputLayer->getOutput(idx % this->batch_size);
+	std::cout<<"test2\n";
 	return;
 }
 
 void Model::back_propagation(int idx) {
+	std::cout<<"back_propagation start\n";
 	Layer* cur = this->outputLayer;
-	dynamic_cast<DenseLayer*>(this->outputLayer)->dE_do[idx % this->batch_size] = 
-		this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]);
+	
+	std::cout<<"back_propagation M1\n";
+	this->outputLayer->setError(this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]), idx % this->batch_size);
+	std::cout<<"back_propagation M2\n";
+
 	do{
 		cur->back_propagation(idx % this->batch_size);
-	}while((cur = cur->preLayer)!= nullptr);
+	}while((cur = cur->getPreLayer())!= nullptr);
+	std::cout<<"back_propagation end\n";
 
 }
 
 void Model::update(){
+	std::cout<<"update start\n";
 	Layer* cur = this->outputLayer;
 	do{
 		cur->update();
-	}while((cur = cur->preLayer)!= nullptr);
+	}while((cur = cur->getPreLayer())!= nullptr);
+	std::cout<<"update end\n";
 }
 
 void Model::fit(int _total, int _epoch, int _batch) {
@@ -100,7 +114,7 @@ void Model::fit(int _total, int _epoch, int _batch) {
 		std::cout << i + 1 << " epoch is done\n";
 	}
 	
-
+	
 }
 
 void Model::evaluate(int _len,bool show) {
@@ -134,16 +148,12 @@ float Model::getError() {
 	return this->error;
 }
 
-int Model::getDepth() {
-	return this->layers.size();
-}
 
 
 void Model::addLayer(Layer* _layer) {
-	this->layers.push_back(_layer);
-	if (this->layers.size() == 1) {
-		this ->inputLayer = _layer;
-		this ->outputLayer = _layer;
+	if (this->inputLayer == nullptr) {
+		this->inputLayer = _layer;
+		this->outputLayer = _layer;
 	}
 	else {
 		this->outputLayer->connect(_layer);

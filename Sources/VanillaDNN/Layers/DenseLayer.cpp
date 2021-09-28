@@ -9,8 +9,8 @@ DenseLayer::DenseLayer(int dim) {
 	this->dim = dim;
 }
 
-DenseLayer::DenseLayer(int _nNueron, Activation _activation) {
-	this->dim = dim;
+DenseLayer::DenseLayer(int _dim, Activation _activation) {
+	this->dim = _dim;
 	this->setActivation(_activation);
 }
 
@@ -24,7 +24,7 @@ void DenseLayer::back_propagation(int idx){
 	this->dz_dw[idx] = this->preLayer->output[idx];
 	
 	if(this->postLayer == nullptr){
-		this->dE_db[idx] = this->dE_do[idx] * this->do_dz[idx];
+		this->dE_db[idx] = dE_do[idx] * this->do_dz[idx];
 		this->dE_dw[idx] = this->dE_db[idx].dot(this->dz_dw[idx].transpose());	
 	}
 	else{
@@ -38,11 +38,13 @@ void DenseLayer::back_propagation(int idx){
 
 void DenseLayer::feed_forward(int idx){
 	if(this->preLayer==nullptr){
-		this->output[idx] = this->output[idx];
+		std::cout<<"aaaaaaaaaaaaaaaaaa\n";
+		this->output[idx] = this->input[idx];
 	}
 	else{
 		this->input[idx] = this->batch_weight[idx].dot(this->preLayer->output[idx]) + this->batch_bias[idx];
 		this->output[idx] = this->activation(this->input[idx]);
+		std::cout<<"bbbbbbbbbbbbbbbbbbbb\n";
 	}
 }
 
@@ -68,10 +70,11 @@ void DenseLayer::update(){
 void DenseLayer::init(int batch_size, Optimizer *_optimizer){
 	this->batch_size = batch_size;
 
-	this->input.resize(this->batch_size); 
-	this->output.resize(this->batch_size);
 	
+	this->input.resize(this->batch_size);
+	this->output.resize(this->batch_size);
 	if(this->preLayer == nullptr) return;
+	
 	this->dE_dw.resize(this->batch_size);
 	this->dE_db.resize(this->batch_size);
 	this->dE_do.resize(this->batch_size);
@@ -95,8 +98,39 @@ void DenseLayer::init(int batch_size, Optimizer *_optimizer){
 		this->dz_db[i].resize(this->dim, 0);
 	}
 	std::memcpy(this->optimizer, _optimizer, sizeof(_optimizer));
+	
+	return;
 }
 
+void DenseLayer::setInput(const Vector<float>& _input,const int& idx) {
+	this->input[idx] = _input;
+}
+
+void DenseLayer::setError(const Vector<float>& error,const int& idx) {
+	this->dE_do[idx] = error;
+}
+
+Vector<float> DenseLayer::getOutput(const int& idx){
+	std::cout<<this->output.size()<<'\n';
+	return this->output[idx];
+}
+
+// void DenseLayer::setInput(const Matrix<float>& _input, int idx) {
+// 	this->input[idx] = _input;
+// }
+
+Layer* DenseLayer::getPostLayer(){
+	return this->postLayer;
+}
+
+Layer* DenseLayer::getPreLayer(){
+	return this->preLayer;
+}
+
+void DenseLayer::connect(Layer * layer){
+	(dynamic_cast<DenseLayer*>(layer))->preLayer = this;
+	this->postLayer = dynamic_cast<DenseLayer*>(layer);
+}
 
 
 #endif
