@@ -3,6 +3,13 @@
 
 #include <VanillaDNN/MNIST/MNIST.hpp>
 #include <iostream>
+
+int char2int(char* p)
+{
+  return ((p[0] & 0xff) << 24) | ((p[1] & 0xff) << 16) |
+         ((p[2] & 0xff) <<  8) | ((p[3] & 0xff) <<  0);
+}
+
 MNIST::MNIST()
 {
 	set = "defalut";
@@ -41,23 +48,26 @@ MNIST::MNIST(std::string _path,std::string _set,bool onehot)
 			std::ios::in | std::ios::binary);
 	}
 
-	imageInputStream.seekg(0, imageInputStream.end);
-	int imageSize = imageInputStream.tellg();
-	imageInputStream.seekg(0, imageInputStream.beg);
 
-	labelInputStream.seekg(0, labelInputStream.end);
-	int labelSize = labelInputStream.tellg();
-	labelInputStream.seekg(0, labelInputStream.beg);
+	char buffer[4];
+	imageInputStream.read(buffer, 4);
+	
+	imageInputStream.read(buffer, 4);
+	int imageSize = char2int(buffer);
+	
+	imageInputStream.read(buffer, 4);
+	int rows = char2int(buffer);
+	
+	imageInputStream.read(buffer, 4);
+	int cols = char2int(buffer);
+	
 
-	char temp[16];
-	imageInputStream.read(temp, 16);
-	for (int i = 0; i < imageSize; i += 784)
+	for (int i = 0; i < imageSize; i++)
 	{
 		Vector<float> image;
-
-		for (int j = 0; j < 784; j++)
+		char pixel;
+		for (int j = 0; j < rows * cols; j++)
 		{
-			char pixel;
 			imageInputStream.read(&pixel, 1);
 			if(onehot){
 				image.push_back(static_cast<float>(static_cast<unsigned char>(pixel!=0)));
@@ -68,9 +78,11 @@ MNIST::MNIST(std::string _path,std::string _set,bool onehot)
 		}
 		this->images.push_back(image);
 	}
-
-	char temp2[8];
-	labelInputStream.read(temp2, 8);
+	
+	labelInputStream.read(buffer, 4);
+	
+	labelInputStream.read(buffer, 4);
+	int labelSize = char2int(buffer);
 
 	for (int i = 0; i < labelSize; i++)
 	{
@@ -81,6 +93,10 @@ MNIST::MNIST(std::string _path,std::string _set,bool onehot)
 		this->labels.push_back(v);
 		
 	}
+	
+	
+	labelInputStream.close();
+	imageInputStream.close();
 }
 
 MNIST::MNIST(const MNIST& rhs)
