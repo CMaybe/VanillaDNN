@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 	}
 
 
-	std::cout<< "loaded mnist!\n";
+	std::cout<< "mnist loaded!\n";
 	
 	Model mnist;//input : 28 x 28, output 0 ~ 9;
 	
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(5000, 2, 2); //total, epoch, batch
+	mnist.fit(5000, 2, 10); //total, epoch, batch
 	
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);

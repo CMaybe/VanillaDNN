@@ -5,16 +5,6 @@
 
 Layer::Layer(){}
 
-Layer::Layer(int _nNueron) {
-	this->nNueron = _nNueron;
-	//this->dz_dw.resize(nNueron,0);
-}
-
-Layer::Layer(int _nNueron, Activation _activation) {
-	this->nNueron = _nNueron;
-	this->setActivation(_activation);
-}
-
 Layer::~Layer() {
 	//if (this->preLayer != nullptr) delete preLayer;
 }
@@ -40,9 +30,6 @@ void Layer::setActivation(Activation _activation) {
 	return;
 }
 
-int Layer::getNueronCnt() {
-	return this->nNueron;
-}
 
 void Layer::connect(Layer * layer){
 	layer->preLayer = this;

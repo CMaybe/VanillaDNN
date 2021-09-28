@@ -44,59 +44,25 @@ void Model::setLoss(Loss _loss) {
 }
 
 void Model::init() {
-	this->output_set.resize(this->batch_size);
-	this->inputLayer->preLayer = nullptr;
-	this->inputLayer->inputNeuron.resize(this->batch_size);
-	this->inputLayer->outputNeuron.resize(this->batch_size);
-	Layer* cur = this->outputLayer;
+	Layer* cur = this->inputLayer;
 	do {
-		
-		cur->weight.resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt());
-		cur->weight.setRandom();
-		cur->bias.resize(cur->getNueronCnt());
-		cur->inputNeuron.resize(this->batch_size);
-		cur->outputNeuron.resize(this->batch_size);
-		cur->dE_dw.resize(this->batch_size);
-		cur->dE_do.resize(this->batch_size);
-		cur->do_dz.resize(this->batch_size);
-		cur->dz_dw.resize(this->batch_size);
-		cur->dE_db.resize(this->batch_size);
-		cur->dE_dz.resize(this->batch_size);
-		cur->dz_db.resize(this->batch_size);
-
-		for(int i = 0; i < this->batch_size; i++){
-			cur->dE_dw[i].resize(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0);
-			cur->dE_do[i].resize(cur->getNueronCnt(), 0);
-			cur->do_dz[i].resize(cur->getNueronCnt(), 0);
-			cur->dz_dw[i].resize(cur->preLayer->getNueronCnt(),0);
-			cur->dE_db[i].resize(cur->getNueronCnt(), 0);
-			cur->dE_dz[i].resize(cur->getNueronCnt(), 0);
-			cur->dz_db[i].resize(cur->getNueronCnt(), 0);
-		}
-
-		batch_dE_dw.insert(batch_dE_dw.begin(), Matrix<float>(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0));
-		batch_dE_db.insert(batch_dE_db.begin(), Vector<float>(cur->getNueronCnt(), 0));
-		cur = cur->preLayer;
-	} while (cur->preLayer != nullptr);
+		cur->init(this->batch_size, this->optimizer);
+	} while ((cur = cur->postLayer) != nullptr);
 }
 
 void Model::feed_forward(int idx) {
-	this->inputLayer->inputNeuron[idx % this->batch_size] = this->input_set[idx];
-	this->inputLayer->outputNeuron[idx % this->batch_size] = this->input_set[idx];
+	this->inputLayer->input[idx % this->batch_size] = this->input_set[idx];
 	for(int i =  1;i<this->layers.size();i++) {
 		layers[i]->feed_forward(idx % this->batch_size);	
 	}
-
-	this->output_set[idx % this->batch_size] = this->outputLayer->outputNeuron[idx % this->batch_size];
-
+	this->output_set[idx % this->batch_size] = this->outputLayer->output[idx % this->batch_size];
 	return;
 }
 
 void Model::back_propagation(int idx) {
-	Layer* cur = nullptr;
-	//output Layer
-	cur = this->outputLayer;
-	this->outputLayer->dE_do[idx % this->batch_size] = this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]);
+	Layer* cur = this->outputLayer;
+	dynamic_cast<DenseLayer*>(this->outputLayer)->dE_do[idx % this->batch_size] = 
+		this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]);
 	do{
 		cur->back_propagation(idx % this->batch_size);
 	}while((cur = cur->preLayer)!= nullptr);
@@ -104,30 +70,10 @@ void Model::back_propagation(int idx) {
 }
 
 void Model::update(){
-	
-	for(int i = 0; i < this->batch_size; i++){
-		for(int j = 1; j < layers.size(); j++){
-			if(layers[j]->preLayer == nullptr) continue;
-			this->batch_dE_dw[j] += layers[j]->dE_dw[i];
-			this->batch_dE_db[j] += layers[j]->dE_db[i];
-		}
-	}
-	
-	for(int i =  1;i < layers.size(); i++){
-		layers[i]->update(this->optimizer->getWeightGradient(this->batch_dE_dw[i], i) / this->batch_size, this->batch_dE_db[i]  / this->batch_size);
-	}
-	
-	batch_dE_dw.clear();
-	batch_dE_db.clear();
-	
-	Layer *cur = this->outputLayer;
-	do {
-		
-		batch_dE_dw.insert(batch_dE_dw.begin(), Matrix<float>(cur->getNueronCnt(), cur->preLayer->getNueronCnt(), 0));
-		batch_dE_db.insert(batch_dE_db.begin(), Vector<float>(cur->getNueronCnt(), 0));
-		
-		cur = cur->preLayer;
-	} while (cur->preLayer != nullptr);
+	Layer* cur = this->outputLayer;
+	do{
+		cur->update();
+	}while((cur = cur->preLayer)!= nullptr);
 }
 
 void Model::fit(int _total, int _epoch, int _batch) {
@@ -164,7 +110,9 @@ void Model::evaluate(int _len,bool show) {
 	for (int i = 0; i < _len; i++) {
 		this->target = this->target_set[i];
 		this->feed_forward(i);
+
 		this->output = this->output_set[i % this->batch_size];
+
 		if (show) {
 			std::cout << "\n\ntarget : \n";
 			std::cout << this->target;

@@ -5,13 +5,12 @@
 
 DenseLayer::DenseLayer(){}
 
-DenseLayer::DenseLayer(int _nNueron) {
-	this->nNueron = _nNueron;
-	//this->dz_dw.resize(nNueron,0);
+DenseLayer::DenseLayer(int dim) {
+	this->dim = dim;
 }
 
 DenseLayer::DenseLayer(int _nNueron, Activation _activation) {
-	this->nNueron = _nNueron;
+	this->dim = dim;
 	this->setActivation(_activation);
 }
 
@@ -21,16 +20,16 @@ DenseLayer::~DenseLayer() {
 
 void DenseLayer::back_propagation(int idx){
 	if(this->preLayer == nullptr) return;
-	this->do_dz[idx] = this->activation_diff(this->inputNeuron[idx]);
-	this->dz_dw[idx] = this->preLayer->outputNeuron[idx];
+	this->do_dz[idx] = this->activation_diff(this->input[idx]);
+	this->dz_dw[idx] = this->preLayer->output[idx];
 	
 	if(this->postLayer == nullptr){
 		this->dE_db[idx] = this->dE_do[idx] * this->do_dz[idx];
-		this->dE_dw[idx] = this->dE_do[idx].dot(this->dz_dw[idx].transpose());	
+		this->dE_dw[idx] = this->dE_db[idx].dot(this->dz_dw[idx].transpose());	
 	}
 	else{
-		this->dE_do[idx] = this->postLayer->weight.transpose().dot(postLayer->dE_dz[idx]);
-		this->dE_dz[idx] = this->postLayer->dE_do[idx] * this->do_dz[idx];
+		this->dE_do[idx] = this->postLayer->batch_weight[idx].transpose().dot(postLayer->dE_dz[idx]);
+		this->dE_dz[idx] = this->dE_do[idx] * this->do_dz[idx];
 		this->dE_dw[idx] += this->dE_dz[idx].dot(this->dz_dw[idx].transpose());	
 		this->dE_db[idx] += this->dE_dz[idx];
 	}
@@ -38,18 +37,64 @@ void DenseLayer::back_propagation(int idx){
 }
 
 void DenseLayer::feed_forward(int idx){
-	if(this->preLayer==nullptr) return;
+	if(this->preLayer==nullptr){
+		this->output[idx] = this->output[idx];
+	}
 	else{
-		this->inputNeuron[idx] = this->weight.dot(this->preLayer->outputNeuron[idx]) + this->bias;
-		this->outputNeuron[idx] = this->activation(this->inputNeuron[idx]);
+		this->input[idx] = this->batch_weight[idx].dot(this->preLayer->output[idx]) + this->batch_bias[idx];
+		this->output[idx] = this->activation(this->input[idx]);
 	}
 }
 
-void DenseLayer::update(const Matrix<float>& dw,const Vector<float>& db){
+void DenseLayer::update(){
 	if(this->preLayer == nullptr) return;
-	this->weight -= dw;
-	this->bias -= db;
+	Matrix<float> dw(this->preLayer->dim,this->dim,0.0f);
+	Vector<float> db(this->dim,0.0f);
+	for(int idx = 0;idx < this->batch_size; idx++){
+		dw += this->dE_dw[idx];
+		db += this->dE_db[idx];
+		this->dE_dw[idx].resize(this->dim, this->preLayer->dim, 0);
+		this->dE_do[idx].resize(this->dim, 0);
+	}
+	this->weight -= this->optimizer->getWeightGradient(dw);
+	this->bias -= this->optimizer->getBiasGradient(db);
 	
+	for(int i = 0;i<this->batch_size;i++){
+		this->batch_weight[i] = this->weight;
+		this->batch_bias[i] = this->bias;
+	}
+}
+
+void DenseLayer::init(int batch_size, Optimizer *_optimizer){
+	this->batch_size = batch_size;
+
+	this->input.resize(this->batch_size); 
+	this->output.resize(this->batch_size);
+	
+	if(this->preLayer == nullptr) return;
+	this->dE_dw.resize(this->batch_size);
+	this->dE_db.resize(this->batch_size);
+	this->dE_do.resize(this->batch_size);
+	this->dE_dz.resize(this->batch_size);
+	this->do_dz.resize(this->batch_size);
+	this->dz_db.resize(this->batch_size);
+	this->dz_dw.resize(this->batch_size);
+	Matrix<float> w(this->dim, this->preLayer->dim);
+	Vector<float> b(this->dim, this->preLayer->dim);
+	w.setRandom();
+	b.setRandom();
+	for(int i = 0;i<this->batch_size;i++){
+		this->batch_weight.push_back(w);
+		this->batch_bias.push_back(b);
+		this->dE_dw[i].resize(this->dim, this->preLayer->dim, 0);
+		this->dE_do[i].resize(this->dim, 0);
+		this->do_dz[i].resize(this->dim, 0);
+		this->dz_dw[i].resize(this->preLayer->dim,0);
+		this->dE_db[i].resize(this->dim, 0);
+		this->dE_dz[i].resize(this->dim, 0);
+		this->dz_db[i].resize(this->dim, 0);
+	}
+	std::memcpy(this->optimizer, _optimizer, sizeof(_optimizer));
 }
 
 

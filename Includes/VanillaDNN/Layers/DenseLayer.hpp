@@ -12,14 +12,10 @@
 
 
 class DenseLayer : public Layer{
-protected:
-	using Activation = std::function<Vector<float>(Vector<float>&)>;
-	int nNueron;
-
 public:
 	DenseLayer();
-	DenseLayer(int _nNueron);
-	DenseLayer(int _nNueron, Activation _activation);
+	DenseLayer(int dim);
+	DenseLayer(int dim, Activation _activation);
 
 	Activation activation, activation_diff;
 
@@ -27,9 +23,33 @@ public:
 	virtual ~DenseLayer();
 	virtual void feed_forward(int idx);
 	virtual void back_propagation(int idx);
-	virtual void update(const Matrix<float>& dw,const Vector<float>& db);
+	virtual void update();
+	virtual void init(int batch_size, Optimizer *_optimizer);
 	
-	int getNueronCnt();
+	int dim;
+	using Activation = std::function<Vector<float>(Vector<float>&)>;
+	Matrix<float> weight;
+	Vector<float> bias;
+	
+	std::vector<Matrix<float>> batch_weight;
+	std::vector<Vector<float>> batch_bias;
+	
+	
+	std::vector<Vector<float>> input; 
+	std::vector<Vector<float>> output;
+
+	std::vector<Matrix<float>> dE_dw;
+	std::vector<Vector<float>> dE_db;
+
+	std::vector<Vector<float>> dE_do;
+	std::vector<Vector<float>> dE_dz;
+
+	std::vector<Vector<float>> do_dz;
+	
+	std::vector<Vector<float>> dz_db;
+	std::vector<Vector<float>> dz_dw;
+	
+	DenseLayer *preLayer = nullptr, *postLayer=nullptr;
 
 
 

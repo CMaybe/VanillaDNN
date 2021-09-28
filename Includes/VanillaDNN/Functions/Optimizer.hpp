@@ -19,22 +19,22 @@ public:
 	virtual ~Optimizer();
 	float getLearningRate();
 	void setLearningRate(float lr);
-	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1);
-	virtual Vector<float> getBiasGradient(Vector<float>& dE_db, int _depth = 1);
+	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
+	virtual Vector<float> getBiasGradient(Vector<float>& dE_db);
 };
 
 class Momentum : public Optimizer
 {
 private:
 	float momentum;
-	std::vector<Matrix<float>> vel_weight;
-	std::vector<Vector<float>> vel_bias;
+	Matrix<float> vel_weight;
+	Vector<float> vel_bias;
 public:	
-	Momentum(float lr, float _momentum, int _depth);
+	Momentum(float lr, float _momentum);
 	virtual ~Momentum(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db, int _depth = 1) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
 };
 
 class NAG : public Optimizer
@@ -43,8 +43,8 @@ public:
 	NAG(float lr);
 	virtual ~NAG(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db, int _depth = 1) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
 };
 
 class Nadam : public Optimizer
@@ -53,53 +53,53 @@ public:
 	Nadam(float lr);
 	virtual ~Nadam(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db, int _depth = 1) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
 };
 
 class RMSProp : public Optimizer
 {
 private:
-	std::vector<Matrix<float>> G_weight; 
-	std::vector<Vector<float>> G_bias; 
+	Matrix<float> G_weight; 
+	Vector<float> G_bias; 
 	float epsilon;
 	float rho;
 public:	
-	RMSProp(float lr, float _rho, float _epsilon, int _depth);
+	RMSProp(float lr, float _rho, float _epsilon);
 	virtual ~RMSProp(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db, int _depth = 1) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
 };
 
 class Adagrad : public Optimizer
 {
 private:
-	std::vector<Matrix<float>> G_weight; 
-	std::vector<Vector<float>> G_bias;
+	Matrix<float> G_weight; 
+	Vector<float> G_bias;
 	float epsilon;
 public:	
-	Adagrad(float lr, float _epsilon, int _depth);
+	Adagrad(float lr, float _epsilon);
 	virtual ~Adagrad(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db, int _depth = 1) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
 };
 
 class Adam : public Optimizer
 {
 private:
 	float beta1, beta2, epsilon, beta1_t = 1, beta2_t = 1;
-	std::vector<Matrix<float>> m_weight; 
-	std::vector<Matrix<float>> v_weight;
-	std::vector<Vector<float>> m_bias; 
-	std::vector<Vector<float>> v_bias; 
+	Matrix<float> m_weight; 
+	Matrix<float> v_weight;
+	Vector<float> m_bias; 
+	Vector<float> v_bias; 
 public:	
-	Adam(float lr, float _beta1, float _beta2, float _epsilon,  int _depth);
+	Adam(float lr, float _beta1, float _beta2, float _epsilon);
 	virtual ~Adam(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW, int _depth = 1) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db, int _depth = 1) override;
+	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
+	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
 };
 
 
