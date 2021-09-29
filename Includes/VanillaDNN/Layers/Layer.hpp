@@ -19,8 +19,7 @@ protected:
 public:
 	Layer();
 	Activation activation, activation_diff;
-	Layer *preLayer = nullptr, *postLayer=nullptr;
-	Optimizer *optimizer = nullptr;
+	Optimizer optimizer;
 	std::vector<Vector<float>> input; 
 	std::vector<Vector<float>> output;
 
@@ -29,8 +28,9 @@ public:
 	virtual void feed_forward(int idx) = 0;
 	virtual void back_propagation(int idx) = 0;
 	virtual void update() = 0;
+	virtual void predict() = 0;
 	virtual void connect(Layer * layer) = 0;
-	virtual void init(int batch_size, Optimizer *_optimizer) = 0;
+	virtual void init(int batch_size, Optimizer _optimizer) = 0;
 	virtual void setInput(const Vector<float>& _input, const int& idx) = 0;
 	virtual void setError(const Vector<float>& error, const int& idx) = 0;
 	

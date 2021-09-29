@@ -24,7 +24,7 @@ private:
 	Loss loss;
 	Loss_diff loss_diff;
 	
-	Optimizer *optimizer = nullptr;
+	Optimizer optimizer;
 	std::vector<Layer*> layers; // exclude input&output Layer;
 	
 	Vector<float> input;
@@ -58,6 +58,7 @@ public:
 	
 	void evaluate(int _batch, bool show = false);
 	void feed_forward(int idx);
+	void predict(int idx);
 	void back_propagation(int idx);
 	void update();
 	
@@ -66,7 +67,7 @@ public:
 	void setInput(std::vector<Vector<float>>& _input_set);
 	void setTarget(std::vector<Vector<float>>& _target_set);
 	
-	void setOptimizer(Optimizer *_optimizer);
+	void setOptimizer(Optimizer _optimizer);
 	
 	float getAccuracy();
 	float getError();

@@ -5,11 +5,17 @@
 
 DenseLayer::DenseLayer(){}
 
-DenseLayer::DenseLayer(int dim) {
-	this->dim = dim;
+DenseLayer::DenseLayer(int _dim) {
+	this->preLayer = nullptr;
+	this->postLayer = nullptr;
+	this->dim = _dim;
+	this->weight = Matrix<float>(0,0,0);
+	this->bias = Vector<float>(0,0);
 }
 
 DenseLayer::DenseLayer(int _dim, Activation _activation) {
+	this->preLayer = nullptr;
+	this->postLayer = nullptr;
 	this->dim = _dim;
 	this->setActivation(_activation);
 }
@@ -33,41 +39,57 @@ void DenseLayer::back_propagation(int idx){
 		this->dE_dw[idx] += this->dE_dz[idx].dot(this->dz_dw[idx].transpose());	
 		this->dE_db[idx] += this->dE_dz[idx];
 	}
+	
+	return;
 
 }
 
 void DenseLayer::feed_forward(int idx){
 	if(this->preLayer==nullptr){
-		std::cout<<"aaaaaaaaaaaaaaaaaa\n";
 		this->output[idx] = this->input[idx];
 	}
 	else{
 		this->input[idx] = this->batch_weight[idx].dot(this->preLayer->output[idx]) + this->batch_bias[idx];
 		this->output[idx] = this->activation(this->input[idx]);
-		std::cout<<"bbbbbbbbbbbbbbbbbbbb\n";
 	}
+	
+	return;
+}
+
+void DenseLayer::predict(){
+	std::cout<<"output size : " << this->output.size()<<'\n';
+	if(this->preLayer==nullptr){
+		this->output[0] = this->input[0];
+	}
+	else{
+		this->input[0] = this->weight.dot(this->preLayer->output[0]) + this->bias;
+		this->output[0] = this->activation(this->input[0]);
+	}
+	
+	return;
 }
 
 void DenseLayer::update(){
 	if(this->preLayer == nullptr) return;
-	Matrix<float> dw(this->preLayer->dim,this->dim,0.0f);
+	Matrix<float> dw(this->dim,this->preLayer->dim,0.0f);
 	Vector<float> db(this->dim,0.0f);
+
 	for(int idx = 0;idx < this->batch_size; idx++){
 		dw += this->dE_dw[idx];
 		db += this->dE_db[idx];
 		this->dE_dw[idx].resize(this->dim, this->preLayer->dim, 0);
 		this->dE_do[idx].resize(this->dim, 0);
+
 	}
-	this->weight -= this->optimizer->getWeightGradient(dw);
-	this->bias -= this->optimizer->getBiasGradient(db);
-	
+	this->weight -= this->optimizer.getWeightGradient(dw);
+	this->bias -= this->optimizer.getBiasGradient(db);
 	for(int i = 0;i<this->batch_size;i++){
 		this->batch_weight[i] = this->weight;
 		this->batch_bias[i] = this->bias;
 	}
 }
 
-void DenseLayer::init(int batch_size, Optimizer *_optimizer){
+void DenseLayer::init(int batch_size, Optimizer _optimizer){
 	this->batch_size = batch_size;
 
 	
@@ -82,13 +104,17 @@ void DenseLayer::init(int batch_size, Optimizer *_optimizer){
 	this->do_dz.resize(this->batch_size);
 	this->dz_db.resize(this->batch_size);
 	this->dz_dw.resize(this->batch_size);
-	Matrix<float> w(this->dim, this->preLayer->dim);
-	Vector<float> b(this->dim, this->preLayer->dim);
-	w.setRandom();
-	b.setRandom();
+	
+	this->weight.resize(this->dim, this->preLayer->dim);
+	this->bias.resize(this->dim, 0);
+	
+	this->weight.setRandom();
+	this->bias.setRandom();
+	
+
 	for(int i = 0;i<this->batch_size;i++){
-		this->batch_weight.push_back(w);
-		this->batch_bias.push_back(b);
+		this->batch_weight.push_back(this->weight);
+		this->batch_bias.push_back(this->bias);
 		this->dE_dw[i].resize(this->dim, this->preLayer->dim, 0);
 		this->dE_do[i].resize(this->dim, 0);
 		this->do_dz[i].resize(this->dim, 0);
@@ -97,8 +123,9 @@ void DenseLayer::init(int batch_size, Optimizer *_optimizer){
 		this->dE_dz[i].resize(this->dim, 0);
 		this->dz_db[i].resize(this->dim, 0);
 	}
-	std::memcpy(this->optimizer, _optimizer, sizeof(_optimizer));
-	
+	this->optimizer = _optimizer;
+
+
 	return;
 }
 
@@ -111,7 +138,6 @@ void DenseLayer::setError(const Vector<float>& error,const int& idx) {
 }
 
 Vector<float> DenseLayer::getOutput(const int& idx){
-	std::cout<<this->output.size()<<'\n';
 	return this->output[idx];
 }
 
@@ -130,6 +156,7 @@ Layer* DenseLayer::getPreLayer(){
 void DenseLayer::connect(Layer * layer){
 	(dynamic_cast<DenseLayer*>(layer))->preLayer = this;
 	this->postLayer = dynamic_cast<DenseLayer*>(layer);
+	return;
 }
 
 

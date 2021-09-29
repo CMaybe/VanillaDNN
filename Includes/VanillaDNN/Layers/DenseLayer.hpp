@@ -24,12 +24,13 @@ public:
 	virtual void feed_forward(int idx);
 	virtual void back_propagation(int idx);
 	virtual void update();
-	virtual void init(int batch_size, Optimizer *_optimizer);
+	virtual void init(int batch_size, Optimizer _optimizer);
 	virtual void setInput(const Vector<float>& _input,const int& idx);
 	virtual void setError(const Vector<float>& error,const int& idx);
-	virtual Vector<float> getOutput(const int& idx);
 	virtual void connect(Layer * layer);
+	virtual void predict();
 	
+	virtual Vector<float> getOutput(const int& idx);
 	virtual Layer* getPostLayer();
 	virtual Layer* getPreLayer();
 	

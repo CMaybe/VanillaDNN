@@ -5,6 +5,7 @@
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
 #include <vector>
+#include <iostream>
 #include <cmath>
 
 
@@ -16,6 +17,7 @@ protected:
 	float learning_rate;
 public:
 	Optimizer();
+	// Optimizer& operator=(const Optimizer& rhs);
 	virtual ~Optimizer();
 	float getLearningRate();
 	void setLearningRate(float lr);

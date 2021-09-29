@@ -13,7 +13,6 @@ Model::Model() {
 	this->error = 0;
 	this->inputLayer = nullptr;
 	this->outputLayer = nullptr;
-	this->optimizer = new Optimizer();
 }
 
 Model::~Model() {
@@ -47,12 +46,12 @@ void Model::setLoss(Loss _loss) {
 
 void Model::init() {
 	Layer* cur = this->inputLayer;
-	std::cout<< this->inputLayer->input.size() << '\n';
 	do {
 		cur->init(this->batch_size, this->optimizer);
 	} while ((cur = cur->getPostLayer()) != nullptr);
-	std::cout<< this->inputLayer->input.size() << '\n';
+
 }
+
 
 void Model::feed_forward(int idx) {
 	this->inputLayer->setInput(this->input_set[idx], idx % this->batch_size);
@@ -60,34 +59,38 @@ void Model::feed_forward(int idx) {
 	do {
 		cur->feed_forward(idx % this->batch_size);	
 	} while ((cur = cur->getPostLayer()) != nullptr);
-	std::cout<<"test1\n";
 	this->output_set[idx % this->batch_size] = this->outputLayer->getOutput(idx % this->batch_size);
-	std::cout<<"test2\n";
+
 	return;
 }
 
-void Model::back_propagation(int idx) {
-	std::cout<<"back_propagation start\n";
-	Layer* cur = this->outputLayer;
-	
-	std::cout<<"back_propagation M1\n";
-	this->outputLayer->setError(this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]), idx % this->batch_size);
-	std::cout<<"back_propagation M2\n";
+void Model::predict(int idx){
+	this->inputLayer->setInput(this->input_set[idx], 0);
+	Layer* cur = this->inputLayer;
+	do {
+		cur->predict();	
+	} while ((cur = cur->getPostLayer()) != nullptr);
+	this->output_set[idx % this->batch_size] = this->outputLayer->getOutput(idx % this->batch_size);
 
+	return;
+}
+
+
+void Model::back_propagation(int idx) {
+	Layer* cur = this->outputLayer;
+	this->outputLayer->setError(this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]), idx % this->batch_size);
 	do{
 		cur->back_propagation(idx % this->batch_size);
 	}while((cur = cur->getPreLayer())!= nullptr);
-	std::cout<<"back_propagation end\n";
-
+	return;
 }
 
 void Model::update(){
-	std::cout<<"update start\n";
 	Layer* cur = this->outputLayer;
 	do{
 		cur->update();
 	}while((cur = cur->getPreLayer())!= nullptr);
-	std::cout<<"update end\n";
+	return;
 }
 
 void Model::fit(int _total, int _epoch, int _batch) {
@@ -95,8 +98,6 @@ void Model::fit(int _total, int _epoch, int _batch) {
 	this->epoch = _epoch;
 	this->batch_size = _batch;
 	this->init();
-	this->inputLayer->preLayer = nullptr;
-	this->outputLayer->postLayer = nullptr;
 	std::vector<std::future<void>> batch_tasks;
 	for (int i = 0; i < this->epoch; i++) {
 		for (int j = 0; j < this->total; j+=this->batch_size) {
@@ -123,8 +124,7 @@ void Model::evaluate(int _len,bool show) {
 	float error_sum = 0;
 	for (int i = 0; i < _len; i++) {
 		this->target = this->target_set[i];
-		this->feed_forward(i);
-
+		this->predict(i);
 		this->output = this->output_set[i % this->batch_size];
 
 		if (show) {
@@ -159,12 +159,12 @@ void Model::addLayer(Layer* _layer) {
 		this->outputLayer->connect(_layer);
 		this->outputLayer = _layer;
 	}
+
 	return;
 }
 
 
-void Model::setOptimizer(Optimizer *_optimizer) {
-	if(this->optimizer != nullptr) delete this->optimizer;
+void Model::setOptimizer(Optimizer _optimizer) {
 	this->optimizer = _optimizer;
 }
 
@@ -178,7 +178,7 @@ void Model::setTarget(std::vector<Vector<float>>& _target_set) {
 
 void Model::setLearningRate(float lr)
 {
-	this->optimizer->setLearningRate(lr);
+	this->optimizer.setLearningRate(lr);
 }
 
 #endif

@@ -15,6 +15,7 @@ Optimizer::~Optimizer()
 
 float Optimizer::getLearningRate()
 {
+	std::cout<<"lr : "<<&(this->learning_rate)<<'\n';
 	return this->learning_rate;
 }
 
