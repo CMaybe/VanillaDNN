@@ -238,10 +238,10 @@ bool Vector<T>::operator==(const Vector<T>& rhs){
 }
 
 template<typename T>
-Matrix<T> Vector<T>::transpose() {
+Matrix<T> Vector<T>::transpose(){
 	int rows = 1;
 	int cols = this->size;
-	Matrix<T> result(rows, rows, 0);
+	Matrix<T> result(1, cols, 0);
 
 	for (int i = 0; i < cols; i++) {
 		result(0, i) = this->vector[i];
