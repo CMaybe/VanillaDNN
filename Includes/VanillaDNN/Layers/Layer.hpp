@@ -12,21 +12,19 @@
 
 
 class Layer {
-protected:
+private:
 	using Activation = std::function<Vector<float>(Vector<float>&)>;
+protected:
 	int batch_size;
 
 public:
 	Layer();
-	Activation activation, activation_diff;
-	Optimizer optimizer;
-	std::vector<Vector<float>> input; 
-	std::vector<Vector<float>> output;
-
+	Layer(const int& dim){};
+	Layer(const int& dim, Activation _activation){};
 
 	virtual ~Layer();
-	virtual void feed_forward(int idx) = 0;
-	virtual void back_propagation(int idx) = 0;
+	virtual void feed_forward(const int& idx) = 0;
+	virtual void back_propagation(const int& idx) = 0;
 	virtual void update() = 0;
 	virtual void predict() = 0;
 	virtual void connect(Layer * layer) = 0;
@@ -39,7 +37,7 @@ public:
 	virtual Vector<float> getOutput(const int& idx) = 0;
 	
 	
-	void setActivation(Activation _activation);
+	
 
 
 

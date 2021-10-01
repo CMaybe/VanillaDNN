@@ -45,6 +45,7 @@ void Model::setLoss(Loss _loss) {
 }
 
 void Model::init() {
+	this->output_set.resize(this->batch_size);
 	Layer* cur = this->inputLayer;
 	do {
 		cur->init(this->batch_size, this->optimizer);
@@ -60,7 +61,6 @@ void Model::feed_forward(int idx) {
 		cur->feed_forward(idx % this->batch_size);	
 	} while ((cur = cur->getPostLayer()) != nullptr);
 	this->output_set[idx % this->batch_size] = this->outputLayer->getOutput(idx % this->batch_size);
-
 	return;
 }
 
@@ -70,8 +70,7 @@ void Model::predict(int idx){
 	do {
 		cur->predict();	
 	} while ((cur = cur->getPostLayer()) != nullptr);
-	this->output_set[idx % this->batch_size] = this->outputLayer->getOutput(idx % this->batch_size);
-
+	this->output_set[idx % this->batch_size] = this->outputLayer->getOutput(0);
 	return;
 }
 
@@ -90,6 +89,7 @@ void Model::update(){
 	do{
 		cur->update();
 	}while((cur = cur->getPreLayer())!= nullptr);
+
 	return;
 }
 
