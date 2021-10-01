@@ -17,10 +17,13 @@ protected:
 	float learning_rate;
 public:
 	Optimizer();
-	// Optimizer& operator=(const Optimizer& rhs);
+	
+	
 	virtual ~Optimizer();
 	float getLearningRate();
 	void setLearningRate(float lr);
+	
+	virtual Optimizer* copy() = 0;
 	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
 	virtual Vector<float> getBiasGradient(Vector<float>& dE_db);
 };
@@ -32,31 +35,53 @@ private:
 	Matrix<float> vel_weight;
 	Vector<float> vel_bias;
 public:	
+	Momentum(){};
 	Momentum(float lr, float _momentum);
 	virtual ~Momentum(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
+	virtual Optimizer* copy();
+	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
+	virtual Vector<float> getBiasGradient(Vector<float>& dE_db);
 };
 
 class NAG : public Optimizer
 {
 public:	
+	NAG(){};
 	NAG(float lr);
 	virtual ~NAG(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
+	virtual Optimizer* copy();
+	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
+	virtual Vector<float> getBiasGradient(Vector<float>& dE_db);
 };
 
 class Nadam : public Optimizer
 {
 public:	
+	Nadam(){};
 	Nadam(float lr);
 	virtual ~Nadam(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
+	virtual Optimizer* copy();
+	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
+	virtual Vector<float> getBiasGradient(Vector<float>& dE_db);
+};
+
+class Adagrad : public Optimizer
+{
+private:
+	Matrix<float> G_weight; 
+	Vector<float> G_bias;
+	float epsilon;
+public:
+	Adagrad(){};
+	Adagrad(float lr, float _epsilon);
+	virtual ~Adagrad(){};
+	
+	virtual Optimizer* copy();
+	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
+	virtual Vector<float> getBiasGradient(Vector<float>& dE_db);
 };
 
 class RMSProp : public Optimizer
@@ -66,27 +91,16 @@ private:
 	Vector<float> G_bias; 
 	float epsilon;
 	float rho;
-public:	
+public:
+	RMSProp(){};
 	RMSProp(float lr, float _rho, float _epsilon);
 	virtual ~RMSProp(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
+	virtual Optimizer* copy();
+	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
+	virtual Vector<float> getBiasGradient(Vector<float>& dE_db);
 };
 
-class Adagrad : public Optimizer
-{
-private:
-	Matrix<float> G_weight; 
-	Vector<float> G_bias;
-	float epsilon;
-public:	
-	Adagrad(float lr, float _epsilon);
-	virtual ~Adagrad(){};
-	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
-};
 
 class Adam : public Optimizer
 {
@@ -96,12 +110,14 @@ private:
 	Matrix<float> v_weight;
 	Vector<float> m_bias; 
 	Vector<float> v_bias; 
-public:	
+public:
+	Adam(){};
 	Adam(float lr, float _beta1, float _beta2, float _epsilon);
 	virtual ~Adam(){};
 	
-	Matrix<float> getWeightGradient(Matrix<float>& dE_dW) override;
-	Vector<float> getBiasGradient(Vector<float>& dE_db) override;
+	virtual Optimizer* copy();
+	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
+	virtual Vector<float> getBiasGradient(Vector<float>& dE_db);
 };
 
 

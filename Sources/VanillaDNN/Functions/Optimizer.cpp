@@ -39,6 +39,11 @@ Momentum::Momentum(float lr, float _momentum)
 	this->momentum = _momentum;
 }
 
+Optimizer* Momentum::copy(){
+	Momentum* result = new Momentum(this->learning_rate, this->momentum);
+	return result;
+}
+
 Matrix<float> Momentum::getWeightGradient(Matrix<float>& dE_dW){
 	if(this->vel_weight.get_rows_size() == 0){
 		this->vel_weight = dE_dW * this->learning_rate;
@@ -65,6 +70,11 @@ NAG::NAG(float lr)
 	this->learning_rate = lr;
 }
 
+Optimizer* NAG::copy(){
+	NAG* result = new NAG(this->learning_rate);
+	return result;
+}
+
 Matrix<float> NAG::getWeightGradient(Matrix<float>& dE_dW){
 	Matrix<float> result;
 	return result;
@@ -79,6 +89,11 @@ Vector<float> NAG::getBiasGradient(Vector<float>& dE_db){
 Nadam::Nadam(float lr)
 {
 	this->learning_rate = lr;
+}
+
+Optimizer* Nadam::copy(){
+	Nadam* result = new Nadam(this->learning_rate);
+	return result;
 }
 
 Matrix<float> Nadam::getWeightGradient(Matrix<float>& dE_dW){
@@ -96,6 +111,11 @@ Adagrad::Adagrad(float lr, float _epsilon)
 {
 	this->learning_rate = lr;
 	this->epsilon = _epsilon;
+}
+
+Optimizer* Adagrad::copy(){
+	Adagrad* result = new Adagrad(this->learning_rate, this->epsilon);
+	return result;
 }
 
 Matrix<float> Adagrad::getWeightGradient(Matrix<float>& dE_dW){
@@ -138,6 +158,12 @@ RMSProp::RMSProp(float lr, float _rho, float _epsilon)
 	this->epsilon = _epsilon;
 }
 
+Optimizer* RMSProp::copy(){
+	RMSProp* result = new RMSProp(this->learning_rate, this->rho, this->epsilon);
+	return result;
+}
+
+
 Matrix<float> RMSProp::getWeightGradient(Matrix<float>& dE_dW){
 	Matrix<float> result;
 	if(this->G_weight.get_rows_size() == 0){
@@ -176,6 +202,11 @@ Adam::Adam(float lr, float _beta1, float _beta2, float _epsilon)
 	this->beta1 = _beta1;
 	this->beta2 = _beta2;
 	this->epsilon = _epsilon;
+}
+
+Optimizer* Adam::copy(){
+	Adam* result = new Adam(this->learning_rate, this->beta1, this->beta2, this->epsilon);
+	return result;
 }
 
 Matrix<float> Adam::getWeightGradient(Matrix<float>& dE_dW){
