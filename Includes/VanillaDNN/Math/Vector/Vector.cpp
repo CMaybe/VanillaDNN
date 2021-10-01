@@ -264,7 +264,9 @@ template<typename T>
 Matrix<T> Vector<T>::dot(const Matrix<T>& rhs) {
 	Matrix<T> result(this->size, rhs.get_cols_size(), 0);
 	for (int i = 0; i < this->size; i++) {
-		for(int j = 0;j < rhs.get_cols_size();j++) result(i,j) = this->vector[i] * rhs(0, j);
+		for(int j = 0;j < rhs.get_cols_size();j++){
+			result(i,j) = this->vector[i] * rhs(0, j);
+		}
 	}
 	return result;
 }

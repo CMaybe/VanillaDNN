@@ -17,13 +17,14 @@ protected:
 	float learning_rate;
 public:
 	Optimizer();
+	Optimizer(float lr);
 	
 	
 	virtual ~Optimizer();
 	float getLearningRate();
 	void setLearningRate(float lr);
 	
-	virtual Optimizer* copy() = 0;
+	virtual Optimizer* copy();
 	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
 	virtual Vector<float> getBiasGradient(Vector<float>& dE_db);
 };

@@ -147,8 +147,6 @@ Matrix<T> Matrix<T>::operator*(const Matrix<T>& rhs) {
 		}
 	}
 	return result;
-
-	return result;
 }
 
 
@@ -325,7 +323,7 @@ Matrix<T>& Matrix<T>::operator/=(const T& rhs) {
 
 template<typename T>
 Matrix<T> Matrix<T>::dot(const Matrix<T>& rhs) {
-	int rows = rhs.get_rows_size();
+	int rows = this->rows;
 	int cols = rhs.get_cols_size();
 	Matrix<T> result(rows, cols, 0);
 
@@ -334,7 +332,7 @@ Matrix<T> Matrix<T>::dot(const Matrix<T>& rhs) {
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
-			for (int k = 0; k < rows; k++) {
+			for (int k = 0; k < this->cols; k++) {
 				result(i, j) += this->matrix[i][k] * rhs(k, j);
 			}
 		}
@@ -348,6 +346,7 @@ Vector<T> Matrix<T>::dot(const Vector<T>& rhs) {
 	if (rhs.get_size() != this->cols) {
 		throw std::out_of_range("Index out of bounds");
 	}
+	
 	Vector<T> result(this->rows, 0);
 	for (int i = 0; i < this->get_rows_size(); i++) {
 		for (int j = 0; j < this->get_cols_size(); j++) {
