@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <random>
+#include <algorithm>
 #include <future>
 #include <thread>
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
@@ -24,7 +25,7 @@ private:
 	Loss loss;
 	Loss_diff loss_diff;
 	
-	Optimizer optimizer;
+	Optimizer *optimizer;
 	std::vector<Layer*> layers; // exclude input&output Layer;
 	
 	Vector<float> input;
@@ -67,7 +68,7 @@ public:
 	void setInput(std::vector<Vector<float>>& _input_set);
 	void setTarget(std::vector<Vector<float>>& _target_set);
 	
-	void setOptimizer(Optimizer _optimizer);
+	void setOptimizer(Optimizer *_optimizer);
 	
 	float getAccuracy();
 	float getError();

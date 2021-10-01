@@ -70,7 +70,7 @@ void Model::predict(int idx){
 	do {
 		cur->predict();	
 	} while ((cur = cur->getPostLayer()) != nullptr);
-	this->output_set[idx % this->batch_size] = this->outputLayer->getOutput(0);
+	this->output = this->outputLayer->getOutput(0);
 	return;
 }
 
@@ -101,21 +101,24 @@ void Model::fit(int _total, int _epoch, int _batch) {
 	std::vector<std::future<void>> batch_tasks;
 	for (int i = 0; i < this->epoch; i++) {
 		for (int j = 0; j < this->total; j+=this->batch_size) {
-			for(int k = 0; k< this->batch_size; k++) {
-				batch_tasks.push_back(std::async(std::launch::async,[j,k,this](){
+			for(int k = 0; k< this->batch_size && (j+k)< this->total; k++) {
+				batch_tasks.emplace_back(std::async(std::launch::async,[j,k,this](){
 					this->feed_forward(j+k);
 					this->back_propagation(j+k);
 				}));
 			}
 			for(int i =0;i<batch_tasks.size();i++){
-				batch_tasks[i].wait();
+				batch_tasks[i].get();
 			}
 			this->update();
+			batch_tasks.clear();
+			batch_tasks.reserve(this->batch_size);
+
 		}
 		std::cout << i + 1 << " epoch is done\n";
 	}
 	
-	
+	return;
 }
 
 void Model::evaluate(int _len,bool show) {
@@ -125,8 +128,6 @@ void Model::evaluate(int _len,bool show) {
 	for (int i = 0; i < _len; i++) {
 		this->target = this->target_set[i];
 		this->predict(i);
-		this->output = this->output_set[i % this->batch_size];
-
 		if (show) {
 			std::cout << "\n\ntarget : \n";
 			std::cout << this->target;
@@ -134,7 +135,7 @@ void Model::evaluate(int _len,bool show) {
 			std::cout << this->output;
 		}
 		acc_sum += static_cast<float>(this->target == this->output.onehot());
-		error_sum += this->loss(this->output, target_set[i]);
+		error_sum += this->loss(this->output, target);
 	}
 	this->accuracy = acc_sum / _len;
 	this->error = error_sum / _len;
@@ -164,7 +165,7 @@ void Model::addLayer(Layer* _layer) {
 }
 
 
-void Model::setOptimizer(Optimizer _optimizer) {
+void Model::setOptimizer(Optimizer *_optimizer) {
 	this->optimizer = _optimizer;
 }
 
@@ -178,7 +179,7 @@ void Model::setTarget(std::vector<Vector<float>>& _target_set) {
 
 void Model::setLearningRate(float lr)
 {
-	this->optimizer.setLearningRate(lr);
+	this->optimizer->setLearningRate(lr);
 }
 
 #endif

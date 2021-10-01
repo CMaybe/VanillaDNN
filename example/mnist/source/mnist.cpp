@@ -21,16 +21,13 @@ int main(int argc, char** argv) {
 	MNIST evaluate_set(MNIST_DATA_LOCATION, "test");
 	std::vector<Vector<float>> evaluate_images(evaluate_set.getImages());
 	std::vector<Vector<float>> evaluate_labels(evaluate_set.getLabels());
-	
 		
 	for(int i = 0;i<evaluate_images.size();i++){
 		evaluate_images[i] /= 255.0f;
 	}
 
-
 	std::cout<< "mnist loaded!\n";
-	std::cout<<training_images.size()<<'\n';
-	std::cout<<training_labels.size()<<'\n';
+
 	Model mnist;//input : 28 x 28, output 0 ~ 9;
 	
 	
@@ -44,18 +41,18 @@ int main(int argc, char** argv) {
 	// mnist.setOptimizer(new Momentum(0.01,0.9,mnist.getDepth()));
 	// mnist.setOptimizer(new Adagrad(0.01f,1e-6,mnist.getDepth()));
 	// mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-8,mnist.getDepth())); //lr, _rho, _epsilon, _depth
-	mnist.setOptimizer(Adam(0.01f, 0.9f, 0.999f, 1e-8)); //lr, _rho, _epsilon, _depth
+	mnist.setOptimizer(new Adam(0.01f, 0.9f, 0.999f, 1e-8)); //lr, _rho, _epsilon, _depth
 	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(5000, 2, 10); //total, epoch, batch
+	mnist.fit(5000, 10, 32); //total, epoch, batch
 	
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
 
 	std::cout << "training is done!" << '\n';
 
-	mnist.evaluate(7000);
+	mnist.evaluate(100, true);
 	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
 
 

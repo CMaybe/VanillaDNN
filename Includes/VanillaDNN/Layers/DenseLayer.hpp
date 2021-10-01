@@ -8,34 +8,18 @@
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
 #include <VanillaDNN/Functions/Functions.hpp>
+#include <VanillaDNN/Functions/Optimizer.hpp>
+
 
 
 
 class DenseLayer : public Layer{
-public:
-	DenseLayer();
-	DenseLayer(int dim);
-	DenseLayer(int dim, Activation _activation);
-
+	private:
+	using Activation = std::function<Vector<float>(Vector<float>&)>;
 	Activation activation, activation_diff;
-
-
-	virtual ~DenseLayer();
-	virtual void feed_forward(int idx);
-	virtual void back_propagation(int idx);
-	virtual void update();
-	virtual void init(int batch_size, Optimizer _optimizer);
-	virtual void setInput(const Vector<float>& _input,const int& idx);
-	virtual void setError(const Vector<float>& error,const int& idx);
-	virtual void connect(Layer * layer);
-	virtual void predict();
-	
-	virtual Vector<float> getOutput(const int& idx);
-	virtual Layer* getPostLayer();
-	virtual Layer* getPreLayer();
+	Optimizer *optimizer;
 	
 	int dim;
-	using Activation = std::function<Vector<float>(Vector<float>&)>;
 	Matrix<float> weight;
 	Vector<float> bias;
 	
@@ -58,6 +42,29 @@ public:
 	std::vector<Vector<float>> dz_dw;
 	
 	DenseLayer *preLayer = nullptr, *postLayer=nullptr;
+	
+public:
+	DenseLayer();
+	DenseLayer(const int& dim);
+	DenseLayer(const int& dim, Activation _activation);
+
+	virtual ~DenseLayer();
+
+	virtual void feed_forward(const int& idx);
+	virtual void back_propagation(const int& idx);
+	virtual void predict();
+	virtual void update();
+	virtual void init(int batch_size, Optimizer *_optimizer);
+	virtual void setInput(const Vector<float>& _input,const int& idx);
+	virtual void setError(const Vector<float>& error,const int& idx);
+	virtual void connect(Layer * layer);
+	virtual void setOptimizer(Optimizer *_optimizer);
+	
+	virtual Vector<float> getOutput(const int& idx);
+	virtual Layer* getPostLayer();
+	virtual Layer* getPreLayer();
+	
+	void setActivation(Activation _activation);
 
 
 
