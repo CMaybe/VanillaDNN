@@ -4,40 +4,40 @@
 #include <vector>
 #include <functional>
 #include <memory>
+#include <cstring>
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
 #include <VanillaDNN/Functions/Functions.hpp>
-
+#include <VanillaDNN/Functions/Optimizer.hpp>
 
 
 class Layer {
-protected:
+private:
 	using Activation = std::function<Vector<float>(Vector<float>&)>;
-	int nNueron;
-
+protected:
+	int batch_size;
 public:
 	Layer();
-	Layer(int _nNueron);
-	Layer(int _nNueron, Activation _activation);
-
-	Activation activation, activation_diff;
-	Layer* preLayer;
-	Matrix<float> weight;
-	Vector<float> bias;
-	std::vector<Vector<float>> inputNeuron; // before activate : preLayer->weight * neuronOutput
-	std::vector<Vector<float>> outputNeuron; // after actionte : actinvation(neuronInput)
-
-	std::vector<Matrix<float>> dE_dw;
-	std::vector<Vector<float>> dE_do;
-	std::vector<Vector<float>> do_dz;
-	std::vector<Vector<float>> dz_dw;
-	std::vector<Vector<float>> dE_dz;
-	std::vector<Vector<float>> dE_db;
-	std::vector<Vector<float>> dz_db;
-
+	Layer(const int& dim){};
+	Layer(const int& dim, Activation _activation){};
+	
 	virtual ~Layer();
-	void setActivation(Activation _activation);
-	int getNueronCnt();
+	virtual void feed_forward(const int& idx) = 0;
+	virtual void back_propagation(const int& idx) = 0;
+	virtual void update() = 0;
+	virtual void predict() = 0;
+	virtual void connect(Layer * layer) = 0;
+	virtual void init(int batch_size, Optimizer *_optimizer) = 0;
+	virtual void setInput(const Vector<float>& _input, const int& idx) = 0;
+	virtual void setError(const Vector<float>& error, const int& idx) = 0;
+	virtual void setOptimizer(Optimizer *_optimizer) = 0;
+	
+	virtual Layer* getPostLayer()=0;
+	virtual Layer* getPreLayer()=0;
+	virtual Vector<float> getOutput(const int& idx) = 0;
+	
+	
+	
 
 
 

@@ -238,13 +238,13 @@ bool Vector<T>::operator==(const Vector<T>& rhs){
 }
 
 template<typename T>
-Matrix<T> Vector<T>::transpose() {
+Matrix<T> Vector<T>::transpose(){
 	int rows = 1;
 	int cols = this->size;
-	Matrix<T> result(rows, rows, 0);
+	Matrix<T> result(1, cols, 0);
 
 	for (int i = 0; i < cols; i++) {
-		result(0, i) = this->vector(i);
+		result(0, i) = this->vector[i];
 	}
 	return result;
 }
@@ -257,6 +257,18 @@ T Vector<T>::dot(const Vector<T>& rhs) {
 	for (int i = 0; i < this->size; i++) {
 		result += (this->vector(i) * rhs(i));
 	}
+	return result;
+}
+
+template<typename T>
+Matrix<T> Vector<T>::dot(const Matrix<T>& rhs) {
+	Matrix<T> result(this->size, rhs.get_cols_size(), 0);
+	for (int i = 0; i < this->size; i++) {
+		for(int j = 0;j < rhs.get_cols_size();j++){
+			result(i,j) = this->vector[i] * rhs(0, j);
+		}
+	}
+	return result;
 }
 
 template<typename T>
