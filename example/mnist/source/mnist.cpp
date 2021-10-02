@@ -49,8 +49,8 @@ int main(int argc, char** argv) {
 	mnist.setTarget(training_labels);
 	mnist.fit(60000, 10, 32); //total, epoch, batch
 	
-	// mnist.setInput(evaluate_images);
-	// mnist.setTarget(evaluate_labels);
+	mnist.setInput(evaluate_images);
+	mnist.setTarget(evaluate_labels);
 
 	std::cout << "training is done!" << '\n';
 
