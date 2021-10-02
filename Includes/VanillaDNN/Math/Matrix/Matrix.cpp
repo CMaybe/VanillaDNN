@@ -327,7 +327,7 @@ Matrix<T> Matrix<T>::dot(const Matrix<T>& rhs) {
 	int cols = rhs.get_cols_size();
 	Matrix<T> result(rows, cols, 0);
 
-	if (this->cols != rows)
+	if (this->cols != rhs->get_rows_size())
 		throw std::out_of_range("Index out of bounds");
 
 	for (int i = 0; i < rows; i++) {
@@ -348,8 +348,8 @@ Vector<T> Matrix<T>::dot(const Vector<T>& rhs) {
 	}
 	
 	Vector<T> result(this->rows, 0);
-	for (int i = 0; i < this->get_rows_size(); i++) {
-		for (int j = 0; j < this->get_cols_size(); j++) {
+	for (int i = 0; i < this->rows; i++) {
+		for (int j = 0; j < this->cols; j++) {
 			result(i) += this->matrix[i][j] * rhs(j);
 		}
 	}

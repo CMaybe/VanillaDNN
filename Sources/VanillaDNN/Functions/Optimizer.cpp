@@ -8,6 +8,11 @@ Optimizer::Optimizer()
 	this->learning_rate = 1.0;
 }
 
+Optimizer::Optimizer(float lr)
+{
+	this->learning_rate = lr;
+}
+
 Optimizer::~Optimizer()
 {
 
@@ -32,6 +37,10 @@ Vector<float> Optimizer::getBiasGradient(Vector<float>& dE_db){
 	return dE_db * this->learning_rate;
 }
 
+Optimizer* Optimizer::copy(){
+	Optimizer* result = new Optimizer(this->learning_rate);
+	return result;
+}
 
 Momentum::Momentum(float lr, float _momentum)
 {

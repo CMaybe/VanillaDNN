@@ -13,6 +13,7 @@ Model::Model() {
 	this->error = 0;
 	this->inputLayer = nullptr;
 	this->outputLayer = nullptr;
+	this->optimizer = new Optimizer();
 }
 
 Model::~Model() {
@@ -77,7 +78,9 @@ void Model::predict(int idx){
 
 void Model::back_propagation(int idx) {
 	Layer* cur = this->outputLayer;
-	this->outputLayer->setError(this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]), idx % this->batch_size);
+	this->outputLayer->setError(
+		this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx])
+		, idx % this->batch_size);
 	do{
 		cur->back_propagation(idx % this->batch_size);
 	}while((cur = cur->getPreLayer())!= nullptr);
@@ -108,7 +111,7 @@ void Model::fit(int _total, int _epoch, int _batch) {
 				}));
 			}
 			for(int i =0;i<batch_tasks.size();i++){
-				batch_tasks[i].get();
+				batch_tasks[i].wait();
 			}
 			this->update();
 			batch_tasks.clear();

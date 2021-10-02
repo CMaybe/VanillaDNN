@@ -35,8 +35,9 @@ void DenseLayer::back_propagation(const int& idx){
 	}
 	else{
 		this->dE_do[idx] = this->postLayer->batch_weight[idx].transpose().dot(postLayer->dE_dz[idx]);
-		this->dE_dw[idx] += this->dE_dz[idx].dot(this->dz_dw[idx].transpose());	
-		this->dE_db[idx] += this->dE_dz[idx];
+		this->dE_dz[idx] = this->dE_do[idx] * this->do_dz[idx];
+		this->dE_dw[idx] = this->dE_dz[idx].dot(this->dz_dw[idx].transpose());
+		this->dE_db[idx] = this->dE_dz[idx];
 	}
 	
 	return;
@@ -74,12 +75,10 @@ void DenseLayer::update(){
 	for(int idx = 0;idx < this->batch_size; idx++){
 		dw += this->dE_dw[idx];
 		db += this->dE_db[idx];
-		this->dE_dw[idx].resize(this->dim, this->preLayer->dim, 0);
-		this->dE_do[idx].resize(this->dim, 0);
-
 	}
 	this->weight -= (this->optimizer->getWeightGradient(dw)) / this->batch_size;
 	this->bias -= (this->optimizer->getBiasGradient(db)) / this->batch_size;
+	// this->bias -= db / this->batch_size;
 	for(int i = 0;i<this->batch_size;i++){
 		this->batch_weight[i] = this->weight;
 		this->batch_bias[i] = this->bias;
