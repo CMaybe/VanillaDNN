@@ -54,6 +54,8 @@ public:
 	
 	
 	T dot(const Vector<T>& rhs);
+	T sum();
+	
 	
 	// sub
 	Vector<T> square();

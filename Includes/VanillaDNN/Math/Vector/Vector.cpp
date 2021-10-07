@@ -393,4 +393,13 @@ Vector<T> Vector<T>::clip(const T& _min, const T& _max){
 	return result;
 }
 
+template<typename T>
+T Vector<T>::sum(){
+	T result = 0;
+	for(int i = 0; i < size; i++){
+		result += this-vector[i];
+	}
+	return result;
+}
+
 #endif

@@ -441,6 +441,18 @@ Matrix<T> Matrix<T>::clip(const T& _min, const T& _max){
 }
 
 template<typename T>
+T Matrix<T>::sum(){
+	T result = 0;
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			result += this->matrix[i][j];
+		}
+	}
+	return result;
+}
+
+
+template<typename T>
 T& Matrix<T>::operator()(const int& row, const int& col) {
 	return this->matrix[row][col];
 }

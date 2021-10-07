@@ -57,6 +57,7 @@ public:
 	Matrix<T> inv();
 	Matrix<T> clip(const T& _min, const T& _max);
 	
+	T sum();
 	
 	
 
