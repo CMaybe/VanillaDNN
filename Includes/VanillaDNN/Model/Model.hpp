@@ -19,14 +19,13 @@
 
 class Model {
 private:
-	using Activation = std::function<Vector<float>(Vector<float>&)>;
 	using  Loss = std::function<float(Vector<float>&, Vector<float>&)>;
 	using  Loss_diff = std::function<Vector<float>(Vector<float>&, Vector<float>&)>;
 	Loss loss;
 	Loss_diff loss_diff;
 	
 	Optimizer *optimizer;
-	std::vector<Layer*> layers; // exclude input&output Layer;
+	std::vector<Layer*> layers; 
 	
 	Vector<float> input;
 	Vector<float> target;

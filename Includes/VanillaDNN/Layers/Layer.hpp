@@ -12,14 +12,12 @@
 
 
 class Layer {
-private:
-	using Activation = std::function<Vector<float>(Vector<float>&)>;
 protected:
 	int batch_size;
 public:
 	Layer();
 	Layer(const int& dim){};
-	Layer(const int& dim, Activation _activation){};
+	Layer(const int& dim, Activation *_activation){};
 	
 	virtual ~Layer();
 	virtual void feed_forward(const int& idx) = 0;

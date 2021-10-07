@@ -4,6 +4,8 @@
 #include <VanillaDNN/Math/Vector/Vector.hpp>
 #include <cmath>
 
+
+
 namespace LOSS_FUNCTION {
 	float mean_squared_error(Vector<float>& y_hat, Vector<float>& y);
 	float root_mean_squared_error(Vector<float>& y_hat, Vector<float>& y);

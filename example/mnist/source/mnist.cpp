@@ -33,12 +33,12 @@ int main(int argc, char** argv) {
 	Model mnist;//input : 28 x 28, output 0 ~ 9;
 	
 	
-	mnist.setLoss(LOSS_FUNCTION::mean_squared_error);
-	mnist.addLayer(new DenseLayer(784, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new DenseLayer(256, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new DenseLayer(128, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new DenseLayer(32, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new DenseLayer(10, ACTIVATION_FUNCTION::sigmoid));
+	mnist.setLoss(LOSS_FUNCTION::categorical_cross_entropy);
+	mnist.addLayer(new DenseLayer(784, "sigmoid"));
+	mnist.addLayer(new DenseLayer(256, "sigmoid"));
+	mnist.addLayer(new DenseLayer(128, "sigmoid"));
+	mnist.addLayer(new DenseLayer(32, "sigmoid"));
+	mnist.addLayer(new DenseLayer(10, "soft_max"));
 	
 	// mnist.setOptimizer(new Momentum(0.1f,0.9));
 	// mnist.setOptimizer(new Adagrad(0.01f,1e-6));
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(60000, 10, 32); //total, epoch, batch
+	mnist.fit(2000, 10, 32); //total, epoch, batch
 	
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
