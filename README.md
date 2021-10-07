@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/badge/Licence-MIT-blue.svg) ![CMake](https://github.com/CMaybe/VanillaDNN/actions/workflows/cmake.yml/badge.svg) ![CodeQL](https://github.com/CMaybe/VanillaDNN/actions/workflows/codeql-analysis.yml/badge.svg)
 
 
-VanillaDNN is DNN framework using only C++. 
+VanillaDNN is Dependency-free DNN framework with C++. 
 
 ## Key Features
 
@@ -96,7 +96,6 @@ ___
 Nothing. All you need is a C++ compiler. (GCC/G++, GDB, Clang/Clang++)
 
 ## Quick Start
-
 You will need CMake to build the code.
 
 

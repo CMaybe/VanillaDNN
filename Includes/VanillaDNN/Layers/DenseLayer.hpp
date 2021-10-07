@@ -15,8 +15,7 @@
 
 class DenseLayer : public Layer{
 	private:
-	using Activation = std::function<Vector<float>(Vector<float>&)>;
-	Activation activation, activation_diff;
+	Activation *activation = nullptr;
 	Optimizer *optimizer;
 	
 	int dim;
@@ -36,7 +35,6 @@ class DenseLayer : public Layer{
 	std::vector<Vector<float>> dE_do;
 	std::vector<Vector<float>> dE_dz;
 
-	std::vector<Vector<float>> do_dz;
 	
 	std::vector<Vector<float>> dz_db;
 	std::vector<Vector<float>> dz_dw;
@@ -46,7 +44,7 @@ class DenseLayer : public Layer{
 public:
 	DenseLayer();
 	DenseLayer(const int& dim);
-	DenseLayer(const int& dim, Activation _activation);
+	DenseLayer(const int& dim, std::string _activation);
 
 	virtual ~DenseLayer();
 
@@ -64,7 +62,7 @@ public:
 	virtual Layer* getPostLayer();
 	virtual Layer* getPreLayer();
 	
-	void setActivation(Activation _activation);
+	void setActivation(std::string name);
 
 
 
