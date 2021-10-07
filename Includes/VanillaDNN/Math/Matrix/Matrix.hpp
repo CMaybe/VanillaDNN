@@ -35,13 +35,10 @@ public:
 	Matrix<T>& operator+=(const Matrix<T>& rhs);
 	Matrix<T>& operator-=(const Matrix<T>& rhs);
 	Matrix<T>& operator*=(const Matrix<T>& rhs);
-
-	Matrix<T> transpose();
-	Matrix<T> square();
-	Matrix<T> sqrt();
-	Matrix<T> inv();
+	
 	Matrix<T> dot(const Matrix<T>& rhs);
 	Vector<T> dot(const Vector<T>& rhs);
+
 
 	//scalar	
 	Matrix<T> operator+(const T& rhs);
@@ -53,6 +50,15 @@ public:
 	Matrix<T>& operator-=(const T& rhs);
 	Matrix<T>& operator*=(const T& rhs);
 	Matrix<T>& operator/=(const T& rhs);
+	
+	Matrix<T> transpose();
+	Matrix<T> square();
+	Matrix<T> sqrt();
+	Matrix<T> inv();
+	Matrix<T> clip(const T& _min, const T& _max);
+	
+	
+	
 
 	T& operator()(const int& row, const int& col);
 	const T& operator()(const int& row, const int& col) const;

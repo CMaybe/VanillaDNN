@@ -425,6 +425,22 @@ float Matrix<T>::norm(){
 }
 
 template<typename T>
+Matrix<T> Matrix<T>::clip(const T& _min, const T& _max){
+	int rows = this->rows;
+	int cols = this->cols;
+	Matrix<T> result(rows, cols, 0);
+
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			if (_max < this->matrix[i][j]) result(i, j) = _max;
+			else if (_min > this->matrix[i][j]) result(i, j) = _min;
+			else result(i, j) = this->matrix[i][j];
+		}
+	}
+	return result;
+}
+
+template<typename T>
 T& Matrix<T>::operator()(const int& row, const int& col) {
 	return this->matrix[row][col];
 }

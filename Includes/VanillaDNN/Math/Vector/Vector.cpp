@@ -381,4 +381,16 @@ Vector<T> Vector<T>::onehot(){
 	return result;
 }
 
+template<typename T>
+Vector<T> Vector<T>::clip(const T& _min, const T& _max){
+	int size = this->size;
+	Vector<T> result(size, 0);
+	for(int i = 0; i < size; i++){
+		if (_max < this->vector[i]) result[i] = _max;
+		else if (_min > this->vector[i]) result[i] = _min;
+		else result[i] = this->vector[i];
+	}
+	return result;
+}
+
 #endif

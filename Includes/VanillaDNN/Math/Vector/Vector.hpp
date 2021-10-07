@@ -48,13 +48,19 @@ public:
 	Vector<T>& operator*=(const T& rhs);
 	Vector<T>& operator/=(const T& rhs);
 
-	//vector
+	// Matrix
 	Matrix<T> transpose();
 	Matrix<T> dot(const Matrix<T>& rhs);
+	
+	
 	T dot(const Vector<T>& rhs);
+	
+	// sub
 	Vector<T> square();
 	Vector<T> sqrt();
 	Vector<T> inv();
+	Vector<T> onehot();
+	Vector<T> clip(const T& _min, const T& _max);
 
 	T& operator()(const int& idx);
 	const T& operator()(const int& idx) const;
@@ -67,7 +73,6 @@ public:
 	template<typename U>
 	friend std::ostream& operator << (std::ostream& out, const Vector<U>& v);
 
-	Vector<T> onehot();
 	int get_size() const;
 	void push_back(T value);
 	void setRandom();
