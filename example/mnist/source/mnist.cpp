@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(2000, 10, 32); //total, epoch, batch
+	mnist.fit(5000, 10, 32); //total, epoch, batch
 	
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
@@ -56,7 +56,6 @@ int main(int argc, char** argv) {
 
 	mnist.evaluate(10000);
 	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
-
 
 	return 0;
 }

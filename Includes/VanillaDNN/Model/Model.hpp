@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <future>
 #include <thread>
+#include <memory>
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
 #include <VanillaDNN/Layers/Layer.hpp>
@@ -24,8 +25,7 @@ private:
 	Loss loss;
 	Loss_diff loss_diff;
 	
-	Optimizer *optimizer;
-	std::vector<Layer*> layers; 
+	std::unique_ptr<Optimizer> optimizer = nullptr;
 	
 	Vector<float> input;
 	Vector<float> target;
@@ -38,8 +38,8 @@ private:
 	std::vector<Matrix<float>> batch_dE_dw;
 	std::vector<Vector<float>> batch_dE_db;
 
-	Layer* inputLayer = nullptr;
-	Layer * outputLayer = nullptr;
+	std::shared_ptr<Layer> inputLayer = nullptr;
+	std::shared_ptr<Layer> outputLayer = nullptr;
 	
 	int batch_size;
 	int epoch;

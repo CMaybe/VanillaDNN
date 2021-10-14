@@ -13,16 +13,10 @@ Model::Model() {
 	this->error = 0;
 	this->inputLayer = nullptr;
 	this->outputLayer = nullptr;
-	this->optimizer = new Optimizer();
+	this->optimizer = std::make_unique<Optimizer>();
 }
 
 Model::~Model() {
-	if (this->inputLayer != nullptr) delete this->inputLayer;
-	if (this->outputLayer != nullptr) delete this->outputLayer;
-	for (Layer* layer : layers) {
-		if (layer != nullptr) delete layer;
-	}
-	layers.clear();
 }
 
 void Model::setLoss(Loss _loss) {
@@ -47,7 +41,7 @@ void Model::setLoss(Loss _loss) {
 
 void Model::init() {
 	this->output_set.resize(this->batch_size);
-	Layer* cur = this->inputLayer;
+	auto cur = this->inputLayer;
 	do {
 		cur->init(this->batch_size, this->optimizer);
 	} while ((cur = cur->getPostLayer()) != nullptr);
@@ -57,7 +51,7 @@ void Model::init() {
 
 void Model::feed_forward(int idx) {
 	this->inputLayer->setInput(this->input_set[idx], idx % this->batch_size);
-	Layer* cur = this->inputLayer;
+	auto cur = this->inputLayer;
 	do {
 		cur->feed_forward(idx % this->batch_size);	
 	} while ((cur = cur->getPostLayer()) != nullptr);
@@ -67,7 +61,7 @@ void Model::feed_forward(int idx) {
 
 void Model::predict(int idx){
 	this->inputLayer->setInput(this->input_set[idx], 0);
-	Layer* cur = this->inputLayer;
+	auto cur = this->inputLayer;
 	do {
 		cur->predict();	
 	} while ((cur = cur->getPostLayer()) != nullptr);
@@ -77,10 +71,9 @@ void Model::predict(int idx){
 
 
 void Model::back_propagation(int idx) {
-	Layer* cur = this->outputLayer;
+	auto cur = this->outputLayer;
 	this->outputLayer->setError(
-		this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx])
-		, idx % this->batch_size);
+		this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]), idx % this->batch_size);
 	do{
 		cur->back_propagation(idx % this->batch_size);
 	}while((cur = cur->getPreLayer())!= nullptr);
@@ -88,7 +81,7 @@ void Model::back_propagation(int idx) {
 }
 
 void Model::update(){
-	Layer* cur = this->outputLayer;
+	auto cur = this->outputLayer;
 	do{
 		cur->update();
 	}while((cur = cur->getPreLayer())!= nullptr);
@@ -155,21 +148,21 @@ float Model::getError() {
 
 
 void Model::addLayer(Layer* _layer) {
+	std::shared_ptr<Layer> layer(_layer);
 	if (this->inputLayer == nullptr) {
-		this->inputLayer = _layer;
-		this->outputLayer = _layer;
+		this->inputLayer = layer;
+		this->outputLayer = layer;
 	}
 	else {
-		this->outputLayer->connect(_layer);
-		this->outputLayer = _layer;
+		this->outputLayer->connect(layer);
+		this->outputLayer = layer;
 	}
-
 	return;
 }
 
 
 void Model::setOptimizer(Optimizer *_optimizer) {
-	this->optimizer = _optimizer;
+	this->optimizer = std::unique_ptr<Optimizer>(_optimizer);
 }
 
 void Model::setInput(std::vector<Vector<float>>& _input_set) {
