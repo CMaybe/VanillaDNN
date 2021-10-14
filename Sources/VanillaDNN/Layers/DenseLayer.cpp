@@ -5,6 +5,15 @@
 
 DenseLayer::DenseLayer(){}
 
+DenseLayer::DenseLayer(const DenseLayer& rhs) {
+	this->preLayer = nullptr;
+	this->postLayer = nullptr;
+	this->dim = rhs.dim;
+	this->weight = rhs.weight;
+	this->bias = rhs.bias;
+	this->setActivation(rhs.getActivationName());
+}
+
 DenseLayer::DenseLayer(const int& dim) {
 	this->preLayer = nullptr;
 	this->postLayer = nullptr;
@@ -88,7 +97,7 @@ void DenseLayer::update(){
 	return;
 }
 
-void DenseLayer::init(int batch_size, Optimizer *_optimizer){
+void DenseLayer::init(int batch_size,std::unique_ptr<Optimizer>& _optimizer){
 	this->batch_size = batch_size;
 	
 	this->input.resize(this->batch_size);
@@ -126,12 +135,12 @@ void DenseLayer::init(int batch_size, Optimizer *_optimizer){
 
 
 void DenseLayer::setActivation(std::string name) {
-	if("None" == name) this->activation = new Activation(name);
-	else if("sigmoid" == name) this->activation = new Sigmoid(name);
-	else if("hyper_tan" == name) this->activation = new HyperTan(name);
-	else if("relu" == name) this->activation = new ReLU(name);
-	else if("leaky_relu" == name) this->activation = new LeakyReLU(name);
-	else if("soft_max" == name) this->activation = new SoftMax(name);
+	if("None" == name) this->activation = std::make_unique<Activation>(name);
+	else if("sigmoid" == name) this->activation = std::make_unique<Sigmoid>(name);
+	else if("hyper_tan" == name) this->activation = std::make_unique<HyperTan>(name);
+	else if("relu" == name) this->activation = std::make_unique<ReLU>(name);
+	else if("leaky_relu" == name) this->activation = std::make_unique<LeakyReLU>(name);
+	else if("soft_max" == name) this->activation = std::make_unique<SoftMax>(name);
 	return;
 }
 
@@ -144,8 +153,8 @@ void DenseLayer::setError(const Vector<float>& error,const int& idx) {
 	this->dE_do[idx] = error;
 }
 
-void DenseLayer::setOptimizer(Optimizer *_optimizer){
-	this->optimizer = _optimizer->copy();
+void DenseLayer::setOptimizer(std::unique_ptr<Optimizer>& _optimizer){
+	this->optimizer = std::unique_ptr<Optimizer>(_optimizer->copy());
 	return;
 }
 
@@ -153,20 +162,23 @@ Vector<float> DenseLayer::getOutput(const int& idx){
 	return this->output[idx];
 }
 
-Layer* DenseLayer::getPostLayer(){
+std::shared_ptr<Layer> DenseLayer::getPostLayer(){
 	return this->postLayer;
 }
 
-Layer* DenseLayer::getPreLayer(){
+std::shared_ptr<Layer> DenseLayer::getPreLayer(){
 	return this->preLayer;
 }
 
-void DenseLayer::connect(Layer * layer){
-	(dynamic_cast<DenseLayer*>(layer))->preLayer = this;
-	this->postLayer = dynamic_cast<DenseLayer*>(layer);
+void DenseLayer::connect(std::shared_ptr<Layer>& layer){
+	(std::dynamic_pointer_cast<DenseLayer>(layer))->preLayer = std::shared_ptr<DenseLayer>(this);
+	this->postLayer = std::dynamic_pointer_cast<DenseLayer>(layer);
 	return;
 }
 
+std::string DenseLayer::getActivationName() const{
+	return this->activation->getName();
+}
 
 
 #endif

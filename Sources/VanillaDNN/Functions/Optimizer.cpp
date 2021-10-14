@@ -13,6 +13,11 @@ Optimizer::Optimizer(float lr)
 	this->learning_rate = lr;
 }
 
+
+Optimizer::Optimizer(const Optimizer& rhs) {
+	this->learning_rate = rhs.learning_rate;
+}
+
 Optimizer::~Optimizer()
 {
 
@@ -20,7 +25,6 @@ Optimizer::~Optimizer()
 
 float Optimizer::getLearningRate()
 {
-	std::cout<<"lr : "<<&(this->learning_rate)<<'\n';
 	return this->learning_rate;
 }
 
@@ -28,6 +32,7 @@ void Optimizer::setLearningRate(float lr)
 {
 	this->learning_rate = lr;
 }
+
 
 Matrix<float> Optimizer::getWeightGradient(Matrix<float>& dE_dW){
 	return dE_dW * this->learning_rate;
@@ -42,10 +47,18 @@ Optimizer* Optimizer::copy(){
 	return result;
 }
 
+
+
 Momentum::Momentum(float lr, float _momentum)
 {
 	this->learning_rate = lr;
 	this->momentum = _momentum;
+}
+
+
+Momentum::Momentum(const Momentum& rhs) {
+	this->learning_rate = rhs.learning_rate;
+	this->momentum = rhs.momentum;
 }
 
 Optimizer* Momentum::copy(){
@@ -79,6 +92,10 @@ NAG::NAG(float lr)
 	this->learning_rate = lr;
 }
 
+NAG::NAG(const NAG& rhs) {
+	this->learning_rate = rhs.learning_rate;
+}
+
 Optimizer* NAG::copy(){
 	NAG* result = new NAG(this->learning_rate);
 	return result;
@@ -98,6 +115,10 @@ Vector<float> NAG::getBiasGradient(Vector<float>& dE_db){
 Nadam::Nadam(float lr)
 {
 	this->learning_rate = lr;
+}
+
+Nadam::Nadam(const Nadam& rhs) {
+	this->learning_rate = rhs.learning_rate;
 }
 
 Optimizer* Nadam::copy(){
@@ -120,6 +141,11 @@ Adagrad::Adagrad(float lr, float _epsilon)
 {
 	this->learning_rate = lr;
 	this->epsilon = _epsilon;
+}
+
+Adagrad::Adagrad(const Adagrad& rhs) {
+	this->learning_rate = rhs.learning_rate;
+	this->epsilon = rhs.epsilon;
 }
 
 Optimizer* Adagrad::copy(){
@@ -167,6 +193,12 @@ RMSProp::RMSProp(float lr, float _rho, float _epsilon)
 	this->epsilon = _epsilon;
 }
 
+RMSProp::RMSProp(const RMSProp& rhs) {
+	this->learning_rate = rhs.learning_rate;
+	this->rho = rhs.rho;
+	this->epsilon = rhs.epsilon;
+}
+
 Optimizer* RMSProp::copy(){
 	RMSProp* result = new RMSProp(this->learning_rate, this->rho, this->epsilon);
 	return result;
@@ -211,6 +243,13 @@ Adam::Adam(float lr, float _beta1, float _beta2, float _epsilon)
 	this->beta1 = _beta1;
 	this->beta2 = _beta2;
 	this->epsilon = _epsilon;
+}
+
+Adam::Adam(const Adam& rhs) {
+	this->learning_rate = rhs.learning_rate;
+	this->beta1 = rhs.beta1;
+	this->beta2 = rhs.beta2;
+	this->epsilon = rhs.epsilon;
 }
 
 Optimizer* Adam::copy(){

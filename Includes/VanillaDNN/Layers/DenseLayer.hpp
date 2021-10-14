@@ -15,8 +15,8 @@
 
 class DenseLayer : public Layer{
 	private:
-	Activation *activation = nullptr;
-	Optimizer *optimizer;
+	std::unique_ptr<Activation> activation = nullptr;
+	std::unique_ptr<Optimizer> optimizer = nullptr;
 	
 	int dim;
 	Matrix<float> weight;
@@ -39,10 +39,11 @@ class DenseLayer : public Layer{
 	std::vector<Vector<float>> dz_db;
 	std::vector<Vector<float>> dz_dw;
 	
-	DenseLayer *preLayer = nullptr, *postLayer=nullptr;
+	std::shared_ptr<DenseLayer> preLayer = nullptr, postLayer=nullptr;
 	
 public:
 	DenseLayer();
+	DenseLayer(const DenseLayer& rhs);
 	DenseLayer(const int& dim);
 	DenseLayer(const int& dim, std::string _activation);
 
@@ -52,17 +53,18 @@ public:
 	virtual void back_propagation(const int& idx);
 	virtual void predict();
 	virtual void update();
-	virtual void init(int batch_size, Optimizer *_optimizer);
+	virtual void init(int batch_size,std::unique_ptr<Optimizer>& _optimizer);
 	virtual void setInput(const Vector<float>& _input,const int& idx);
 	virtual void setError(const Vector<float>& error,const int& idx);
-	virtual void connect(Layer * layer);
-	virtual void setOptimizer(Optimizer *_optimizer);
+	virtual void connect(std::shared_ptr<Layer>& layer);
+	virtual void setOptimizer(std::unique_ptr<Optimizer>& _optimizer);
 	
+	virtual std::shared_ptr<Layer> getPostLayer();
+	virtual std::shared_ptr<Layer> getPreLayer();
 	virtual Vector<float> getOutput(const int& idx);
-	virtual Layer* getPostLayer();
-	virtual Layer* getPreLayer();
 	
 	void setActivation(std::string name);
+	std::string getActivationName() const;
 
 
 

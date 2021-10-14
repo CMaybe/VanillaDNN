@@ -18,7 +18,7 @@ protected:
 public:
 	Optimizer();
 	Optimizer(float lr);
-	
+	Optimizer(const Optimizer& rhs);
 	
 	virtual ~Optimizer();
 	float getLearningRate();
@@ -38,6 +38,7 @@ private:
 public:	
 	Momentum(){};
 	Momentum(float lr, float _momentum);
+	Momentum(const Momentum& rhs);
 	virtual ~Momentum(){};
 	
 	virtual Optimizer* copy();
@@ -50,6 +51,8 @@ class NAG : public Optimizer
 public:	
 	NAG(){};
 	NAG(float lr);
+	NAG(const NAG& rhs);
+	
 	virtual ~NAG(){};
 	
 	virtual Optimizer* copy();
@@ -62,6 +65,8 @@ class Nadam : public Optimizer
 public:	
 	Nadam(){};
 	Nadam(float lr);
+	Nadam(const Nadam& rhs);
+	
 	virtual ~Nadam(){};
 	
 	virtual Optimizer* copy();
@@ -78,6 +83,8 @@ private:
 public:
 	Adagrad(){};
 	Adagrad(float lr, float _epsilon);
+	Adagrad(const Adagrad& rhs);
+	
 	virtual ~Adagrad(){};
 	
 	virtual Optimizer* copy();
@@ -95,6 +102,8 @@ private:
 public:
 	RMSProp(){};
 	RMSProp(float lr, float _rho, float _epsilon);
+	RMSProp(const RMSProp& rhs);
+	
 	virtual ~RMSProp(){};
 	
 	virtual Optimizer* copy();
@@ -114,6 +123,8 @@ private:
 public:
 	Adam(){};
 	Adam(float lr, float _beta1, float _beta2, float _epsilon);
+	Adam(const Adam& rhs);
+	
 	virtual ~Adam(){};
 	
 	virtual Optimizer* copy();
