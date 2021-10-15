@@ -170,9 +170,9 @@ std::shared_ptr<Layer> DenseLayer::getPreLayer(){
 	return this->preLayer;
 }
 
-void DenseLayer::connect(std::shared_ptr<Layer>& layer){
-	(std::dynamic_pointer_cast<DenseLayer>(layer))->preLayer = std::shared_ptr<DenseLayer>(this);
-	this->postLayer = std::dynamic_pointer_cast<DenseLayer>(layer);
+void DenseLayer::connect(std::shared_ptr<Layer>& cur_layer, std::shared_ptr<Layer>& new_layer){
+	(std::dynamic_pointer_cast<DenseLayer>(new_layer))->preLayer = (std::dynamic_pointer_cast<DenseLayer>(cur_layer));
+	this->postLayer = std::dynamic_pointer_cast<DenseLayer>(new_layer);
 	return;
 }
 

@@ -149,12 +149,12 @@ float Model::getError() {
 
 void Model::addLayer(Layer* _layer) {
 	std::shared_ptr<Layer> layer(_layer);
-	if (this->inputLayer == nullptr) {
+	if (this->outputLayer == nullptr) {
 		this->inputLayer = layer;
 		this->outputLayer = layer;
 	}
 	else {
-		this->outputLayer->connect(layer);
+		this->outputLayer->connect(outputLayer ,layer);
 		this->outputLayer = layer;
 	}
 	return;

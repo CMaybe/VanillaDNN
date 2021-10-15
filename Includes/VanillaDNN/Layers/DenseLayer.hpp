@@ -56,7 +56,7 @@ public:
 	virtual void init(int batch_size,std::unique_ptr<Optimizer>& _optimizer);
 	virtual void setInput(const Vector<float>& _input,const int& idx);
 	virtual void setError(const Vector<float>& error,const int& idx);
-	virtual void connect(std::shared_ptr<Layer>& layer);
+	virtual void connect(std::shared_ptr<Layer>& cur_layer, std::shared_ptr<Layer>& new_layer);
 	virtual void setOptimizer(std::unique_ptr<Optimizer>& _optimizer);
 	
 	virtual std::shared_ptr<Layer> getPostLayer();

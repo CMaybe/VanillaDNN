@@ -26,7 +26,7 @@ public:
 	virtual void back_propagation(const int& idx) = 0;
 	virtual void update() = 0;
 	virtual void predict() = 0;
-	virtual void connect(std::shared_ptr<Layer>& layer) = 0;
+	virtual void connect(std::shared_ptr<Layer>& cur_layer, std::shared_ptr<Layer>& new_layer) = 0;
 	virtual void init(int batch_size,std::unique_ptr<Optimizer>& _optimizer) = 0;
 	virtual void setInput(const Vector<float>& _input, const int& idx) = 0;
 	virtual void setError(const Vector<float>& error, const int& idx) = 0;
