@@ -20,10 +20,12 @@ public:
 	Matrix();
 	Matrix(int _rows, int _cols);
 	Matrix(int _rows, int _cols, const T& _init);
+	Matrix<T>& operator=(const Matrix<T>& rhs);
 	Matrix(const Matrix<T>& rhs);
 	Matrix(const std::vector<std::vector<T>>& rhs);
 
-	Matrix<T>& operator=(const Matrix<T>& rhs);
+	Matrix(const Vector<T>& rhs);
+	Matrix<T>& operator=(const Vector<T>& rhs);
 
 	virtual ~Matrix();
 
