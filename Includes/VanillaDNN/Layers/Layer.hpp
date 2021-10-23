@@ -16,12 +16,12 @@ class Layer {
 protected:
 	int batch_size;
 public:
-	Layer();
+	Layer() {};
 	Layer(const Layer& rhs){};
 	Layer(const int& dim){};
 	Layer(const int& dim, Activation *_activation){};
 	
-	virtual ~Layer();
+	virtual ~Layer() {};
 	virtual void feed_forward(const int& idx) = 0;
 	virtual void back_propagation(const int& idx) = 0;
 	virtual void update() = 0;

@@ -17,7 +17,6 @@ add_library(VanillaDNN STATIC
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Functions/Activation.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Functions/Loss.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Functions/Optimizer.cpp
-	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Layers/Layer.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Layers/DenseLayer.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/Model/Model.cpp
 	${VanillaDNN_SOURCE_DIR}/VanillaDNN/MNIST/MNIST.cpp
