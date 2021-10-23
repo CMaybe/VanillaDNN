@@ -60,7 +60,7 @@ void DenseLayer::feed_forward(const int& idx){
 		this->output[idx] = this->input[idx];
 	}
 	else{
-		this->input[idx] = this->batch_weight[idx].dot(this->preLayer->getOutput(idx) + this->batch_bias[idx]);
+		this->input[idx] = this->batch_weight[idx].dot(this->preLayer->getOutput(idx)) + this->batch_bias[idx];
 		this->output[idx] = this->activation->getActivated(this->input[idx]);
 	}
 	return;
