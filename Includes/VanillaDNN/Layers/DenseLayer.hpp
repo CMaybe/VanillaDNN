@@ -56,15 +56,15 @@ public:
 	virtual void predict();
 	virtual void update();
 	virtual void init(int batch_size,std::unique_ptr<Optimizer>& _optimizer);
-	virtual void setInput(const Vector<float>& _input,const int& idx);
+	virtual void setInput(const Matrix<float>& _input,const int& idx);
 	virtual void setError(const Vector<float>& error,const int& idx);
 	virtual void connect(std::shared_ptr<Layer>& cur_layer, std::shared_ptr<Layer>& new_layer);
 	virtual void setOptimizer(std::unique_ptr<Optimizer>& _optimizer);
 	
 	virtual std::shared_ptr<Layer> getPostLayer();
 	virtual std::shared_ptr<Layer> getPreLayer();
-	virtual Vector<float> getOutput(const int& idx);
-	virtual Vector<float> getFeedback(const int& idx);
+	virtual Matrix<float> getOutput(const int& idx);
+	virtual Matrix<float> getFeedback(const int& idx);
 	virtual int getDim() const; 
 
 	virtual void setActivation(std::string name);

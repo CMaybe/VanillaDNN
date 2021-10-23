@@ -147,7 +147,7 @@ void DenseLayer::setActivation(std::string name) {
 }
 
 
-void DenseLayer::setInput(const Vector<float>& _input,const int& idx) {
+void DenseLayer::setInput(const Matrix<float>& _input,const int& idx) {
 	this->input[idx] = _input;
 }
 
@@ -161,11 +161,11 @@ void DenseLayer::setOptimizer(std::unique_ptr<Optimizer>& _optimizer){
 }
 
 
-Vector<float> DenseLayer::getFeedback(const int& idx){
+Matrix<float> DenseLayer::getFeedback(const int& idx){
 	return this->feedback[idx];
 }
 
-Vector<float> DenseLayer::getOutput(const int& idx){
+Matrix<float> DenseLayer::getOutput(const int& idx){
 	return this->output[idx];
 }
 

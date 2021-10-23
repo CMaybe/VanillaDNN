@@ -23,8 +23,10 @@ public:
 	Vector(const Vector<T>& rhs);
 	Vector(const std::vector<T>& rhs);
 	Vector<T>& operator=(const Vector<T>& rhs);
-	bool operator==(const Vector<T>& rhs);
 	
+	Vector(const Matrix<T>& rhs);
+	Vector<T>& operator=(const Matrix<T>& rhs);
+
 	virtual ~Vector();
 
 
@@ -47,6 +49,8 @@ public:
 	Vector<T>& operator-=(const T& rhs);
 	Vector<T>& operator*=(const T& rhs);
 	Vector<T>& operator/=(const T& rhs);
+	
+	bool operator==(const Vector<T>& rhs);
 
 	// Matrix
 	Matrix<T> transpose();
