@@ -39,7 +39,9 @@ class DenseLayer : public Layer{
 	std::vector<Vector<float>> dz_db;
 	std::vector<Vector<float>> dz_dw;
 	
-	std::shared_ptr<DenseLayer> preLayer = nullptr, postLayer=nullptr;
+	std::vector<Vector<float>> feedback;
+	
+	std::shared_ptr<Layer> preLayer = nullptr, postLayer=nullptr;
 	
 public:
 	DenseLayer();
@@ -62,8 +64,10 @@ public:
 	virtual std::shared_ptr<Layer> getPostLayer();
 	virtual std::shared_ptr<Layer> getPreLayer();
 	virtual Vector<float> getOutput(const int& idx);
-	
-	void setActivation(std::string name);
+	virtual Vector<float> getFeedback(const int& idx);
+	virtual int getDim() const; 
+
+	virtual void setActivation(std::string name);
 	std::string getActivationName() const;
 
 

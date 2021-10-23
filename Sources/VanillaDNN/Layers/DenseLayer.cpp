@@ -36,7 +36,7 @@ DenseLayer::~DenseLayer() {
 
 void DenseLayer::back_propagation(const int& idx){
 	if(this->preLayer == nullptr) return;
-	if(this->postLayer != nullptr)	this->dE_do[idx] = this->postLayer->batch_weight[idx].transpose().dot(postLayer->dE_dz[idx]);
+	if(this->postLayer != nullptr)	this->dE_do[idx] = this->postLayer->getFeedback(idx);
 
 	if(this->activation->getName() == "soft_max"){
 		Matrix<float> do_dz = this->activation->getActivatedDiff2(this->input[idx]);
@@ -47,10 +47,10 @@ void DenseLayer::back_propagation(const int& idx){
 		this->dE_dz[idx] = this->dE_do[idx] * do_dz;
 	}
 	
-// 	self.delta_w += np.dot(delta, self.previous_layer.output.transpose())
-	this->dz_dw[idx] = this->preLayer->output[idx];
+	this->dz_dw[idx] = this->preLayer->getOutput(idx);
 	this->dE_dw[idx] = this->dE_dz[idx].dot(this->dz_dw[idx].transpose());
 	this->dE_db[idx] = this->dE_dz[idx];
+	this->feedback[idx] = this->batch_weight[idx].transpose().dot(this->dE_dz[idx]);
 	return;
 
 }
@@ -60,7 +60,7 @@ void DenseLayer::feed_forward(const int& idx){
 		this->output[idx] = this->input[idx];
 	}
 	else{
-		this->input[idx] = this->batch_weight[idx].dot(this->preLayer->output[idx]) + this->batch_bias[idx];
+		this->input[idx] = this->batch_weight[idx].dot(this->preLayer->getOutput(idx) + this->batch_bias[idx]);
 		this->output[idx] = this->activation->getActivated(this->input[idx]);
 	}
 	return;
@@ -71,7 +71,7 @@ void DenseLayer::predict(){
 		this->output[0] = this->input[0];
 	}
 	else{
-		this->input[0] = this->weight.dot(this->preLayer->output[0]) + this->bias;
+		this->input[0] = this->weight.dot(this->preLayer->getOutput(0)) + this->bias;
 		this->output[0] = this->activation->getActivated(this->input[0]);
 	}
 	return;
@@ -80,7 +80,7 @@ void DenseLayer::predict(){
 void DenseLayer::update(){
 
 	if(this->preLayer == nullptr) return;
-	Matrix<float> dw(this->dim,this->preLayer->dim,0.0f);
+	Matrix<float> dw(this->dim,this->preLayer->getDim(),0.0f);
 	Vector<float> db(this->dim,0.0f);
 
 	for(int idx = 0;idx < this->batch_size; idx++){
@@ -110,8 +110,9 @@ void DenseLayer::init(int batch_size,std::unique_ptr<Optimizer>& _optimizer){
 	this->dE_dz.resize(this->batch_size);
 	this->dz_db.resize(this->batch_size);
 	this->dz_dw.resize(this->batch_size);
+	this->feedback.resize(this->batch_size);
 	
-	this->weight.resize(this->dim, this->preLayer->dim);
+	this->weight.resize(this->dim, this->preLayer->getDim());
 	this->bias.resize(this->dim, 0);
 	
 	this->weight.setRandom();
@@ -121,12 +122,13 @@ void DenseLayer::init(int batch_size,std::unique_ptr<Optimizer>& _optimizer){
 	for(int i = 0;i<this->batch_size;i++){
 		this->batch_weight.push_back(this->weight);
 		this->batch_bias.push_back(this->bias);
-		this->dE_dw[i].resize(this->dim, this->preLayer->dim, 0);
+		this->dE_dw[i].resize(this->dim, this->preLayer->getDim(), 0);
 		this->dE_do[i].resize(this->dim, 0);
-		this->dz_dw[i].resize(this->preLayer->dim,0);
+		this->dz_dw[i].resize(this->preLayer->getDim(),0);
 		this->dE_db[i].resize(this->dim, 0);
 		this->dE_dz[i].resize(this->dim, 0);
 		this->dz_db[i].resize(this->dim, 0);
+		this->feedback[i].resize(this->dim, 0);
 	}
 	this->setOptimizer(_optimizer);
 
@@ -158,6 +160,11 @@ void DenseLayer::setOptimizer(std::unique_ptr<Optimizer>& _optimizer){
 	return;
 }
 
+
+Vector<float> DenseLayer::getFeedback(const int& idx){
+	return this->feedback[idx];
+}
+
 Vector<float> DenseLayer::getOutput(const int& idx){
 	return this->output[idx];
 }
@@ -171,14 +178,18 @@ std::shared_ptr<Layer> DenseLayer::getPreLayer(){
 }
 
 void DenseLayer::connect(std::shared_ptr<Layer>& cur_layer, std::shared_ptr<Layer>& new_layer){
-	(std::dynamic_pointer_cast<DenseLayer>(new_layer))->preLayer = (std::dynamic_pointer_cast<DenseLayer>(cur_layer));
-	this->postLayer = std::dynamic_pointer_cast<DenseLayer>(new_layer);
+	(std::dynamic_pointer_cast<DenseLayer>(new_layer))->preLayer = cur_layer;
+	this->postLayer = new_layer;
 	return;
 }
 
 std::string DenseLayer::getActivationName() const{
 	return this->activation->getName();
 }
+
+int DenseLayer::getDim() const{
+	return this->dim;
+}; 
 
 
 #endif
