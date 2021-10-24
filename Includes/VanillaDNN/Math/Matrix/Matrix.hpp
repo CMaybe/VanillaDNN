@@ -75,7 +75,9 @@ public:
 	int get_rows_size() const;
 	int get_cols_size() const;
 	void resize(int _rows, int _cols, T _init = 0);
+	void resize();
 	void setRandom();
+	void clear();
 	float norm();
 
 };

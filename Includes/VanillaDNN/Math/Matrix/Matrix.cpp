@@ -11,22 +11,16 @@ Matrix<T>::Matrix() {
 
 template<typename T>
 Matrix<T>::Matrix(int _rows, int _cols) {
-	this->matrix.resize(_rows);
-	for (int i = 0; i < matrix.size(); i++) {
-		matrix[i].resize(_cols, 0);
-	}
 	this->rows = _rows;
 	this->cols = _cols;
+	this->resize(_rows, _cols);
 }
 
 template<typename T>
 Matrix<T>::Matrix(int _rows, int _cols, const T& _init) {
-	this->matrix.resize(_rows);
-	for (int i = 0; i < matrix.size(); i++) {
-		matrix[i].resize(_cols, _init);
-	}
 	this->rows = _rows;
 	this->cols = _cols;
+	this->resize(_rows, _cols, _init);
 }
 
 template<typename T>
@@ -40,10 +34,9 @@ template<typename T>
 Matrix<T>::Matrix(const Vector<T>& rhs) {
 	this->rows = rhs.get_size();
 	this->cols = 1;
-	this->matrix.resize(rows);
+	this->resize();
 	
 	for (int i = 0; i < this->rows; i++) {
-		matrix[i].resize(1);
 		matrix[i][0] = rhs[i];
 	}
 }
@@ -62,24 +55,39 @@ Matrix<T>::Matrix(const std::vector<std::vector<T>>& rhs) {
 }
 
 template<typename T>
-Matrix<T>::~Matrix() {}
+Matrix<T>::~Matrix() {
+	this->clear();
+}
 
 template<typename T>
 void Matrix<T>::resize(int _rows, int _cols, T _init) {
-	matrix.resize(_rows);
-	for (int i = 0; i < matrix.size(); i++) {
-		matrix[i].resize(_cols, _init);
+	this->clear();
+	std::vector<std::vector<T>>(_rows).swap(this->matrix);
+	for (int i = 0; i < _rows; i++){
+		std::vector<T>(_cols, _init).swap(this->matrix[i]);
 	}
-	rows = _rows;
-	cols = _cols;
+	this->rows = _rows;
+	this->cols = _cols;
+	
+	return;
+}
+
+template<typename T>
+void Matrix<T>::resize() {
+	this->clear();
+	std::vector<std::vector<T>>(this->rows).swap(this->matrix);
+	for (int i = 0; i < this->rows; i++){
+		this->matrix[i] = std::vector<T>(this->cols, 0);
+	}
+	return;
 }
 
 template<typename T>
 void Matrix<T>::setRandom()
 {
 	std::srand(std::time(0));
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
+	for (int i = 0; i < this->rows; i++) {
+		for (int j = 0; j < this->cols; j++) {
 			this->matrix[i][j] = ((float)std::rand() / ((float)RAND_MAX)) * 2 - 1;
 		}
 	}
@@ -88,15 +96,11 @@ void Matrix<T>::setRandom()
 template<typename T>
 Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs) {
 	if (&rhs == this) return *this;
-
+	this->clear();
 	this->rows = rhs.get_rows_size();
 	this->cols = rhs.get_cols_size();
-
-	this->matrix.resize(this->rows);
-	for (int i = 0; i < matrix.size(); i++) {
-		matrix[i].resize(this->cols);
-	}
-
+	this->resize();
+	
 	for (int i = 0; i < this->rows; i++) {
 		for (int j = 0; j < this->cols; j++) {
 			matrix[i][j] = rhs(i, j);
@@ -109,13 +113,12 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs) {
 
 template<typename T>
 Matrix<T>& Matrix<T>::operator=(const Vector<T>& rhs) {
+	this->clear();
 	this->rows = rhs.get_size();
 	this->cols = 1;
-
-	this->matrix.resize(this->rows);
+	this->resize();
 	
 	for (int i = 0; i < this->rows; i++) {
-		matrix[i].resize(1);
 		matrix[i][0] = rhs(i);
 	}
 
@@ -472,6 +475,14 @@ T Matrix<T>::sum(){
 		}
 	}
 	return result;
+}
+template<typename T>
+void Matrix<T>::clear(){
+	for (int i = 0; i < this->matrix.size(); i++){
+		std::vector<T>().swap(this->matrix[i]);
+	}
+	std::vector<std::vector<T>>().swap(this->matrix);
+	return;
 }
 
 

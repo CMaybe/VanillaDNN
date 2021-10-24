@@ -82,8 +82,8 @@ public:
 	int get_size() const;
 	void push_back(T value);
 	void setRandom();
-	void resize(const int& _size);
-	void resize(const int& _size, const T& _init);
+	void resize(const int& _size, const T& _init = 0);
+	void clear();
 	float norm();
 
 };
