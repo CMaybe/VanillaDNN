@@ -55,6 +55,7 @@ void DenseLayer::back_propagation(const int& idx){
 }
 
 void DenseLayer::feed_forward(const int& idx){
+	std::cout<<"layer feed_forward , idx : "<<idx<<'\n';
 	if(this->preLayer.expired()){
 		this->output[idx] = this->input[idx];
 	}
@@ -63,6 +64,7 @@ void DenseLayer::feed_forward(const int& idx){
 		this->input[idx] = this->batch_weight[idx].dot(pre_layer->getOutput(idx)) + this->batch_bias[idx];
 		this->output[idx] = this->activation->getActivated(this->input[idx]);
 	}
+	std::cout<<"layer feed_forward2 , idx : "<<idx<<'\n';
 	return;
 }
 
@@ -191,7 +193,7 @@ std::string DenseLayer::getActivationName() const{
 
 int DenseLayer::getDim() const{
 	return this->dim;
-}; 
+}
 
 
 #endif

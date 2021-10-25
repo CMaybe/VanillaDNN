@@ -54,9 +54,12 @@ void Model::feed_forward(int idx) {
 	std::cout << "feed_forward\n";
 	auto cur = this->inputLayer;
 	do {
+		std::cout<<cur<<'\n'<<cur.use_count();
 		cur->feed_forward(idx % this->batch_size);
-		std::cout << cur->getPostLayer().use_count()<<'\n';
-	} while ((cur = cur->getPostLayer()).use_count() > 0);
+		std::cout << "before\n";
+		cur = cur->getPostLayer();
+		std::cout << "after\n";
+	} while (cur.use_count() > 0);
 	this->output_set[idx % this->batch_size] = this->outputLayer->getOutput(idx % this->batch_size);
 	std::cout << "feed_forward2\n";
 	return;
