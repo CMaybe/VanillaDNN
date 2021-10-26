@@ -134,9 +134,10 @@ make
 #include <iostream>
 #include <vector>
 
+
 int main(int argc, char** argv) {
 	//training set
-	MNIST training_set(MNIST_DATA_LOCATION, "train");
+	MNIST training_set(MNIST_DATA_LOCATION, "train", 500);
 	std::vector<Vector<float>> training_images(training_set.getImages());
 	std::vector<Vector<float>> training_labels(training_set.getLabels());
 	
@@ -147,7 +148,7 @@ int main(int argc, char** argv) {
 	
 	
 	//evaluate set
-	MNIST evaluate_set(MNIST_DATA_LOCATION, "test");
+	MNIST evaluate_set(MNIST_DATA_LOCATION, "test", 100);
 	std::vector<Vector<float>> evaluate_images(evaluate_set.getImages());
 	std::vector<Vector<float>> evaluate_labels(evaluate_set.getLabels());
 
@@ -161,30 +162,26 @@ int main(int argc, char** argv) {
 	Model mnist;//input : 28 x 28, output 0 ~ 9;
 	
 	
-	mnist.setLoss(LOSS_FUNCTION::mean_squared_error);
-	mnist.addLayer(new DenseLayer(784, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new DenseLayer(256, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new DenseLayer(128, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new DenseLayer(32, ACTIVATION_FUNCTION::sigmoid));
-	mnist.addLayer(new DenseLayer(10, ACTIVATION_FUNCTION::sigmoid));
+	mnist.setLoss(LOSS_FUNCTION::categorical_cross_entropy);
+	mnist.addLayer(new DenseLayer(784, "sigmoid"));
+	mnist.addLayer(new DenseLayer(256, "sigmoid"));
+	mnist.addLayer(new DenseLayer(128, "sigmoid"));
+	mnist.addLayer(new DenseLayer(32, "sigmoid"));
+	mnist.addLayer(new DenseLayer(10, "soft_max"));
 	
 	// mnist.setOptimizer(new Momentum(0.1f,0.9));
 	// mnist.setOptimizer(new Adagrad(0.01f,1e-6));
 	// mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-8)); //lr, _rho, _epsilon, _depth
 	mnist.setOptimizer(new Adam(0.01f, 0.9f, 0.999f, 1e-8)); //lr, _rho, _epsilon, _depth
 	
-	mnist.setInput(training_images);
-	mnist.setTarget(training_labels);
-	mnist.fit(60000, 10, 32); //total, epoch, batch
+	mnist.fit(training_images, training_labels, 5, 32); //total, epoch, batch
 	
-	mnist.setInput(evaluate_images);
-	mnist.setTarget(evaluate_labels);
 
 	std::cout << "training is done!" << '\n';
 
-	mnist.evaluate(10000);
+	mnist.evaluate(evaluate_images, evaluate_labels);
 	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
-
+	
 
 	return 0;
 }
@@ -195,9 +192,10 @@ cmake_minimum_required(VERSION 3.10)
 
 project(mnist)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/bin)
+set(CMAKE_CXX_FLAGS "-O3")
 set(CMAKE_BUILD_TYPE Release)
 # set(CMAKE_BUILD_TYPE Degug)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/bin/${CMAKE_BUILD_TYPE})
 
 
 find_package(VanillaDNN REQUIRED)
@@ -206,8 +204,9 @@ add_definitions("-std=c++17")
 add_executable(mnist
 	source/mnist.cpp
 )
-target_link_libraries(mnist ${VanillaDNN_LIBRARY_DIR}/libVanillaDNN.a)
+target_link_libraries(mnist ${VanillaDNN_LIBRARY_DIR}/${CMAKE_BUILD_TYPE}/libVanillaDNN.a)
 target_compile_definitions(mnist PRIVATE MNIST_DATA_LOCATION="${MNIST_DATA_DIR}")
+
 ```
 
 
