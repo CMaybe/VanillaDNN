@@ -15,7 +15,7 @@ MNIST::MNIST()
 	set = "defalut";
 }
 
-MNIST::MNIST(std::string _path,std::string _set,bool onehot)
+MNIST::MNIST(std::string _path,std::string _set, const int& size, bool onehot)
 {
 	
 	std::string trainSetFileName[2] = \
@@ -62,7 +62,7 @@ MNIST::MNIST(std::string _path,std::string _set,bool onehot)
 	int cols = char2int(buffer);
 	
 
-	for (int i = 0; i < imageSize; i++)
+	for (int i = 0; i < imageSize && i < size; i++)
 	{
 		Vector<float> image;
 		char pixel;
@@ -84,7 +84,7 @@ MNIST::MNIST(std::string _path,std::string _set,bool onehot)
 	labelInputStream.read(buffer, 4);
 	int labelSize = char2int(buffer);
 
-	for (int i = 0; i < labelSize; i++)
+	for (int i = 0; i < labelSize && i < size; i++)
 	{
 		char label;
 		labelInputStream.read(&label, 1);

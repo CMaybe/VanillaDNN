@@ -25,7 +25,7 @@ Vector<T>::Vector(const Vector<T>& rhs) {
 template<typename T>
 Vector<T>::Vector(const Matrix<T>& rhs) {
 	this->clear();
-	if (this->rhs.get_rows_size() != 1)
+	if (this->rhs.get_cols_size() != 1)
 		throw std::out_of_range("Index out of bounds");
 	this->size = rhs.get_rows_size();
 	this->vector.resize(size,0);

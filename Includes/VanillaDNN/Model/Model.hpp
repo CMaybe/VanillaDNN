@@ -48,25 +48,23 @@ private:
 	float accuracy;
 	float error;
 
+	void setInput(std::vector<Vector<float>>& _input_set);
+	void setTarget(std::vector<Vector<float>>& _target_set);
+	
 public:
 	Model();
 	virtual ~Model();
 	void setLoss(Loss _loss);
 	
 	void init();
-	void fit(int _total, int _epoch, int _batch = 1);
-	
-	void evaluate(int _batch, bool show = false);
+	void fit(std::vector<Vector<float>>& _input_set, std::vector<Vector<float>>& _target_set, int _epoch, int _batch = 1);
+	void evaluate(std::vector<Vector<float>>& _input_set, std::vector<Vector<float>>& _target_set, bool show = false);
 	void feed_forward(int idx);
 	void predict(int idx);
 	void back_propagation(int idx);
 	void update();
 	
-	void addLayer(std::shared_ptr<Layer> layer);
-	
-	void setInput(std::vector<Vector<float>>& _input_set);
-	void setTarget(std::vector<Vector<float>>& _target_set);
-	
+	void addLayer(Layer* _layer);
 	void setOptimizer(Optimizer *_optimizer);
 	
 	float getAccuracy();

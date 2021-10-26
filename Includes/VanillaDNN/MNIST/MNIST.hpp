@@ -19,7 +19,7 @@ private:
 
 public:
 	MNIST();
-	MNIST(std::string _path, std::string _set,bool onehot = false);
+	MNIST(std::string _path, std::string _set, const int& size = 60000, bool onehot = false);
 	MNIST(const MNIST& rhs);
 
 	std::vector<Vector<float>> getImages();

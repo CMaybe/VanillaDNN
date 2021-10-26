@@ -8,7 +8,6 @@ Model::Model() {
 	this->batch_size = 1;
 	this->epoch = 0;
 	this->nEval = 0;
-	this->total = 0;
 	this->accuracy = 0;
 	this->error = 0;
 	this->inputLayer = nullptr;
@@ -51,6 +50,7 @@ void Model::init() {
 
 void Model::feed_forward(int idx) {
 	this->inputLayer->setInput(this->input_set[idx], idx % this->batch_size);
+
 	auto cur = this->inputLayer;
 	do {
 		cur->feed_forward(idx % this->batch_size);
@@ -90,15 +90,17 @@ void Model::update(){
 	return;
 }
 
-void Model::fit(int _total, int _epoch, int _batch) {
-	this->total = _total;
+void Model::fit(std::vector<Vector<float>>& _input_set, std::vector<Vector<float>>& _target_set, int _epoch, int _batch) {
+	this->setInput(_input_set);
+	this->setTarget(_target_set);
+	int data_cnt = _input_set.size();
 	this->epoch = _epoch;
 	this->batch_size = _batch;
 	this->init();
 	std::vector<std::future<void>> batch_tasks;
 	for (int i = 0; i < this->epoch; i++) {
-		for (int j = 0; j < this->total; j+=this->batch_size) {
-			for(int k = 0; k< this->batch_size && (j+k)< this->total; k++) {
+		for (int j = 0; j < data_cnt; j+=this->batch_size) {
+			for(int k = 0; k< this->batch_size && (j+k)< data_cnt; k++) {
 				batch_tasks.emplace_back(std::async(std::launch::async,[j,k,this](){
 					this->feed_forward(j+k);
 					this->back_propagation(j+k);
@@ -117,11 +119,14 @@ void Model::fit(int _total, int _epoch, int _batch) {
 	return;
 }
 
-void Model::evaluate(int _len,bool show) {
+void Model::evaluate(std::vector<Vector<float>>& _input_set, std::vector<Vector<float>>& _target_set, bool show) {
+	this->setInput(_input_set);
+	this->setTarget(_target_set);
+	int data_cnt = _input_set.size(); 
 	this->accuracy = 0;
 	float acc_sum = 0;
 	float error_sum = 0;
-	for (int i = 0; i < _len; i++) {
+	for (int i = 0; i < data_cnt; i++) {
 		this->target = this->target_set[i];
 		this->predict(i);
 		if (show) {
@@ -133,8 +138,8 @@ void Model::evaluate(int _len,bool show) {
 		acc_sum += static_cast<float>(this->target == this->output.onehot());
 		error_sum += this->loss(this->output, target);
 	}
-	this->accuracy = acc_sum / _len;
-	this->error = error_sum / _len;
+	this->accuracy = acc_sum / data_cnt;
+	this->error = error_sum / data_cnt;
 }
 
 float Model::getAccuracy() {
@@ -145,9 +150,8 @@ float Model::getError() {
 	return this->error;
 }
 
-
-
-void Model::addLayer(std::shared_ptr<Layer> layer) {
+void Model::addLayer(Layer* _layer) {
+	std::shared_ptr<Layer> layer(_layer);
 	if (this->outputLayer == nullptr) {
 		this->inputLayer = layer;
 		this->outputLayer = layer;
