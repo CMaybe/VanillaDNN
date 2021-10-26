@@ -23,8 +23,10 @@ public:
 	Vector(const Vector<T>& rhs);
 	Vector(const std::vector<T>& rhs);
 	Vector<T>& operator=(const Vector<T>& rhs);
-	bool operator==(const Vector<T>& rhs);
 	
+	Vector(const Matrix<T>& rhs);
+	Vector<T>& operator=(const Matrix<T>& rhs);
+
 	virtual ~Vector();
 
 
@@ -47,6 +49,8 @@ public:
 	Vector<T>& operator-=(const T& rhs);
 	Vector<T>& operator*=(const T& rhs);
 	Vector<T>& operator/=(const T& rhs);
+	
+	bool operator==(const Vector<T>& rhs);
 
 	// Matrix
 	Matrix<T> transpose();
@@ -78,8 +82,8 @@ public:
 	int get_size() const;
 	void push_back(T value);
 	void setRandom();
-	void resize(const int& _size);
-	void resize(const int& _size, const T& _init);
+	void resize(const int& _size, const T& _init = 0);
+	void clear();
 	float norm();
 
 };

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 
+
 int main(int argc, char** argv) {
 	//training set
 	MNIST training_set(MNIST_DATA_LOCATION, "train");
@@ -34,11 +35,11 @@ int main(int argc, char** argv) {
 	
 	
 	mnist.setLoss(LOSS_FUNCTION::categorical_cross_entropy);
-	mnist.addLayer(new DenseLayer(784, "sigmoid"));
-	mnist.addLayer(new DenseLayer(256, "sigmoid"));
-	mnist.addLayer(new DenseLayer(128, "sigmoid"));
-	mnist.addLayer(new DenseLayer(32, "sigmoid"));
-	mnist.addLayer(new DenseLayer(10, "soft_max"));
+	mnist.addLayer(std::make_shared<DenseLayer>(784, "sigmoid"));
+	mnist.addLayer(std::make_shared<DenseLayer>(256, "sigmoid"));
+	mnist.addLayer(std::make_shared<DenseLayer>(128, "sigmoid"));
+	mnist.addLayer(std::make_shared<DenseLayer>(32, "sigmoid"));
+	mnist.addLayer(std::make_shared<DenseLayer>(10, "soft_max"));
 	
 	// mnist.setOptimizer(new Momentum(0.1f,0.9));
 	// mnist.setOptimizer(new Adagrad(0.01f,1e-6));
@@ -47,7 +48,7 @@ int main(int argc, char** argv) {
 	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(60000, 10, 32); //total, epoch, batch
+	mnist.fit(50000, 10, 32); //total, epoch, batch
 	
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
@@ -56,6 +57,8 @@ int main(int argc, char** argv) {
 
 	mnist.evaluate(10000);
 	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
+	
+	// valgrind --leak-check=full --error-limit=no ../bin/mnist
 
 	return 0;
 }

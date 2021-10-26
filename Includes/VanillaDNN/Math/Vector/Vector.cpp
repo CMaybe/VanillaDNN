@@ -10,18 +10,33 @@ Vector<T>::Vector() {
 
 template<typename T>
 Vector<T>::Vector(int _size, const T& _init) {
+	this->clear();
 	this->vector.resize(_size, _init);
 	this->size = _size;
 }
 
 template<typename T>
 Vector<T>::Vector(const Vector<T>& rhs) {
+	this->clear();
 	this->vector = rhs.vector;
 	this->size = rhs.get_size();
 }
 
 template<typename T>
+Vector<T>::Vector(const Matrix<T>& rhs) {
+	this->clear();
+	if (this->rhs.get_rows_size() != 1)
+		throw std::out_of_range("Index out of bounds");
+	this->size = rhs.get_rows_size();
+	this->vector.resize(size,0);
+	for(int i = 0; i < this->size; i++){
+		this->vector[i] = rhs(i,0);
+	}
+}
+
+template<typename T>
 Vector<T>::Vector(const std::vector<T>& rhs) {
+	this->clear();
 	this->vector.resize(rhs.size());
 	this->size = rhs.size();
 	for (int i = 0; i < this->size; i++) {
@@ -34,29 +49,35 @@ Vector<T>::~Vector() {}
 
 template<typename T>
 void Vector<T>::resize(const int& _size, const T& _init) {
+	this->clear();
 	this->vector.resize(_size, _init);
-	this->size = _size;
-}
-
-template<typename T>
-void Vector<T>::resize(const int& _size) {
-	this->vector.resize(_size, 0);
 	this->size = _size;
 }
 
 template<typename T>
 Vector<T>& Vector<T>::operator=(const Vector<T>& rhs) {
 	if (&rhs == this) return *this;
+	this->clear();
+	this->size = rhs.get_size();
+	this->vector.resize(this->size);
 
-	int new_size = rhs.get_size();
-
-	this->vector.resize(new_size);
-
-	for (int i = 0; i < new_size; i++) {
+	for (int i = 0; i < this->size; i++) {
 		this->vector[i] = rhs(i);
 	}
 
-	this->size = new_size;
+
+	return *this;
+}
+
+template<typename T>
+Vector<T>& Vector<T>::operator=(const Matrix<T>& rhs) {
+	this->clear();
+	this->size = rhs.get_rows_size();
+	this->vector.resize(this->size);
+
+	for (int i = 0; i < this->size; i++) {
+		this->vector[i] = rhs(i,0);
+	}
 
 	return *this;
 }
@@ -330,6 +351,12 @@ float Vector<T>::norm(){
 		sum += static_cast<float>(this->vector[i] * this->vector[i]);
 	}
 	return std::sqrt(sum);
+}
+
+template<typename T>
+void Vector<T>::clear(){
+	std::vector<T>(this->vector).swap(this->vector);
+	return;
 }
 
 template<typename T>

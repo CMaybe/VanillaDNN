@@ -44,7 +44,7 @@ void Model::init() {
 	auto cur = this->inputLayer;
 	do {
 		cur->init(this->batch_size, this->optimizer);
-	} while ((cur = cur->getPostLayer()) != nullptr);
+	} while ((cur = cur->getPostLayer()).use_count() > 0);
 
 }
 
@@ -53,8 +53,9 @@ void Model::feed_forward(int idx) {
 	this->inputLayer->setInput(this->input_set[idx], idx % this->batch_size);
 	auto cur = this->inputLayer;
 	do {
-		cur->feed_forward(idx % this->batch_size);	
-	} while ((cur = cur->getPostLayer()) != nullptr);
+		cur->feed_forward(idx % this->batch_size);
+		cur = cur->getPostLayer();
+	} while (cur.use_count() > 0);
 	this->output_set[idx % this->batch_size] = this->outputLayer->getOutput(idx % this->batch_size);
 	return;
 }
@@ -64,7 +65,7 @@ void Model::predict(int idx){
 	auto cur = this->inputLayer;
 	do {
 		cur->predict();	
-	} while ((cur = cur->getPostLayer()) != nullptr);
+	} while ((cur = cur->getPostLayer()).use_count() > 0);
 	this->output = this->outputLayer->getOutput(0);
 	return;
 }
@@ -76,7 +77,7 @@ void Model::back_propagation(int idx) {
 		this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]), idx % this->batch_size);
 	do{
 		cur->back_propagation(idx % this->batch_size);
-	}while((cur = cur->getPreLayer())!= nullptr);
+	}while((cur = cur->getPreLayer()).use_count() > 0);
 	return;
 }
 
@@ -84,7 +85,7 @@ void Model::update(){
 	auto cur = this->outputLayer;
 	do{
 		cur->update();
-	}while((cur = cur->getPreLayer())!= nullptr);
+	}while((cur = cur->getPreLayer()).use_count() > 0);
 
 	return;
 }
@@ -109,7 +110,6 @@ void Model::fit(int _total, int _epoch, int _batch) {
 			this->update();
 			batch_tasks.clear();
 			batch_tasks.reserve(this->batch_size);
-
 		}
 		std::cout << i + 1 << " epoch is done\n";
 	}
@@ -147,8 +147,7 @@ float Model::getError() {
 
 
 
-void Model::addLayer(Layer* _layer) {
-	std::shared_ptr<Layer> layer(_layer);
+void Model::addLayer(std::shared_ptr<Layer> layer) {
 	if (this->outputLayer == nullptr) {
 		this->inputLayer = layer;
 		this->outputLayer = layer;

@@ -5,35 +5,40 @@
 
 template<typename T>
 Matrix<T>::Matrix() {
-	rows = 0;
-	cols = 0;
+	this->rows = 0;
+	this->cols = 0;
 }
 
 template<typename T>
 Matrix<T>::Matrix(int _rows, int _cols) {
-	matrix.resize(_rows);
-	for (int i = 0; i < matrix.size(); i++) {
-		matrix[i].resize(_cols, 0);
-	}
-	rows = _rows;
-	cols = _cols;
+	this->rows = _rows;
+	this->cols = _cols;
+	this->resize(_rows, _cols);
 }
 
 template<typename T>
 Matrix<T>::Matrix(int _rows, int _cols, const T& _init) {
-	matrix.resize(_rows);
-	for (int i = 0; i < matrix.size(); i++) {
-		matrix[i].resize(_cols, _init);
-	}
-	rows = _rows;
-	cols = _cols;
+	this->rows = _rows;
+	this->cols = _cols;
+	this->resize(_rows, _cols, _init);
 }
 
 template<typename T>
 Matrix<T>::Matrix(const Matrix<T>& rhs) {
-	matrix = rhs.matrix;
-	rows = rhs.get_rows_size();
-	cols = rhs.get_cols_size();
+	this->matrix = rhs.matrix;
+	this->rows = rhs.get_rows_size();
+	this->cols = rhs.get_cols_size();
+}
+
+template<typename T>
+Matrix<T>::Matrix(const Vector<T>& rhs) {
+	this->rows = rhs.get_size();
+	this->cols = 1;
+	this->resize();
+	
+	for (int i = 0; i < this->rows; i++) {
+		matrix[i][0] = rhs[i];
+	}
 }
 
 template<typename T>
@@ -50,24 +55,39 @@ Matrix<T>::Matrix(const std::vector<std::vector<T>>& rhs) {
 }
 
 template<typename T>
-Matrix<T>::~Matrix() {}
+Matrix<T>::~Matrix() {
+	this->clear();
+}
 
 template<typename T>
 void Matrix<T>::resize(int _rows, int _cols, T _init) {
-	matrix.resize(_rows);
-	for (int i = 0; i < matrix.size(); i++) {
-		matrix[i].resize(_cols, _init);
+	this->clear();
+	std::vector<std::vector<T>>(_rows).swap(this->matrix);
+	for (int i = 0; i < _rows; i++){
+		std::vector<T>(_cols, _init).swap(this->matrix[i]);
 	}
-	rows = _rows;
-	cols = _cols;
+	this->rows = _rows;
+	this->cols = _cols;
+	
+	return;
+}
+
+template<typename T>
+void Matrix<T>::resize() {
+	this->clear();
+	std::vector<std::vector<T>>(this->rows).swap(this->matrix);
+	for (int i = 0; i < this->rows; i++){
+		this->matrix[i] = std::vector<T>(this->cols, 0);
+	}
+	return;
 }
 
 template<typename T>
 void Matrix<T>::setRandom()
 {
 	std::srand(std::time(0));
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
+	for (int i = 0; i < this->rows; i++) {
+		for (int j = 0; j < this->cols; j++) {
 			this->matrix[i][j] = ((float)std::rand() / ((float)RAND_MAX)) * 2 - 1;
 		}
 	}
@@ -76,28 +96,34 @@ void Matrix<T>::setRandom()
 template<typename T>
 Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs) {
 	if (&rhs == this) return *this;
-
-	int new_rows = rhs.get_rows_size();
-	int new_cols = rhs.get_cols_size();
-
-	this->matrix.resize(new_rows);
-	for (int i = 0; i < matrix.size(); i++) {
-		matrix[i].resize(new_cols);
-	}
-
-	for (int i = 0; i < new_rows; i++) {
-		for (int j = 0; j < new_cols; j++) {
+	this->clear();
+	this->rows = rhs.get_rows_size();
+	this->cols = rhs.get_cols_size();
+	this->resize();
+	
+	for (int i = 0; i < this->rows; i++) {
+		for (int j = 0; j < this->cols; j++) {
 			matrix[i][j] = rhs(i, j);
 		}
 	}
 
-	rows = new_rows;
-	cols = new_cols;
 
 	return *this;
 }
 
+template<typename T>
+Matrix<T>& Matrix<T>::operator=(const Vector<T>& rhs) {
+	this->clear();
+	this->rows = rhs.get_size();
+	this->cols = 1;
+	this->resize();
+	
+	for (int i = 0; i < this->rows; i++) {
+		matrix[i][0] = rhs(i);
+	}
 
+	return *this;
+}
 
 template<typename T>
 Matrix<T> Matrix<T>::operator+(const Matrix<T>& rhs) {
@@ -327,7 +353,7 @@ Matrix<T> Matrix<T>::dot(const Matrix<T>& rhs) {
 	int cols = rhs.get_cols_size();
 	Matrix<T> result(rows, cols, 0);
 
-	if (this->cols != rhs->get_rows_size())
+	if (this->cols != rhs.get_rows_size())
 		throw std::out_of_range("Index out of bounds");
 
 	for (int i = 0; i < rows; i++) {
@@ -449,6 +475,14 @@ T Matrix<T>::sum(){
 		}
 	}
 	return result;
+}
+template<typename T>
+void Matrix<T>::clear(){
+	for (int i = 0; i < this->matrix.size(); i++){
+		std::vector<T>().swap(this->matrix[i]);
+	}
+	std::vector<std::vector<T>>().swap(this->matrix);
+	return;
 }
 
 

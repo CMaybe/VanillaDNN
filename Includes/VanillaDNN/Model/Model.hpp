@@ -62,7 +62,7 @@ public:
 	void back_propagation(int idx);
 	void update();
 	
-	void addLayer(Layer* _layer);
+	void addLayer(std::shared_ptr<Layer> layer);
 	
 	void setInput(std::vector<Vector<float>>& _input_set);
 	void setTarget(std::vector<Vector<float>>& _target_set);
