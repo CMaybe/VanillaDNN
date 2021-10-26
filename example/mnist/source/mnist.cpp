@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
 	
 	mnist.setInput(training_images);
 	mnist.setTarget(training_labels);
-	mnist.fit(100, 3, 32); //total, epoch, batch
+	mnist.fit(500, 5, 32); //total, epoch, batch
 	
 	mnist.setInput(evaluate_images);
 	mnist.setTarget(evaluate_labels);
@@ -57,6 +57,8 @@ int main(int argc, char** argv) {
 
 	mnist.evaluate(100);
 	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
+	
+	// valgrind --leak-check=full --error-limit=no ../bin/mnist
 
 	return 0;
 }

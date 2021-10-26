@@ -41,7 +41,8 @@ class DenseLayer : public Layer{
 	
 	std::vector<Vector<float>> feedback;
 	
-	std::weak_ptr<Layer> preLayer, postLayer;
+	std::shared_ptr<Layer> preLayer;
+	std::weak_ptr<Layer> postLayer;
 	
 public:
 	DenseLayer();

@@ -51,17 +51,12 @@ void Model::init() {
 
 void Model::feed_forward(int idx) {
 	this->inputLayer->setInput(this->input_set[idx], idx % this->batch_size);
-	std::cout << "feed_forward\n";
 	auto cur = this->inputLayer;
 	do {
-		std::cout<<cur<<'\n'<<cur.use_count();
 		cur->feed_forward(idx % this->batch_size);
-		std::cout << "before\n";
 		cur = cur->getPostLayer();
-		std::cout << "after\n";
 	} while (cur.use_count() > 0);
 	this->output_set[idx % this->batch_size] = this->outputLayer->getOutput(idx % this->batch_size);
-	std::cout << "feed_forward2\n";
 	return;
 }
 
@@ -78,13 +73,11 @@ void Model::predict(int idx){
 
 void Model::back_propagation(int idx) {
 	auto cur = this->outputLayer;
-	std::cout << "back_propagation\n";
 	this->outputLayer->setError(
 		this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]), idx % this->batch_size);
 	do{
 		cur->back_propagation(idx % this->batch_size);
 	}while((cur = cur->getPreLayer()).use_count() > 0);
-	std::cout << "back_propagation2\n";
 	return;
 }
 
