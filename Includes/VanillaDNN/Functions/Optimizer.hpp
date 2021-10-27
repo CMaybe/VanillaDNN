@@ -17,8 +17,8 @@ protected:
 	float learning_rate;
 public:
 	Optimizer();
-	Optimizer(const float& lr);
 	Optimizer(const Optimizer& rhs);
+	explicit Optimizer(const float& lr);
 	
 	virtual ~Optimizer();
 	float getLearningRate();
@@ -61,8 +61,8 @@ public:
 class Nadam : public Optimizer
 {
 public:	
-	Nadam(const float& lr);
 	Nadam(const Nadam& rhs);
+	explicit Nadam(const float& lr);
 	
 	virtual ~Nadam(){};
 	
