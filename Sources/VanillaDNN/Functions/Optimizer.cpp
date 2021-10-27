@@ -8,7 +8,7 @@ Optimizer::Optimizer()
 	this->learning_rate = 1.0;
 }
 
-Optimizer::Optimizer(float lr)
+Optimizer::Optimizer(const float& lr)
 {
 	this->learning_rate = lr;
 }
@@ -28,7 +28,7 @@ float Optimizer::getLearningRate()
 	return this->learning_rate;
 }
 
-void Optimizer::setLearningRate(float lr)
+void Optimizer::setLearningRate(const float& lr)
 {
 	this->learning_rate = lr;
 }
@@ -49,7 +49,7 @@ Optimizer* Optimizer::copy(){
 
 
 
-Momentum::Momentum(float lr, float _momentum)
+Momentum::Momentum(const float& lr, const float& _momentum)
 {
 	this->learning_rate = lr;
 	this->momentum = _momentum;
@@ -87,7 +87,7 @@ Vector<float> Momentum::getBiasGradient(Vector<float>& dE_db){
 }
 
 
-NAG::NAG(float lr)
+NAG::NAG(const float& lr)
 {
 	this->learning_rate = lr;
 }
@@ -112,7 +112,7 @@ Vector<float> NAG::getBiasGradient(Vector<float>& dE_db){
 }
 
 
-Nadam::Nadam(float lr)
+Nadam::Nadam(const float& lr)
 {
 	this->learning_rate = lr;
 }
@@ -137,7 +137,7 @@ Vector<float> Nadam::getBiasGradient(Vector<float>& dE_db){
 }
 
 
-Adagrad::Adagrad(float lr, float _epsilon)
+Adagrad::Adagrad(const float& lr, const float& _epsilon)
 {
 	this->learning_rate = lr;
 	this->epsilon = _epsilon;
@@ -186,7 +186,7 @@ Vector<float> Adagrad::getBiasGradient(Vector<float>& dE_db){
 }
 
 
-RMSProp::RMSProp(float lr, float _rho, float _epsilon)
+RMSProp::RMSProp(const float& lr, const float& _rho, const float& _epsilon)
 {
 	this->learning_rate = lr;
 	this->rho = _rho;
@@ -237,7 +237,7 @@ Vector<float> RMSProp::getBiasGradient(Vector<float>& dE_db){
 	return result;
 }
 
-Adam::Adam(float lr, float _beta1, float _beta2, float _epsilon)
+Adam::Adam(const float& lr, const float& _beta1, const float& _beta2, const float& _epsilon)
 {
 	this->learning_rate = lr;
 	this->beta1 = _beta1;

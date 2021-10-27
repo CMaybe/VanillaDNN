@@ -9,7 +9,7 @@ Vector<T>::Vector() {
 }
 
 template<typename T>
-Vector<T>::Vector(int _size, const T& _init) {
+Vector<T>::Vector(const int& _size, const T& _init) {
 	this->clear();
 	this->vector.resize(_size, _init);
 	this->size = _size;
@@ -25,7 +25,7 @@ Vector<T>::Vector(const Vector<T>& rhs) {
 template<typename T>
 Vector<T>::Vector(const Matrix<T>& rhs) {
 	this->clear();
-	if (this->rhs.get_cols_size() != 1)
+	if (rhs.get_rows_size() != 1)
 		throw std::out_of_range("Index out of bounds");
 	this->size = rhs.get_rows_size();
 	this->vector.resize(size,0);
@@ -424,7 +424,7 @@ template<typename T>
 T Vector<T>::sum(){
 	T result = 0;
 	for(int i = 0; i < size; i++){
-		result += this-vector[i];
+		result += this->vector[i];
 	}
 	return result;
 }

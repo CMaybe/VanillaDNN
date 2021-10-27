@@ -18,14 +18,13 @@ private:
 
 public:
 	Matrix();
-	Matrix(int _rows, int _cols);
-	Matrix(int _rows, int _cols, const T& _init);
-	Matrix<T>& operator=(const Matrix<T>& rhs);
+	Matrix(const int& _rows, const int& _cols);
+	Matrix(const int& _rows, const int& _cols, const T& _init);
 	Matrix(const Matrix<T>& rhs);
-	Matrix(const std::vector<std::vector<T>>& rhs);
-
 	Matrix(const Vector<T>& rhs);
-	Matrix<T>& operator=(const Vector<T>& rhs);
+
+	explicit Matrix(const std::vector<std::vector<T>>& rhs);
+	
 
 	virtual ~Matrix();
 
@@ -37,6 +36,8 @@ public:
 	Matrix<T>& operator+=(const Matrix<T>& rhs);
 	Matrix<T>& operator-=(const Matrix<T>& rhs);
 	Matrix<T>& operator*=(const Matrix<T>& rhs);
+	Matrix<T>& operator=(const Matrix<T>& rhs);
+	Matrix<T>& operator=(const Vector<T>& rhs);
 	
 	Matrix<T> dot(const Matrix<T>& rhs);
 	Vector<T> dot(const Vector<T>& rhs);

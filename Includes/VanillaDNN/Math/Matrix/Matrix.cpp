@@ -10,14 +10,14 @@ Matrix<T>::Matrix() {
 }
 
 template<typename T>
-Matrix<T>::Matrix(int _rows, int _cols) {
+Matrix<T>::Matrix(const int& _rows, const int& _cols) {
 	this->rows = _rows;
 	this->cols = _cols;
 	this->resize(_rows, _cols);
 }
 
 template<typename T>
-Matrix<T>::Matrix(int _rows, int _cols, const T& _init) {
+Matrix<T>::Matrix(const int& _rows, const int&_cols, const T& _init) {
 	this->rows = _rows;
 	this->cols = _cols;
 	this->resize(_rows, _cols, _init);

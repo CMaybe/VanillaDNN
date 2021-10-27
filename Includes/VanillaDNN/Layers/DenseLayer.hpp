@@ -48,7 +48,7 @@ public:
 	DenseLayer();
 	DenseLayer(const DenseLayer& rhs);
 	DenseLayer(const int& dim);
-	DenseLayer(const int& dim, std::string _activation);
+	DenseLayer(const int& dim, const std::string& _activation);
 
 	virtual ~DenseLayer();
 
@@ -56,7 +56,7 @@ public:
 	virtual void back_propagation(const int& idx);
 	virtual void predict();
 	virtual void update();
-	virtual void init(int batch_size,std::unique_ptr<Optimizer>& _optimizer);
+	virtual void init(const int& batch_size,std::unique_ptr<Optimizer>& _optimizer);
 	virtual void setInput(const Matrix<float>& _input,const int& idx);
 	virtual void setError(const Vector<float>& error,const int& idx);
 	virtual void connect(std::shared_ptr<Layer>& cur_layer, std::shared_ptr<Layer>& new_layer);
@@ -68,7 +68,7 @@ public:
 	virtual Matrix<float> getFeedback(const int& idx);
 	virtual int getDim() const; 
 
-	virtual void setActivation(std::string name);
+	virtual void setActivation(const std::string& name);
 	std::string getActivationName() const;
 
 

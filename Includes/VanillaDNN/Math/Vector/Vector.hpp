@@ -19,13 +19,11 @@ private:
 
 public:
 	Vector();
-	Vector(int _size, const T& _init);
+	Vector(const int& _size, const T& _init);
 	Vector(const Vector<T>& rhs);
-	Vector(const std::vector<T>& rhs);
-	Vector<T>& operator=(const Vector<T>& rhs);
-	
 	Vector(const Matrix<T>& rhs);
-	Vector<T>& operator=(const Matrix<T>& rhs);
+	
+	explicit Vector(const std::vector<T>& rhs);
 
 	virtual ~Vector();
 
@@ -38,6 +36,8 @@ public:
 	Vector<T>& operator+=(const Vector<T>& rhs);
 	Vector<T>& operator-=(const Vector<T>& rhs);
 	Vector<T>& operator*=(const Vector<T>& rhs);
+	Vector<T>& operator=(const Vector<T>& rhs);
+	Vector<T>& operator=(const Matrix<T>& rhs);
 
 	//scalar
 	Vector<T> operator+(const T& rhs);
