@@ -1,6 +1,6 @@
 # Vanilla-DNN
 
-![License](https://img.shields.io/badge/Licence-MIT-blue.svg) ![CMake](https://github.com/CMaybe/VanillaDNN/actions/workflows/cmake.yml/badge.svg) ![CodeQL](https://github.com/CMaybe/VanillaDNN/actions/workflows/codeql-analysis.yml/badge.svg)
+![License](https://img.shields.io/badge/Licence-MIT-blue.svg) ![CMake](https://github.com/CMaybe/VanillaDNN/actions/workflows/cmake.yml/badge.svg) ![CodeQL](https://github.com/CMaybe/VanillaDNN/actions/workflows/codeql-analysis.yml/badge.svg) ![MSCV](https://github.com/CMaybe/VanillaDNN/actions/workflows/msvc-analysis.yml/badge.svg)
 
 
 VanillaDNN is Dependency-free DNN framework with C++. 
