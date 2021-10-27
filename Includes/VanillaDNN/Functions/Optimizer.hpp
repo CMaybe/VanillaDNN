@@ -36,7 +36,6 @@ private:
 	Matrix<float> vel_weight;
 	Vector<float> vel_bias;
 public:	
-	Momentum(){};
 	Momentum(float lr, float _momentum);
 	Momentum(const Momentum& rhs);
 	virtual ~Momentum(){};
@@ -49,7 +48,6 @@ public:
 class NAG : public Optimizer
 {
 public:	
-	NAG(){};
 	NAG(float lr);
 	NAG(const NAG& rhs);
 	
@@ -63,7 +61,6 @@ public:
 class Nadam : public Optimizer
 {
 public:	
-	Nadam(){};
 	Nadam(float lr);
 	Nadam(const Nadam& rhs);
 	
@@ -81,7 +78,6 @@ private:
 	Vector<float> G_bias;
 	float epsilon;
 public:
-	Adagrad(){};
 	Adagrad(float lr, float _epsilon);
 	Adagrad(const Adagrad& rhs);
 	
@@ -100,7 +96,6 @@ private:
 	float epsilon;
 	float rho;
 public:
-	RMSProp(){};
 	RMSProp(float lr, float _rho, float _epsilon);
 	RMSProp(const RMSProp& rhs);
 	
@@ -121,7 +116,6 @@ private:
 	Vector<float> m_bias; 
 	Vector<float> v_bias; 
 public:
-	Adam(){};
 	Adam(float lr, float _beta1, float _beta2, float _epsilon);
 	Adam(const Adam& rhs);
 	

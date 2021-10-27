@@ -3,7 +3,9 @@
 
 #include <VanillaDNN/Layers/DenseLayer.hpp>
 
-DenseLayer::DenseLayer(){}
+DenseLayer::DenseLayer(){
+	this->dim = 0;
+}
 
 DenseLayer::DenseLayer(const DenseLayer& rhs) {
 	this->dim = rhs.dim;

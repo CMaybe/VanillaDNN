@@ -16,10 +16,10 @@ class Layer {
 protected:
 	int batch_size;
 public:
-	Layer() {};
-	Layer(const Layer& rhs){};
-	Layer(const int& dim){};
-	Layer(const int& dim, Activation *_activation){};
+	Layer() { this->batch_size = 0; };
+	Layer(const Layer& rhs){ this->batch_size = 0; };
+	Layer(const int& dim){ this->batch_size = 0; };
+	Layer(const int& dim, Activation *_activation){ this->batch_size = 0; };
 	
 	virtual ~Layer() {};
 	virtual void feed_forward(const int& idx) = 0;
