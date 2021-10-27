@@ -21,7 +21,7 @@ DenseLayer::DenseLayer(const int& dim) {
 	this->setActivation("None");
 }
 
-DenseLayer::DenseLayer(const int& dim, std::string _activation) {
+DenseLayer::DenseLayer(const int& dim, const std::string& _activation) {
 	this->dim = dim;
 	this->setActivation(_activation);
 }
@@ -94,7 +94,7 @@ void DenseLayer::update(){
 	return;
 }
 
-void DenseLayer::init(int batch_size,std::unique_ptr<Optimizer>& _optimizer){
+void DenseLayer::init(const int& batch_size,std::unique_ptr<Optimizer>& _optimizer){
 	this->batch_size = batch_size;
 	
 	this->input.resize(this->batch_size);
@@ -128,7 +128,7 @@ void DenseLayer::init(int batch_size,std::unique_ptr<Optimizer>& _optimizer){
 }
 
 
-void DenseLayer::setActivation(std::string name) {
+void DenseLayer::setActivation(const std::string& name) {
 	if("None" == name) this->activation = std::make_unique<Activation>(name);
 	else if("sigmoid" == name) this->activation = std::make_unique<Sigmoid>(name);
 	else if("hyper_tan" == name) this->activation = std::make_unique<HyperTan>(name);

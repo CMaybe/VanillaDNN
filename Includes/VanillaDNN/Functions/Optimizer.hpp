@@ -17,12 +17,12 @@ protected:
 	float learning_rate;
 public:
 	Optimizer();
-	Optimizer(float lr);
+	Optimizer(const float& lr);
 	Optimizer(const Optimizer& rhs);
 	
 	virtual ~Optimizer();
 	float getLearningRate();
-	void setLearningRate(float lr);
+	void setLearningRate(const float& lr);
 	
 	virtual Optimizer* copy();
 	virtual Matrix<float> getWeightGradient(Matrix<float>& dE_dW);
@@ -36,7 +36,7 @@ private:
 	Matrix<float> vel_weight;
 	Vector<float> vel_bias;
 public:	
-	Momentum(float lr, float _momentum);
+	Momentum(const float& lr, const float& _momentum);
 	Momentum(const Momentum& rhs);
 	virtual ~Momentum(){};
 	
@@ -48,7 +48,7 @@ public:
 class NAG : public Optimizer
 {
 public:	
-	NAG(float lr);
+	NAG(const float& lr);
 	NAG(const NAG& rhs);
 	
 	virtual ~NAG(){};
@@ -61,7 +61,7 @@ public:
 class Nadam : public Optimizer
 {
 public:	
-	Nadam(float lr);
+	Nadam(const float& lr);
 	Nadam(const Nadam& rhs);
 	
 	virtual ~Nadam(){};
@@ -78,7 +78,7 @@ private:
 	Vector<float> G_bias;
 	float epsilon;
 public:
-	Adagrad(float lr, float _epsilon);
+	Adagrad(const float& lr, const float& _epsilon);
 	Adagrad(const Adagrad& rhs);
 	
 	virtual ~Adagrad(){};
@@ -96,7 +96,7 @@ private:
 	float epsilon;
 	float rho;
 public:
-	RMSProp(float lr, float _rho, float _epsilon);
+	RMSProp(const float& lr, const float& _rho, const float& _epsilon);
 	RMSProp(const RMSProp& rhs);
 	
 	virtual ~RMSProp(){};
@@ -116,7 +116,7 @@ private:
 	Vector<float> m_bias; 
 	Vector<float> v_bias; 
 public:
-	Adam(float lr, float _beta1, float _beta2, float _epsilon);
+	Adam(const float& lr, const float& _beta1, const float& _beta2, const float& _epsilon);
 	Adam(const Adam& rhs);
 	
 	virtual ~Adam(){};
