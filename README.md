@@ -2,27 +2,30 @@
 
 ![License](https://img.shields.io/badge/Licence-MIT-blue.svg) ![CMake](https://github.com/CMaybe/VanillaDNN/actions/workflows/cmake.yml/badge.svg) ![CodeQL](https://github.com/CMaybe/VanillaDNN/actions/workflows/codeql-analysis.yml/badge.svg) ![MSCV](https://github.com/CMaybe/VanillaDNN/actions/workflows/msvc-analysis.yml/badge.svg)
 
-
-VanillaDNN is Dependency-free DNN framework with C++. 
+VanillaDNN is Dependency-free DNN framework with C++.
 
 ## Key Features
 
-  * C++ based Deep Learning framework
-  * Dependency-free
-  
-  
+- C++ based Deep Learning framework
+- Dependency-free
+
 ## To-do
 
 ### DNN
+
 - [x] ~~Training Func~~
 - [x] ~~Testing Func~~
-- [X] ~~Feed forward~~
-- [X] ~~Back propagation~~
+- [x] ~~Feed forward~~
+- [x] ~~Back propagation~~
 - [x] ~~Optimizer~~
 - [ ] TBA
-___
+
+---
+
 ### Math
+
 ##### Matrix
+
 - [x] ~~Matrices and matrix operations~~
 - [x] ~~Matrices and vector operations~~
 - [x] ~~Matrices and scala operations~~
@@ -30,15 +33,18 @@ ___
 - [ ] TBA
 
 ##### Vector
+
 - [x] ~~Vectors and vector operations~~
 - [x] ~~Vectors and scala operations~~
 - [x] ~~Transpose~~
-- [X] ~~Inner product~~
+- [x] ~~Inner product~~
 - [ ] cross product
 - [ ] TBA
-___
+
+---
 
 ### Model
+
 - [x] ~~Loss function handle~~
 - [x] ~~Output function(activation) handle~~
 - [x] ~~fit~~
@@ -50,17 +56,20 @@ ___
 - [x] ~~Optimizer handle~~
 - [ ] TBA
 
-___
+---
+
 ### Layer
+
 - [x] ~~Activation function handle~~
 - [x] ~~weight~~
 - [x] ~~bias~~
 - [x] ~~Neurons~~
 - [x] ~~diff factors~~
 
+---
 
-___
 ### activation functions
+
 - [x] ~~tanh~~
 - [x] ~~sigmoid~~
 - [x] ~~softmax~~
@@ -74,6 +83,7 @@ ___
 - [ ] scaled exponential linear units (selu)
 
 ### loss functions
+
 - [x] ~~mean squared error~~
 - [x] ~~root mean squared error~~
 - [x] ~~cross_entropy_error~~
@@ -82,26 +92,28 @@ ___
 - [ ] mean absolute error with epsilon range
 
 ### optimization algorithms
+
 - [x] ~~stochastic gradient descent~~
 - [x] ~~batch gradient descent~~
-- [x] ~~mini-batch gradient descent~~ 
+- [x] ~~mini-batch gradient descent~~
 - [x] ~~momentum~~
 - [x] ~~adagrad~~
 - [x] ~~rmsprop~~
 - [x] ~~adam~~
 - [ ] adamax
 
-
 ## Dependencies
+
 Nothing. All you need is a C++ compiler. (GCC/G++, GDB, Clang/Clang++)
 
 ## Quick Start
-You will need CMake to build the code.
 
+You will need CMake to build the code.
 
 ```
 git clone https://github.com/CMaybe/VanillaDNN.git
 ```
+
 ```
 mkdir build
 cd build
@@ -109,8 +121,8 @@ cmake ..
 make
 ```
 
-
 ## Examples
+
 #### Mnist
 
 ```
@@ -120,11 +132,13 @@ cd build
 cmake ..
 make
 ```
+
 ```
 ../bin/mnist
 ```
 
 ##### Source code
+
 ```cpp
 #include <VanillaDNN/Layers/DenseLayer.hpp>
 #include <VanillaDNN/Model/Model.hpp>
@@ -140,19 +154,19 @@ int main(int argc, char** argv) {
 	MNIST training_set(MNIST_DATA_LOCATION, "train", 500);
 	std::vector<Vector<float>> training_images(training_set.getImages());
 	std::vector<Vector<float>> training_labels(training_set.getLabels());
-	
-	
+
+
 	for(int i = 0;i<training_images.size();i++){
 		training_images[i] /= 255.0f;
 	}
-	
-	
+
+
 	//evaluate set
 	MNIST evaluate_set(MNIST_DATA_LOCATION, "test", 100);
 	std::vector<Vector<float>> evaluate_images(evaluate_set.getImages());
 	std::vector<Vector<float>> evaluate_labels(evaluate_set.getLabels());
 
-	
+
 	for(int i = 0;i<evaluate_images.size();i++){
 		evaluate_images[i] /= 255.0f;
 	}
@@ -160,33 +174,35 @@ int main(int argc, char** argv) {
 	std::cout<< "mnist loaded!\n";
 
 	Model mnist;//input : 28 x 28, output 0 ~ 9;
-	
-	
+
+
 	mnist.setLoss(LOSS_FUNCTION::categorical_cross_entropy);
 	mnist.addLayer(new DenseLayer(784, "sigmoid"));
 	mnist.addLayer(new DenseLayer(256, "sigmoid"));
 	mnist.addLayer(new DenseLayer(128, "sigmoid"));
 	mnist.addLayer(new DenseLayer(32, "sigmoid"));
 	mnist.addLayer(new DenseLayer(10, "soft_max"));
-	
+
 	// mnist.setOptimizer(new Momentum(0.1f,0.9));
 	// mnist.setOptimizer(new Adagrad(0.01f,1e-6));
 	// mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-8)); //lr, _rho, _epsilon, _depth
 	mnist.setOptimizer(new Adam(0.01f, 0.9f, 0.999f, 1e-8)); //lr, _rho, _epsilon, _depth
-	
+
 	mnist.fit(training_images, training_labels, 5, 32); //total, epoch, batch
-	
+
 
 	std::cout << "training is done!" << '\n';
 
 	mnist.evaluate(evaluate_images, evaluate_labels);
 	std::cout <<"Accuracy : "<< mnist.getAccuracy() << '\n';
-	
+
 
 	return 0;
 }
 ```
+
 ##### CMakeLists.txt of Example
+
 ```
 cmake_minimum_required(VERSION 3.10)
 
@@ -209,7 +225,6 @@ target_compile_definitions(mnist PRIVATE MNIST_DATA_LOCATION="${MNIST_DATA_DIR}"
 
 ```
 
-
 ## Documentation
 
 TBA
@@ -218,7 +233,6 @@ TBA
 
 Contributions are always welcome, either reporting issues/bugs or forking the repository and then issuing pull requests when you have completed some additional coding that you feel will be beneficial to the main project. If you are interested in contributing in a more dedicated capacity, then please contact me.
 
-
 ## License
 
 <img align="right" src="http://opensource.org/trademarks/opensource/OSI-Approved-License-100x137.png">
@@ -226,7 +240,6 @@ Contributions are always welcome, either reporting issues/bugs or forking the re
 The class is licensed under the [MIT License](http://opensource.org/licenses/MIT):
 
 Copyright &copy; 2021 Jaegyeom Kim
-
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
