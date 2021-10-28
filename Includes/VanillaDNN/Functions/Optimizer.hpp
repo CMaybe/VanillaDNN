@@ -48,8 +48,8 @@ public:
 class NAG : public Optimizer
 {
 public:	
-	NAG(const float& lr);
 	NAG(const NAG& rhs);
+	explicit NAG(const float& lr);
 	
 	virtual ~NAG(){};
 	

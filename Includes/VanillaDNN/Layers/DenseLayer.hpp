@@ -47,8 +47,8 @@ class DenseLayer : public Layer{
 public:
 	DenseLayer();
 	DenseLayer(const DenseLayer& rhs);
-	DenseLayer(const int& dim);
 	DenseLayer(const int& dim, const std::string& _activation);
+	explicit DenseLayer(const int& dim);
 
 	virtual ~DenseLayer();
 
