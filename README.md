@@ -116,7 +116,7 @@ git clone https://github.com/CMaybe/VanillaDNN.git
 
 <!---->
 
-~~~
+~~~sh
 mkdir build
 cd build
 cmake ..
@@ -127,7 +127,7 @@ make
 
 ### Mnist
 
-~~~
+~~~sh
 cd example/mnist
 mkdir build
 cd build
@@ -137,7 +137,7 @@ make
 
 <!---->
 
-~~~
+~~~sh
 ../bin/mnist
 ~~~
 
