@@ -50,3 +50,7 @@ bin/
 
 # goorm
 goorm.manifest
+
+# Node
+node_modules/
+*.json
