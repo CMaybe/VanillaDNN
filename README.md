@@ -1,5 +1,7 @@
 # Vanilla-DNN
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/44093e13d66543cda4348de3b4480f55)](https://app.codacy.com/gh/CMaybe/VanillaDNN?utm_source=github.com&utm_medium=referral&utm_content=CMaybe/VanillaDNN&utm_campaign=Badge_Grade_Settings)
+
 ![License](https://img.shields.io/badge/Licence-MIT-blue.svg) ![CMake](https://github.com/CMaybe/VanillaDNN/actions/workflows/cmake.yml/badge.svg) ![CodeQL](https://github.com/CMaybe/VanillaDNN/actions/workflows/codeql-analysis.yml/badge.svg) ![MSCV](https://github.com/CMaybe/VanillaDNN/actions/workflows/msvc-analysis.yml/badge.svg)
 
 VanillaDNN is Dependency-free DNN framework with C++.
