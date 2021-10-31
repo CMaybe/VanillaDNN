@@ -6,101 +6,101 @@ VanillaDNN is Dependency-free DNN framework with C++.
 
 ## Key Features
 
-- C++ based Deep Learning framework
-- Dependency-free
+*   C++ based Deep Learning framework
+*   Dependency-free
 
 ## To-do
 
 ### DNN
 
-- [x] ~~Training Func~~
-- [x] ~~Testing Func~~
-- [x] ~~Feed forward~~
-- [x] ~~Back propagation~~
-- [x] ~~Optimizer~~
-- [ ] TBA
+*   \[x] ~~Training Func~~
+*   \[x] ~~Testing Func~~
+*   \[x] ~~Feed forward~~
+*   \[x] ~~Back propagation~~
+*   \[x] ~~Optimizer~~
+*   \[ ] TBA
 
----
+***
 
 ### Math
 
-##### Matrix
+#### Matrix
 
-- [x] ~~Matrices and matrix operations~~
-- [x] ~~Matrices and vector operations~~
-- [x] ~~Matrices and scala operations~~
-- [x] ~~Transpose~~
-- [ ] TBA
+*   \[x] ~~Matrices and matrix operations~~
+*   \[x] ~~Matrices and vector operations~~
+*   \[x] ~~Matrices and scala operations~~
+*   \[x] ~~Transpose~~
+*   \[ ] TBA
 
-##### Vector
+#### Vector
 
-- [x] ~~Vectors and vector operations~~
-- [x] ~~Vectors and scala operations~~
-- [x] ~~Transpose~~
-- [x] ~~Inner product~~
-- [ ] cross product
-- [ ] TBA
+*   \[x] ~~Vectors and vector operations~~
+*   \[x] ~~Vectors and scala operations~~
+*   \[x] ~~Transpose~~
+*   \[x] ~~Inner product~~
+*   \[ ] cross product
+*   \[ ] TBA
 
----
+***
 
 ### Model
 
-- [x] ~~Loss function handle~~
-- [x] ~~Output function(activation) handle~~
-- [x] ~~fit~~
-- [x] ~~evaluate~~
-- [x] ~~Layer handle~~
-- [x] ~~Set input~~
-- [x] ~~Set target~~
-- [x] ~~Get accuracy~~
-- [x] ~~Optimizer handle~~
-- [ ] TBA
+*   \[x] ~~Loss function handle~~
+*   \[x] ~~Output function(activation) handle~~
+*   \[x] ~~fit~~
+*   \[x] ~~evaluate~~
+*   \[x] ~~Layer handle~~
+*   \[x] ~~Set input~~
+*   \[x] ~~Set target~~
+*   \[x] ~~Get accuracy~~
+*   \[x] ~~Optimizer handle~~
+*   \[ ] TBA
 
----
+***
 
 ### Layer
 
-- [x] ~~Activation function handle~~
-- [x] ~~weight~~
-- [x] ~~bias~~
-- [x] ~~Neurons~~
-- [x] ~~diff factors~~
+*   \[x] ~~Activation function handle~~
+*   \[x] ~~weight~~
+*   \[x] ~~bias~~
+*   \[x] ~~Neurons~~
+*   \[x] ~~diff factors~~
 
----
+***
 
 ### activation functions
 
-- [x] ~~tanh~~
-- [x] ~~sigmoid~~
-- [x] ~~softmax~~
-- [ ] softplus
-- [ ] softsign
-- [x] ~~rectified linear(relu)~~
-- [x] ~~leaky relu~~
-- [ ] identity
-- [ ] scaled tanh
-- [ ] exponential linear units(elu)
-- [ ] scaled exponential linear units (selu)
+*   \[x] ~~tanh~~
+*   \[x] ~~sigmoid~~
+*   \[x] ~~softmax~~
+*   \[ ] softplus
+*   \[ ] softsign
+*   \[x] ~~rectified linear(relu)~~
+*   \[x] ~~leaky relu~~
+*   \[ ] identity
+*   \[ ] scaled tanh
+*   \[ ] exponential linear units(elu)
+*   \[ ] scaled exponential linear units (selu)
 
 ### loss functions
 
-- [x] ~~mean squared error~~
-- [x] ~~root mean squared error~~
-- [x] ~~cross_entropy_error~~
-- [x] ~~binary_entropy_error~~
-- [ ] mean absolute error
-- [ ] mean absolute error with epsilon range
+*   \[x] ~~mean squared error~~
+*   \[x] ~~root mean squared error~~
+*   \[x] ~~cross\_entropy\_error~~
+*   \[x] ~~binary\_entropy\_error~~
+*   \[ ] mean absolute error
+*   \[ ] mean absolute error with epsilon range
 
 ### optimization algorithms
 
-- [x] ~~stochastic gradient descent~~
-- [x] ~~batch gradient descent~~
-- [x] ~~mini-batch gradient descent~~
-- [x] ~~momentum~~
-- [x] ~~adagrad~~
-- [x] ~~rmsprop~~
-- [x] ~~adam~~
-- [ ] adamax
+*   \[x] ~~stochastic gradient descent~~
+*   \[x] ~~batch gradient descent~~
+*   \[x] ~~mini-batch gradient descent~~
+*   \[x] ~~momentum~~
+*   \[x] ~~adagrad~~
+*   \[x] ~~rmsprop~~
+*   \[x] ~~adam~~
+*   \[ ] adamax
 
 ## Dependencies
 
@@ -110,36 +110,40 @@ Nothing. All you need is a C++ compiler. (GCC/G++, GDB, Clang/Clang++)
 
 You will need CMake to build the code.
 
-```
+~~~sh
 git clone https://github.com/CMaybe/VanillaDNN.git
-```
+~~~
 
-```
+<!---->
+
+~~~sh
 mkdir build
 cd build
 cmake ..
 make
-```
+~~~
 
 ## Examples
 
-#### Mnist
+### Mnist
 
-```
+~~~sh
 cd example/mnist
 mkdir build
 cd build
 cmake ..
 make
-```
+~~~
 
-```
+<!---->
+
+~~~sh
 ../bin/mnist
-```
+~~~
 
-##### Source code
+### Source code
 
-```cpp
+~~~cpp
 #include <VanillaDNN/Layers/DenseLayer.hpp>
 #include <VanillaDNN/Model/Model.hpp>
 #include <VanillaDNN/Functions/Functions.hpp>
@@ -199,11 +203,11 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
-```
+~~~
 
-##### CMakeLists.txt of Example
+### CMakeLists.txt of Example
 
-```
+~~~
 cmake_minimum_required(VERSION 3.10)
 
 project(mnist)
@@ -223,7 +227,7 @@ add_executable(mnist
 target_link_libraries(mnist ${VanillaDNN_LIBRARY_DIR}/${CMAKE_BUILD_TYPE}/libVanillaDNN.a)
 target_compile_definitions(mnist PRIVATE MNIST_DATA_LOCATION="${MNIST_DATA_DIR}")
 
-```
+~~~
 
 ## Documentation
 
@@ -239,7 +243,7 @@ Contributions are always welcome, either reporting issues/bugs or forking the re
 
 The class is licensed under the [MIT License](http://opensource.org/licenses/MIT):
 
-Copyright &copy; 2021 Jaegyeom Kim
+Copyright © 2021 Jaegyeom Kim
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
