@@ -24,7 +24,7 @@ VanillaDNN is Dependency-free DNN framework with C++.
 
 ### Math
 
-##### Matrix
+#### Matrix
 
 *   \[x] ~~Matrices and matrix operations~~
 *   \[x] ~~Matrices and vector operations~~
@@ -32,7 +32,7 @@ VanillaDNN is Dependency-free DNN framework with C++.
 *   \[x] ~~Transpose~~
 *   \[ ] TBA
 
-##### Vector
+#### Vector
 
 *   \[x] ~~Vectors and vector operations~~
 *   \[x] ~~Vectors and scala operations~~
@@ -110,32 +110,40 @@ Nothing. All you need is a C++ compiler. (GCC/G++, GDB, Clang/Clang++)
 
 You will need CMake to build the code.
 
-    git clone https://github.com/CMaybe/VanillaDNN.git
+~~~
+git clone https://github.com/CMaybe/VanillaDNN.git
+~~~
 
 <!---->
 
-    mkdir build
-    cd build
-    cmake ..
-    make
+~~~
+mkdir build
+cd build
+cmake ..
+make
+~~~
 
 ## Examples
 
-#### Mnist
+### Mnist
 
-    cd example/mnist
-    mkdir build
-    cd build
-    cmake ..
-    make
+~~~
+cd example/mnist
+mkdir build
+cd build
+cmake ..
+make
+~~~
 
 <!---->
 
-    ../bin/mnist
+~~~
+../bin/mnist
+~~~
 
-##### Source code
+### Source code
 
-```cpp
+~~~cpp
 #include <VanillaDNN/Layers/DenseLayer.hpp>
 #include <VanillaDNN/Model/Model.hpp>
 #include <VanillaDNN/Functions/Functions.hpp>
@@ -195,11 +203,11 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
-```
+~~~
 
-##### CMakeLists.txt of Example
+### CMakeLists.txt of Example
 
-```
+~~~
 cmake_minimum_required(VERSION 3.10)
 
 project(mnist)
@@ -219,7 +227,7 @@ add_executable(mnist
 target_link_libraries(mnist ${VanillaDNN_LIBRARY_DIR}/${CMAKE_BUILD_TYPE}/libVanillaDNN.a)
 target_compile_definitions(mnist PRIVATE MNIST_DATA_LOCATION="${MNIST_DATA_DIR}")
 
-```
+~~~
 
 ## Documentation
 
