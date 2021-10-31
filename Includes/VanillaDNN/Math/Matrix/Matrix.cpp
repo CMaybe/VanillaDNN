@@ -245,7 +245,7 @@ Matrix<T> Matrix<T>::operator+(const T& rhs) {
 
 template<typename T>
 Matrix<T> Matrix<T>::operator-(const T& rhs) {
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(rows, cols, 0);
 
@@ -260,7 +260,7 @@ Matrix<T> Matrix<T>::operator-(const T& rhs) {
 
 template<typename T>
 Matrix<T> Matrix<T>::operator*(const T& rhs) {
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(rows, cols, 0);
 
@@ -275,7 +275,7 @@ Matrix<T> Matrix<T>::operator*(const T& rhs) {
 
 template<typename T>
 Matrix<T> Matrix<T>::operator/(const T& rhs) {
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(rows, cols, 0);
 
@@ -292,7 +292,7 @@ Matrix<T> Matrix<T>::operator/(const T& rhs) {
 //ref
 template<typename T>
 Matrix<T>& Matrix<T>::operator+=(const T& rhs) {
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 
 	for (int i = 0; i < rows; i++) {
@@ -306,7 +306,7 @@ Matrix<T>& Matrix<T>::operator+=(const T& rhs) {
 
 template<typename T>
 Matrix<T>& Matrix<T>::operator-=(const T& rhs) {
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 
 	for (int i = 0; i < rows; i++) {
@@ -320,7 +320,7 @@ Matrix<T>& Matrix<T>::operator-=(const T& rhs) {
 
 template<typename T>
 Matrix<T>& Matrix<T>::operator*=(const T& rhs) {
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 
 	for (int i = 0; i < rows; i++) {
@@ -334,7 +334,7 @@ Matrix<T>& Matrix<T>::operator*=(const T& rhs) {
 
 template<typename T>
 Matrix<T>& Matrix<T>::operator/=(const T& rhs) {
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 
 	for (int i = 0; i < rows; i++) {
@@ -385,7 +385,7 @@ Vector<T> Matrix<T>::dot(const Vector<T>& rhs) {
 
 template<typename T>
 Matrix<T> Matrix<T>::transpose(){
-	int row = this->rows;
+	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(cols, rows, 0);
 

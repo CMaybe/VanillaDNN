@@ -260,7 +260,6 @@ bool Vector<T>::operator==(const Vector<T>& rhs){
 
 template<typename T>
 Matrix<T> Vector<T>::transpose(){
-	int rows = 1;
 	int cols = this->size;
 	Matrix<T> result(1, cols, 0);
 
