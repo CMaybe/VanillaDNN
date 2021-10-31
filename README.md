@@ -110,7 +110,7 @@ Nothing. All you need is a C++ compiler. (GCC/G++, GDB, Clang/Clang++)
 
 You will need CMake to build the code.
 
-~~~
+~~~sh
 git clone https://github.com/CMaybe/VanillaDNN.git
 ~~~
 
