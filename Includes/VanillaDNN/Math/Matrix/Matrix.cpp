@@ -467,6 +467,38 @@ Matrix<T> Matrix<T>::clip(const T& _min, const T& _max){
 }
 
 template<typename T>
+Matrix<T> Matrix<T>::block(const int& i, const int& j, const int& row, const int& col){
+	if (this->rows > i + row || this->cols > j + cols)
+		throw std::out_of_range("Index out of bounds");
+	
+	Matrix<T> result(row, col, 0);
+	for (int r = 0; r < row && (i+r) < this->rows; r++) {
+		for (int c = 0; c < col && (j+c) < this->cols; c++) {
+			result(r, c) = this->matrix[i+r][j+c];
+		}
+	}
+	return result;
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::convolution(const Matrix<float> &kernel){
+	int kernel_height = kernel.get_rows_size();
+	int kernel_width = kernel.get_cols_size();
+	int output_height = this->rows - kernel.get_rows_size() + 1;
+	int output_width = this->cols - kernel.get_cols_size() + 1;
+	
+	Matrix<T> result(output_height, output_width, 0);
+	for(int i = 0;i<output_height;i++){
+		for(int j = 0;i<output_width;j++){
+			result(i, j) = (kernel * this->block(i, j, kernel_height, kernel_width)).sum();
+		}
+	}
+	
+	return result.transpose();
+}
+
+
+template<typename T>
 T Matrix<T>::sum(){
 	T result = 0;
 	for (int i = 0; i < rows; i++) {
