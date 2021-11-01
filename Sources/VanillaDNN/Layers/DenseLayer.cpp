@@ -128,17 +128,6 @@ void DenseLayer::init(const int& batch_size,std::unique_ptr<Optimizer>& _optimiz
 }
 
 
-void DenseLayer::setActivation(const std::string& name) {
-	if("None" == name) this->activation = std::make_unique<Activation>(name);
-	else if("sigmoid" == name) this->activation = std::make_unique<Sigmoid>(name);
-	else if("hyper_tan" == name) this->activation = std::make_unique<HyperTan>(name);
-	else if("relu" == name) this->activation = std::make_unique<ReLU>(name);
-	else if("leaky_relu" == name) this->activation = std::make_unique<LeakyReLU>(name);
-	else if("soft_max" == name) this->activation = std::make_unique<SoftMax>(name);
-	return;
-}
-
-
 void DenseLayer::setInput(const Matrix<float>& _input,const int& idx) {
 	this->input[idx] = _input;
 }
@@ -146,12 +135,6 @@ void DenseLayer::setInput(const Matrix<float>& _input,const int& idx) {
 void DenseLayer::setError(const Vector<float>& error,const int& idx) {
 	this->dE_do[idx] = error;
 }
-
-void DenseLayer::setOptimizer(std::unique_ptr<Optimizer>& _optimizer){
-	this->optimizer = std::unique_ptr<Optimizer>(_optimizer->copy());
-	return;
-}
-
 
 Matrix<float> DenseLayer::getFeedback(const int& idx){
 	return this->feedback[idx];
@@ -161,24 +144,6 @@ Matrix<float> DenseLayer::getOutput(const int& idx){
 	return this->output[idx];
 }
 
-std::shared_ptr<Layer> DenseLayer::getPostLayer(){
-	std::shared_ptr<Layer> temp = this->postLayer.lock();
-	return temp;
-}
-
-std::shared_ptr<Layer> DenseLayer::getPreLayer(){
-	return this->preLayer;
-}
-
-void DenseLayer::connect(std::shared_ptr<Layer>& cur_layer, std::shared_ptr<Layer>& new_layer){
-	(std::dynamic_pointer_cast<DenseLayer>(new_layer))->preLayer = cur_layer;
-	this->postLayer = new_layer;
-	return;
-}
-
-std::string DenseLayer::getActivationName() const{
-	return this->activation->getName();
-}
 
 int DenseLayer::getDim() const{
 	return this->dim;

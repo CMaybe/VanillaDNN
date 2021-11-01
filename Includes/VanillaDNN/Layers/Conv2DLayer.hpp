@@ -4,6 +4,7 @@
 #include <vector>
 #include <functional>
 #include <memory>
+#include <tuple>
 #include <VanillaDNN/Layers/Layer.hpp>
 #include <VanillaDNN/Math/Matrix/Matrix.hpp>
 #include <VanillaDNN/Math/Vector/Vector.hpp>
@@ -12,9 +13,6 @@
 
 class Conv2DLayer : public Layer{
 	private:
-	std::unique_ptr<Activation> activation = nullptr;
-	std::unique_ptr<Optimizer> optimizer = nullptr;
-	
 	int height, width, channel, padding_size, kernel_size, stride;
 	Matrix<float> filter;
 	Vector<float> bias;
@@ -36,7 +34,7 @@ class Conv2DLayer : public Layer{
 	std::vector<Vector<float>> dz_db;
 	std::vector<Matrix<float>> dz_dw;
 	
-	std::shared_ptr<DenseLayer> preLayer = nullptr, postLayer=nullptr;
+	std::vector<Matrix<float>> feedback;
 	
 public:
 	Conv2DLayer();
@@ -51,20 +49,17 @@ public:
 	virtual void back_propagation(const int& idx);
 	virtual void predict();
 	virtual void update();
-	virtual void init(int batch_size,std::unique_ptr<Optimizer>& _optimizer);
+	virtual void init(const int& batch_size,std::unique_ptr<Optimizer>& _optimizer);
 	virtual void setInput(const Matrix<float>& _input,const int& idx);
 	virtual void setError(const Vector<float>& error,const int& idx);
 	virtual void connect(std::shared_ptr<Layer>& cur_layer, std::shared_ptr<Layer>& new_layer);
 	virtual void setOptimizer(std::unique_ptr<Optimizer>& _optimizer);
 	
-	virtual std::shared_ptr<Layer> getPostLayer();
-	virtual std::shared_ptr<Layer> getPreLayer();
 	virtual Matrix<float> getOutput(const int& idx);
 	virtual Matrix<float> getFeedback(const int& idx);
 	virtual int getDim() const; 
 
-	virtual void setActivation(std::string name);
-	std::string getActivationName() const;
+	std::tuple<int, int, int> getShape() const;
 
 
 

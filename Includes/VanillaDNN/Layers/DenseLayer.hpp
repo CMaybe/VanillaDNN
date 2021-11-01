@@ -11,12 +11,8 @@
 #include <VanillaDNN/Functions/Optimizer.hpp>
 
 
-
-
 class DenseLayer : public Layer{
 	private:
-	std::unique_ptr<Activation> activation = nullptr;
-	std::unique_ptr<Optimizer> optimizer = nullptr;
 	
 	int dim;
 	Matrix<float> weight;
@@ -41,8 +37,7 @@ class DenseLayer : public Layer{
 	
 	std::vector<Vector<float>> feedback;
 	
-	std::shared_ptr<Layer> preLayer;
-	std::weak_ptr<Layer> postLayer;
+
 	
 public:
 	DenseLayer();
@@ -59,17 +54,11 @@ public:
 	virtual void init(const int& batch_size,std::unique_ptr<Optimizer>& _optimizer);
 	virtual void setInput(const Matrix<float>& _input,const int& idx);
 	virtual void setError(const Vector<float>& error,const int& idx);
-	virtual void connect(std::shared_ptr<Layer>& cur_layer, std::shared_ptr<Layer>& new_layer);
-	virtual void setOptimizer(std::unique_ptr<Optimizer>& _optimizer);
 	
-	virtual std::shared_ptr<Layer> getPostLayer();
-	virtual std::shared_ptr<Layer> getPreLayer();
 	virtual Matrix<float> getOutput(const int& idx);
 	virtual Matrix<float> getFeedback(const int& idx);
 	virtual int getDim() const; 
 
-	virtual void setActivation(const std::string& name);
-	std::string getActivationName() const;
 
 
 
