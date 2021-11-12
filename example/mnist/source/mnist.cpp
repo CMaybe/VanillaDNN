@@ -9,7 +9,7 @@
 
 int main(int argc, char** argv) {
 	//training set
-	MNIST training_set(MNIST_DATA_LOCATION, "train", 6000);
+	MNIST training_set(MNIST_DATA_LOCATION, "train", 3000);
 	std::vector<Vector<float>> training_images(training_set.getImages());
 	std::vector<Vector<float>> training_labels(training_set.getLabels());
 	
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 	// mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-8)); //lr, _rho, _epsilon, _depth
 	mnist.setOptimizer(new Adam(0.01f, 0.9f, 0.999f, 1e-8)); //lr, _rho, _epsilon, _depth
 	
-	mnist.fit(training_images, training_labels, 10, 32); //total, epoch, batch
+	mnist.fit(training_images, training_labels, 5, 32); //total, epoch, batch
 	
 
 	std::cout << "training is done!" << '\n';
