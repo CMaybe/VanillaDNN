@@ -9,7 +9,7 @@
 
 int main(int argc, char** argv) {
 	//training set
-	MNIST training_set(MNIST_DATA_LOCATION, "train", 500);
+	MNIST training_set(MNIST_DATA_LOCATION, "train", 6000);
 	std::vector<Vector<float>> training_images(training_set.getImages());
 	std::vector<Vector<float>> training_labels(training_set.getLabels());
 	
@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 	
 	
 	//evaluate set
-	MNIST evaluate_set(MNIST_DATA_LOCATION, "test", 100);
+	MNIST evaluate_set(MNIST_DATA_LOCATION, "test", 1000);
 	std::vector<Vector<float>> evaluate_images(evaluate_set.getImages());
 	std::vector<Vector<float>> evaluate_labels(evaluate_set.getLabels());
 
@@ -35,10 +35,8 @@ int main(int argc, char** argv) {
 	
 	
 	mnist.setLoss(LOSS_FUNCTION::categorical_cross_entropy);
-	mnist.addLayer(new DenseLayer(784, "sigmoid"));
-	mnist.addLayer(new DenseLayer(256, "sigmoid"));
-	mnist.addLayer(new DenseLayer(128, "sigmoid"));
-	mnist.addLayer(new DenseLayer(32, "sigmoid"));
+	mnist.addLayer(new DenseLayer(784, "relu"));
+	mnist.addLayer(new DenseLayer(256, "relu"));
 	mnist.addLayer(new DenseLayer(10, "soft_max"));
 	
 	// mnist.setOptimizer(new Momentum(0.1f,0.9));
@@ -46,7 +44,7 @@ int main(int argc, char** argv) {
 	// mnist.setOptimizer(new RMSProp(0.01f, 0.9, 1e-8)); //lr, _rho, _epsilon, _depth
 	mnist.setOptimizer(new Adam(0.01f, 0.9f, 0.999f, 1e-8)); //lr, _rho, _epsilon, _depth
 	
-	mnist.fit(training_images, training_labels, 5, 32); //total, epoch, batch
+	mnist.fit(training_images, training_labels, 10, 32); //total, epoch, batch
 	
 
 	std::cout << "training is done!" << '\n';

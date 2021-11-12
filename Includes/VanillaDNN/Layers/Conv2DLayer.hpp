@@ -14,11 +14,11 @@
 class Conv2DLayer : public Layer{
 	private:
 	int height, width, channel, padding_size, kernel_size, stride;
-	Matrix<float> filter;
-	Vector<float> bias;
+	std::vector<Matrix<float>> filter;
+	std::vector<Vector<float>> bias;
 	
-	std::vector<Matrix<float>> batch_weight;
-	std::vector<Vector<float>> batch_bias;
+	std::vector<std::vector<Matrix<float>>> batch_weight;
+	std::vector<std::vector<Vector<float>>> batch_bias;
 	
 	
 	std::vector<Matrix<float>> input; 
@@ -39,9 +39,9 @@ class Conv2DLayer : public Layer{
 public:
 	Conv2DLayer();
 	Conv2DLayer(const Conv2DLayer& rhs);
-	Conv2DLayer(const int& channel, const int& kernel_size, std::string _activation);
-	Conv2DLayer(const int& channel, const int& kernel_size, const int& stride, std::string _activation);
-	Conv2DLayer(const int& channel, const int& kernel_size, const int& stride, const int& padding_size, std::string _activation);
+	Conv2DLayer(const int& channel, const int& kernel_size, const std::string& _activation);
+	Conv2DLayer(const int& channel, const int& kernel_size, const int& stride, const std::string& _activation);
+	Conv2DLayer(const int& channel, const int& kernel_size, const int& stride, const int& padding_size, const std::string& _activation);
 	
 	virtual ~Conv2DLayer();
 
@@ -55,8 +55,8 @@ public:
 	virtual void connect(std::shared_ptr<Layer>& cur_layer, std::shared_ptr<Layer>& new_layer);
 	virtual void setOptimizer(std::unique_ptr<Optimizer>& _optimizer);
 	
-	virtual Matrix<float> getOutput(const int& idx);
-	virtual Matrix<float> getFeedback(const int& idx);
+	virtual const Matrix<float>& getOutput(const int& idx);
+	virtual const Matrix<float>& getFeedback(const int& idx);
 	virtual int getDim() const; 
 
 	std::tuple<int, int, int> getShape() const;

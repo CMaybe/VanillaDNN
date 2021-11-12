@@ -11,15 +11,15 @@ Conv2DLayer::Conv2DLayer(const Conv2DLayer& rhs){
 	
 }
 
-Conv2DLayer::Conv2DLayer(const int& channel, const int& kernel_size, std::string _activation){
+Conv2DLayer::Conv2DLayer(const int& channel, const int& kernel_size, const std::string& _activation){
 	
 }
 
-Conv2DLayer::Conv2DLayer(const int& channel, const int& kernel_size, const int& stride, std::string _activation){
+Conv2DLayer::Conv2DLayer(const int& channel, const int& kernel_size, const int& stride, const std::string& _activation){
 	
 }
 
-Conv2DLayer::Conv2DLayer(const int& channel, const int& kernel_size, const int& stride, const int& padding_size, std::string _activation){
+Conv2DLayer::Conv2DLayer(const int& channel, const int& kernel_size, const int& stride, const int& padding_size, const std::string& _activation){
 	
 }
 

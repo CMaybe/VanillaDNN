@@ -118,7 +118,7 @@ Matrix<float> ReLU::getActivated(Matrix<float>& input){
 Vector<float> ReLU::getActivatedDiff(Vector<float>& input){
 	Vector<float> output(input.get_size(), 0);
 	for (int i = 0; i < output.get_size(); i++) {
-		output(i) = static_cast<int>(0.0f < input(i));
+		output(i) = static_cast<float>(0.0f < input(i));
 	}
 	return output;
 }
@@ -127,7 +127,7 @@ Matrix<float> ReLU::getActivatedDiff(Matrix<float>& input){
 	Matrix<float> output(input.get_rows_size(), input.get_cols_size(), 0);
 	for (int i = 0; i < output.get_rows_size(); i++) {
 		for(int j = 0; j < output.get_cols_size(); j++){
-			output(i,j) = static_cast<int>(0.0f < input(i,j));
+			output(i,j) = static_cast<float>(0.0f < input(i,j));
 		}
 	}
 	return output;
@@ -190,7 +190,7 @@ Matrix<float> SoftMax::getActivatedDiff2(Vector<float>& input){
 	Matrix<float> output(temp.get_size(), temp.get_size(), 0);
 	for (int i = 0; i < output.get_rows_size(); i++) {
 		for(int j = 0; j < output.get_cols_size(); j++){
-			output(i, j) =  temp(i) * (static_cast<int>(i==j) - temp[j]);
+			output(i, j) =  temp(i) * (static_cast<float>(i==j) - temp[j]);
 		}
 	}
 	return output;
