@@ -60,11 +60,11 @@ void Model::feed_forward(int idx) {
 	return;
 }
 
-void Model::predict(int idx){
+void Model::predict(int idx) {
 	this->inputLayer->setInput(this->input_set[idx], 0);
 	auto cur = this->inputLayer;
 	do {
-		cur->predict();	
+		cur->predict();
 	} while ((cur = cur->getPostLayer()).use_count() > 0);
 	this->output = this->outputLayer->getOutput(0);
 	return;
@@ -75,17 +75,17 @@ void Model::back_propagation(int idx) {
 	auto cur = this->outputLayer;
 	this->outputLayer->setError(
 		this->loss_diff(this->output_set[idx % this->batch_size], this->target_set[idx]), idx % this->batch_size);
-	do{
+	do {
 		cur->back_propagation(idx % this->batch_size);
-	}while((cur = cur->getPreLayer()).use_count() > 0);
+	} while ((cur = cur->getPreLayer()).use_count() > 0);
 	return;
 }
 
-void Model::update(){
+void Model::update() {
 	auto cur = this->outputLayer;
-	do{
+	do {
 		cur->update();
-	}while((cur = cur->getPreLayer()).use_count() > 0);
+	} while ((cur = cur->getPreLayer()).use_count() > 0);
 
 	return;
 }
@@ -99,14 +99,14 @@ void Model::fit(std::vector<Vector<float>>& _input_set, std::vector<Vector<float
 	this->init();
 	std::vector<std::future<void>> batch_tasks;
 	for (int i = 0; i < this->epoch; i++) {
-		for (int j = 0; j < data_cnt; j+=this->batch_size) {
-			for(int k = 0; k< this->batch_size && (j+k)< data_cnt; k++) {
-				batch_tasks.emplace_back(std::async(std::launch::async,[j,k,this](){
-					this->feed_forward(j+k);
-					this->back_propagation(j+k);
-				}));
+		for (int j = 0; j < data_cnt; j += this->batch_size) {
+			for (int k = 0; k < this->batch_size && (j + k) < data_cnt; k++) {
+				batch_tasks.emplace_back(std::async(std::launch::async, [j, k, this]() {
+					this->feed_forward(j + k);
+					this->back_propagation(j + k);
+					}));
 			}
-			for(int i =0;i<batch_tasks.size();i++){
+			for (int i = 0; i < batch_tasks.size(); i++) {
 				batch_tasks[i].wait();
 			}
 			this->update();
@@ -115,14 +115,14 @@ void Model::fit(std::vector<Vector<float>>& _input_set, std::vector<Vector<float
 		}
 		std::cout << i + 1 << " epoch is done\n";
 	}
-	
+
 	return;
 }
 
 void Model::evaluate(std::vector<Vector<float>>& _input_set, std::vector<Vector<float>>& _target_set, bool show) {
 	this->setInput(_input_set);
 	this->setTarget(_target_set);
-	int data_cnt = _input_set.size(); 
+	int data_cnt = _input_set.size();
 	this->accuracy = 0;
 	float acc_sum = 0;
 	float error_sum = 0;
@@ -157,14 +157,14 @@ void Model::addLayer(Layer* _layer) {
 		this->outputLayer = layer;
 	}
 	else {
-		this->outputLayer->connect(outputLayer ,layer);
+		this->outputLayer->connect(outputLayer, layer);
 		this->outputLayer = layer;
 	}
 	return;
 }
 
 
-void Model::setOptimizer(Optimizer *_optimizer) {
+void Model::setOptimizer(Optimizer* _optimizer) {
 	this->optimizer = std::unique_ptr<Optimizer>(_optimizer);
 }
 

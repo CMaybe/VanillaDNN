@@ -28,9 +28,9 @@ Vector<T>::Vector(const Matrix<T>& rhs) {
 	if (rhs.get_rows_size() != 1)
 		throw std::out_of_range("Index out of bounds");
 	this->size = rhs.get_rows_size();
-	this->vector.resize(size,0);
-	for(int i = 0; i < this->size; i++){
-		this->vector[i] = rhs(i,0);
+	this->vector.resize(size, 0);
+	for (int i = 0; i < this->size; i++) {
+		this->vector[i] = rhs(i, 0);
 	}
 }
 
@@ -76,7 +76,7 @@ Vector<T>& Vector<T>::operator=(const Matrix<T>& rhs) {
 	this->vector.resize(this->size);
 
 	for (int i = 0; i < this->size; i++) {
-		this->vector[i] = rhs(i,0);
+		this->vector[i] = rhs(i, 0);
 	}
 
 	return *this;
@@ -214,7 +214,7 @@ Vector<T>& Vector<T>::operator+=(const T& rhs) {
 	int size = this->size;
 
 	for (int i = 0; i < size; i++) {
-		 this->vector[i] += rhs;
+		this->vector[i] += rhs;
 	}
 
 	return *this;
@@ -225,7 +225,7 @@ Vector<T>& Vector<T>::operator-=(const T& rhs) {
 	int size = this->size;
 
 	for (int i = 0; i < size; i++) {
-		 this->vector[i] -= rhs;
+		this->vector[i] -= rhs;
 	}
 
 	return *this;
@@ -236,7 +236,7 @@ Vector<T>& Vector<T>::operator*=(const T& rhs) {
 	int size = this->size;
 
 	for (int i = 0; i < size; i++) {
-		 this->vector[i] *= rhs;
+		this->vector[i] *= rhs;
 	}
 
 	return *this;
@@ -247,19 +247,19 @@ Vector<T>& Vector<T>::operator/=(const T& rhs) {
 	int size = this->size;
 
 	for (int i = 0; i < size; i++) {
-		 this->vector[i] /= rhs;
+		this->vector[i] /= rhs;
 	}
 
 	return *this;
 }
 
 template<typename T>
-bool Vector<T>::operator==(const Vector<T>& rhs){
+bool Vector<T>::operator==(const Vector<T>& rhs) {
 	return (*this - rhs).norm() < 0.001f;
 }
 
 template<typename T>
-Matrix<T> Vector<T>::transpose(){
+Matrix<T> Vector<T>::transpose() {
 	int cols = this->size;
 	Matrix<T> result(1, cols, 0);
 
@@ -284,8 +284,8 @@ template<typename T>
 Matrix<T> Vector<T>::dot(const Matrix<T>& rhs) {
 	Matrix<T> result(this->size, rhs.get_cols_size(), 0);
 	for (int i = 0; i < this->size; i++) {
-		for(int j = 0;j < rhs.get_cols_size();j++){
-			result(i,j) = this->vector[i] * rhs(0, j);
+		for (int j = 0; j < rhs.get_cols_size(); j++) {
+			result(i, j) = this->vector[i] * rhs(0, j);
 		}
 	}
 	return result;
@@ -344,7 +344,7 @@ void Vector<T>::setRandom()
 }
 
 template<typename T>
-float Vector<T>::norm(){
+float Vector<T>::norm() {
 	float sum = 0;
 	for (int i = 0; i < this->size; i++) {
 		sum += static_cast<float>(this->vector[i] * this->vector[i]);
@@ -353,7 +353,7 @@ float Vector<T>::norm(){
 }
 
 template<typename T>
-void Vector<T>::clear(){
+void Vector<T>::clear() {
 	std::vector<T>(this->vector).swap(this->vector);
 	return;
 }
@@ -394,12 +394,12 @@ Vector<T> Vector<T>::inv() {
 
 
 template<typename T>
-Vector<T> Vector<T>::onehot(){
+Vector<T> Vector<T>::onehot() {
 	int size = this->size;
 	Vector<T> result(size, 0);
 	float _max = *std::max_element(this->vector.begin(), this->vector.end());
-	for(int i = 0; i < size; i++){
-		if (_max == this->vector[i]){
+	for (int i = 0; i < size; i++) {
+		if (_max == this->vector[i]) {
 			result[i] = 1;
 			break;
 		}
@@ -408,10 +408,10 @@ Vector<T> Vector<T>::onehot(){
 }
 
 template<typename T>
-Vector<T> Vector<T>::clip(const T& _min, const T& _max){
+Vector<T> Vector<T>::clip(const T& _min, const T& _max) {
 	int size = this->size;
 	Vector<T> result(size, 0);
-	for(int i = 0; i < size; i++){
+	for (int i = 0; i < size; i++) {
 		if (_max < this->vector[i]) result[i] = _max;
 		else if (_min > this->vector[i]) result[i] = _min;
 		else result[i] = this->vector[i];
@@ -420,9 +420,9 @@ Vector<T> Vector<T>::clip(const T& _min, const T& _max){
 }
 
 template<typename T>
-T Vector<T>::sum(){
+T Vector<T>::sum() {
 	T result = 0;
-	for(int i = 0; i < size; i++){
+	for (int i = 0; i < size; i++) {
 		result += this->vector[i];
 	}
 	return result;

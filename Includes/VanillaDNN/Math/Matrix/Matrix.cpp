@@ -17,7 +17,7 @@ Matrix<T>::Matrix(const int& _rows, const int& _cols) {
 }
 
 template<typename T>
-Matrix<T>::Matrix(const int& _rows, const int&_cols, const T& _init) {
+Matrix<T>::Matrix(const int& _rows, const int& _cols, const T& _init) {
 	this->rows = _rows;
 	this->cols = _cols;
 	this->resize(_rows, _cols, _init);
@@ -35,7 +35,7 @@ Matrix<T>::Matrix(const Vector<T>& rhs) {
 	this->rows = rhs.get_size();
 	this->cols = 1;
 	this->resize();
-	
+
 	for (int i = 0; i < this->rows; i++) {
 		matrix[i][0] = rhs[i];
 	}
@@ -63,12 +63,12 @@ template<typename T>
 void Matrix<T>::resize(int _rows, int _cols, T _init) {
 	this->clear();
 	std::vector<std::vector<T>>(_rows).swap(this->matrix);
-	for (int i = 0; i < _rows; i++){
+	for (int i = 0; i < _rows; i++) {
 		std::vector<T>(_cols, _init).swap(this->matrix[i]);
 	}
 	this->rows = _rows;
 	this->cols = _cols;
-	
+
 	return;
 }
 
@@ -76,7 +76,7 @@ template<typename T>
 void Matrix<T>::resize() {
 	this->clear();
 	std::vector<std::vector<T>>(this->rows).swap(this->matrix);
-	for (int i = 0; i < this->rows; i++){
+	for (int i = 0; i < this->rows; i++) {
 		this->matrix[i] = std::vector<T>(this->cols, 0);
 	}
 	return;
@@ -100,7 +100,7 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs) {
 	this->rows = rhs.get_rows_size();
 	this->cols = rhs.get_cols_size();
 	this->resize();
-	
+
 	for (int i = 0; i < this->rows; i++) {
 		for (int j = 0; j < this->cols; j++) {
 			matrix[i][j] = rhs(i, j);
@@ -117,7 +117,7 @@ Matrix<T>& Matrix<T>::operator=(const Vector<T>& rhs) {
 	this->rows = rhs.get_size();
 	this->cols = 1;
 	this->resize();
-	
+
 	for (int i = 0; i < this->rows; i++) {
 		matrix[i][0] = rhs(i);
 	}
@@ -372,7 +372,7 @@ Vector<T> Matrix<T>::dot(const Vector<T>& rhs) {
 	if (rhs.get_size() != this->cols) {
 		throw std::out_of_range("Index out of bounds");
 	}
-	
+
 	Vector<T> result(this->rows, 0);
 	for (int i = 0; i < this->rows; i++) {
 		for (int j = 0; j < this->cols; j++) {
@@ -384,7 +384,7 @@ Vector<T> Matrix<T>::dot(const Vector<T>& rhs) {
 }
 
 template<typename T>
-Matrix<T> Matrix<T>::transpose(){
+Matrix<T> Matrix<T>::transpose() {
 	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(cols, rows, 0);
@@ -412,7 +412,7 @@ Matrix<T> Matrix<T>::square() {
 }
 
 template<typename T>
-Matrix<T> Matrix<T>::inv(){
+Matrix<T> Matrix<T>::inv() {
 	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(rows, cols, 0);
@@ -426,7 +426,7 @@ Matrix<T> Matrix<T>::inv(){
 }
 
 template<typename T>
-Matrix<T> Matrix<T>::sqrt(){
+Matrix<T> Matrix<T>::sqrt() {
 	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(rows, cols, 0);
@@ -440,7 +440,7 @@ Matrix<T> Matrix<T>::sqrt(){
 }
 
 template<typename T>
-float Matrix<T>::norm(){
+float Matrix<T>::norm() {
 	float sum = 0;
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -451,7 +451,7 @@ float Matrix<T>::norm(){
 }
 
 template<typename T>
-Matrix<T> Matrix<T>::clip(const T& _min, const T& _max){
+Matrix<T> Matrix<T>::clip(const T& _min, const T& _max) {
 	int rows = this->rows;
 	int cols = this->cols;
 	Matrix<T> result(rows, cols, 0);
@@ -467,39 +467,39 @@ Matrix<T> Matrix<T>::clip(const T& _min, const T& _max){
 }
 
 template<typename T>
-Matrix<T> Matrix<T>::block(const int& i, const int& j, const int& row, const int& col){
+Matrix<T> Matrix<T>::block(const int& i, const int& j, const int& row, const int& col) {
 	if (this->rows > i + row || this->cols > j + cols)
 		throw std::out_of_range("Index out of bounds");
-	
+
 	Matrix<T> result(row, col, 0);
-	for (int r = 0; r < row && (i+r) < this->rows; r++) {
-		for (int c = 0; c < col && (j+c) < this->cols; c++) {
-			result(r, c) = this->matrix[i+r][j+c];
+	for (int r = 0; r < row && (i + r) < this->rows; r++) {
+		for (int c = 0; c < col && (j + c) < this->cols; c++) {
+			result(r, c) = this->matrix[i + r][j + c];
 		}
 	}
 	return result;
 }
 
 template<typename T>
-Matrix<T> Matrix<T>::convolution(const Matrix<float> &kernel){
+Matrix<T> Matrix<T>::convolution(const Matrix<float>& kernel) {
 	int kernel_height = kernel.get_rows_size();
 	int kernel_width = kernel.get_cols_size();
 	int output_height = this->rows - kernel.get_rows_size() + 1;
 	int output_width = this->cols - kernel.get_cols_size() + 1;
-	
+
 	Matrix<T> result(output_height, output_width, 0);
-	for(int i = 0;i<output_height;i++){
-		for(int j = 0;i<output_width;j++){
+	for (int i = 0; i < output_height; i++) {
+		for (int j = 0; i < output_width; j++) {
 			result(i, j) = (kernel * this->block(i, j, kernel_height, kernel_width)).sum();
 		}
 	}
-	
+
 	return result.transpose();
 }
 
 
 template<typename T>
-T Matrix<T>::sum(){
+T Matrix<T>::sum() {
 	T result = 0;
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -509,8 +509,8 @@ T Matrix<T>::sum(){
 	return result;
 }
 template<typename T>
-void Matrix<T>::clear(){
-	for (int i = 0; i < this->matrix.size(); i++){
+void Matrix<T>::clear() {
+	for (int i = 0; i < this->matrix.size(); i++) {
 		std::vector<T>().swap(this->matrix[i]);
 	}
 	std::vector<std::vector<T>>().swap(this->matrix);

@@ -24,9 +24,9 @@ private:
 	using  Loss_diff = std::function<Vector<float>(Vector<float>&, Vector<float>&)>;
 	Loss loss;
 	Loss_diff loss_diff;
-	
+
 	std::unique_ptr<Optimizer> optimizer = nullptr;
-	
+
 	Vector<float> input;
 	Vector<float> target;
 	Vector<float> output;
@@ -34,13 +34,13 @@ private:
 	std::vector<Vector<float>> input_set;
 	std::vector<Vector<float>> target_set;
 	std::vector<Vector<float>> output_set;
-	
+
 	std::vector<Matrix<float>> batch_dE_dw;
 	std::vector<Vector<float>> batch_dE_db;
 
 	std::shared_ptr<Layer> inputLayer = nullptr;
 	std::shared_ptr<Layer> outputLayer = nullptr;
-	
+
 	int batch_size;
 	int epoch;
 	int nEval;
@@ -50,12 +50,12 @@ private:
 
 	void setInput(std::vector<Vector<float>>& _input_set);
 	void setTarget(std::vector<Vector<float>>& _target_set);
-	
+
 public:
 	Model();
 	virtual ~Model();
 	void setLoss(Loss _loss);
-	
+
 	void init();
 	void fit(std::vector<Vector<float>>& _input_set, std::vector<Vector<float>>& _target_set, int _epoch, int _batch = 1);
 	void evaluate(std::vector<Vector<float>>& _input_set, std::vector<Vector<float>>& _target_set, bool show = false);
@@ -63,10 +63,10 @@ public:
 	void predict(int idx);
 	void back_propagation(int idx);
 	void update();
-	
+
 	void addLayer(Layer* _layer);
-	void setOptimizer(Optimizer *_optimizer);
-	
+	void setOptimizer(Optimizer* _optimizer);
+
 	float getAccuracy();
 	float getError();
 	void setLearningRate(float lr);

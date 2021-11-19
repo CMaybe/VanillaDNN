@@ -72,7 +72,7 @@ Vector<float> DIFF_FUNCTION::root_mean_squared_error_diff(Vector<float>& y_hat, 
 	return result;
 }
 
-Vector<float> DIFF_FUNCTION::cross_entropy_diff(Vector<float>& y_hat, Vector<float>& y){
+Vector<float> DIFF_FUNCTION::cross_entropy_diff(Vector<float>& y_hat, Vector<float>& y) {
 	int N = y.get_size();
 	Vector<float> result(N, 0);
 	float delta = 1e-4;
@@ -91,7 +91,7 @@ Vector<float> DIFF_FUNCTION::binary_cross_entropy_diff(Vector<float>& y_hat, Vec
 	return result;
 }
 
-Vector<float> DIFF_FUNCTION::categorical_cross_entropy_diff(Vector<float>& y_hat, Vector<float>& y){
+Vector<float> DIFF_FUNCTION::categorical_cross_entropy_diff(Vector<float>& y_hat, Vector<float>& y) {
 	float delta = 1e-6;
 	int N = y.get_size();
 	Vector<float> result(N, 0);

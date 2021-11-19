@@ -22,7 +22,7 @@ public:
 	Vector(const int& _size, const T& _init);
 	Vector(const Vector<T>& rhs);
 	Vector(const Matrix<T>& rhs);
-	
+
 	explicit Vector(const std::vector<T>& rhs);
 
 	virtual ~Vector();
@@ -44,23 +44,23 @@ public:
 	Vector<T> operator-(const T& rhs);
 	Vector<T> operator*(const T& rhs);
 	Vector<T> operator/(const T& rhs);
-	
+
 	Vector<T>& operator+=(const T& rhs);
 	Vector<T>& operator-=(const T& rhs);
 	Vector<T>& operator*=(const T& rhs);
 	Vector<T>& operator/=(const T& rhs);
-	
+
 	bool operator==(const Vector<T>& rhs);
 
 	// Matrix
 	Matrix<T> transpose();
 	Matrix<T> dot(const Matrix<T>& rhs);
-	
-	
+
+
 	T dot(const Vector<T>& rhs);
 	T sum();
-	
-	
+
+
 	// sub
 	Vector<T> square();
 	Vector<T> sqrt();
