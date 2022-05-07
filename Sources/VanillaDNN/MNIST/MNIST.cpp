@@ -6,8 +6,8 @@
 
 int char2int(char* p)
 {
-  return ((p[0] & 0xff) << 24) | ((p[1] & 0xff) << 16) |
-         ((p[2] & 0xff) <<  8) | ((p[3] & 0xff) <<  0);
+	return ((p[0] & 0xff) << 24) | ((p[1] & 0xff) << 16) |
+		((p[2] & 0xff) << 8) | ((p[3] & 0xff) << 0);
 }
 
 MNIST::MNIST()
@@ -15,20 +15,20 @@ MNIST::MNIST()
 	set = "defalut";
 }
 
-MNIST::MNIST(std::string _path,std::string _set, const int& size, bool onehot)
+MNIST::MNIST(std::string _path, std::string _set, const int& size, bool onehot)
 {
-	
+
 	std::string trainSetFileName[2] = \
 	{
 		_path + "/train-images-idx3-ubyte",
-		_path + "/train-labels-idx1-ubyte"
+			_path + "/train-labels-idx1-ubyte"
 	};
 	std::string testSetFileName[2] = \
 	{
 		_path + "/t10k-images-idx3-ubyte",
-		_path + "/t10k-labels-idx1-ubyte"
+			_path + "/t10k-labels-idx1-ubyte"
 	};
-	
+
 	std::ifstream imageInputStream;
 	std::ifstream labelInputStream;
 
@@ -51,16 +51,16 @@ MNIST::MNIST(std::string _path,std::string _set, const int& size, bool onehot)
 
 	char buffer[4];
 	imageInputStream.read(buffer, 4);
-	
+
 	imageInputStream.read(buffer, 4);
 	int imageSize = char2int(buffer);
-	
+
 	imageInputStream.read(buffer, 4);
 	int rows = char2int(buffer);
-	
+
 	imageInputStream.read(buffer, 4);
 	int cols = char2int(buffer);
-	
+
 
 	for (int i = 0; i < imageSize && i < size; i++)
 	{
@@ -69,18 +69,18 @@ MNIST::MNIST(std::string _path,std::string _set, const int& size, bool onehot)
 		for (int j = 0; j < rows * cols; j++)
 		{
 			imageInputStream.read(&pixel, 1);
-			if(onehot){
-				image.push_back(static_cast<float>(static_cast<unsigned char>(pixel!=0)));
+			if (onehot) {
+				image.push_back(static_cast<float>(static_cast<unsigned char>(pixel != 0)));
 			}
-			else{
+			else {
 				image.push_back(static_cast<float>(static_cast<unsigned char>(pixel)));
 			}
 		}
 		this->images.push_back(image);
 	}
-	
+
 	labelInputStream.read(buffer, 4);
-	
+
 	labelInputStream.read(buffer, 4);
 	int labelSize = char2int(buffer);
 
@@ -88,13 +88,13 @@ MNIST::MNIST(std::string _path,std::string _set, const int& size, bool onehot)
 	{
 		char label;
 		labelInputStream.read(&label, 1);
-		Vector<float> v(10,0);
+		Vector<float> v(10, 0);
 		v[label] = 1;
 		this->labels.push_back(v);
-		
+
 	}
-	
-	
+
+
 	labelInputStream.close();
 	imageInputStream.close();
 }

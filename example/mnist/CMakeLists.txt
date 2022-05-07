@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.10)
 
 project(mnist)
 
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release)
+endif()
+
 set(CMAKE_CXX_FLAGS "-O3")
-set(CMAKE_BUILD_TYPE Release)
-# set(CMAKE_BUILD_TYPE Degug)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/bin/${CMAKE_BUILD_TYPE})
-
-
-find_package(VanillaDNN REQUIRED)
+find_package(VanillaDNN PATHS ${CMAKE_CURRENT_LIST_DIR}/../../../  REQUIRED )
 add_definitions("-std=c++17")
 
 add_executable(mnist

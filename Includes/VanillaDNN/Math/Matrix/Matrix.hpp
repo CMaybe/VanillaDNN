@@ -24,7 +24,7 @@ public:
 	Matrix(const Vector<T>& rhs);
 
 	explicit Matrix(const std::vector<std::vector<T>>& rhs);
-	
+
 
 	virtual ~Matrix();
 
@@ -38,7 +38,7 @@ public:
 	Matrix<T>& operator*=(const Matrix<T>& rhs);
 	Matrix<T>& operator=(const Matrix<T>& rhs);
 	Matrix<T>& operator=(const Vector<T>& rhs);
-	
+
 	Matrix<T> dot(const Matrix<T>& rhs);
 	Vector<T> dot(const Vector<T>& rhs);
 
@@ -48,28 +48,28 @@ public:
 	Matrix<T> operator-(const T& rhs);
 	Matrix<T> operator*(const T& rhs);
 	Matrix<T> operator/(const T& rhs);
-	
+
 	Matrix<T>& operator+=(const T& rhs);
 	Matrix<T>& operator-=(const T& rhs);
 	Matrix<T>& operator*=(const T& rhs);
 	Matrix<T>& operator/=(const T& rhs);
-	
+
 	Matrix<T> transpose();
 	Matrix<T> square();
 	Matrix<T> sqrt();
 	Matrix<T> inv();
 	Matrix<T> clip(const T& _min, const T& _max);
 	Matrix<T> block(const int& i, const int& j, const int& row, const int& col);
-	Matrix<T> convolution(const Matrix<float> &kernel);
-	
+	Matrix<T> convolution(const Matrix<float>& kernel);
+
 	T sum();
-	
-	
+
+
 
 	T& operator()(const int& row, const int& col);
 	const T& operator()(const int& row, const int& col) const;
-	
-	
+
+
 
 	//cout overloading 
 	template<typename U>
